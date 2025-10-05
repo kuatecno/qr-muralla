@@ -374,7 +374,7 @@ body{
 .chip.active{background:linear-gradient(180deg, #2a2437, #1a1622);color:#fff;border-color:rgba(185,102,255,0.5);box-shadow:0 6px 18px rgba(185,102,255,0.18)}
 
 /* Product card fade container */
-.products{display:grid;grid-template-columns:repeat(auto-fill, minmax(280px,1fr));gap:16px}
+.products{display:grid;grid-template-columns:repeat(2, 1fr);gap:16px}
 
 .card-flip-container{
   cursor:pointer;
@@ -554,6 +554,8 @@ body{
   border-radius:16px;
   overflow:hidden;
   padding:10px;
+  max-height:400px;
+  overflow-y:auto;
 }
 
 /* Promo instructions page */
