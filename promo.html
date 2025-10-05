@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Muralla — Café a $1000</title>
+    <meta name="description" content="Instrucciones para obtener tu café a $1000 en Muralla" />
+    <link rel="stylesheet" href="https://use.typekit.net/xas4kcy.css">
+    <link rel="preload" href="/assets/css/style.css" as="style" />
+    <link rel="stylesheet" href="/assets/css/style.css" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>☕</text></svg>">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <img id="brandLogo" class="brand-logo" alt="Muralla logo" hidden>
+        <span class="logo" id="brandText">Muralla</span>
+      </div>
+      <div class="ticker" id="ticker" aria-label="Especiales de hoy">
+        <div class="ticker-track" id="tickerTrack"></div>
+      </div>
+      <a href="/" class="street-sign">
+        <span class="sign-arrow">←</span>
+        <span class="sign-text">VOLVER</span>
+      </a>
+    </header>
+
+    <main>
+      <section class="promo-instructions" aria-label="Instrucciones de promoción">
+        <div class="promo-container">
+          <div class="promo-header">
+            <div class="promo-icon">☕</div>
+            <h1>Café a $1000</h1>
+            <p class="promo-subtitle">¡Muy fácil de obtener!</p>
+          </div>
+
+          <div class="steps-flow">
+            <div class="instructions-card" data-step="1">
+              <div class="step-icon">📱</div>
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h3>Síguenos en Instagram</h3>
+                <p>Encuentra nuestro perfil y dale seguir</p>
+                <a href="https://instagram.com/muralla.cafe" target="_blank" rel="noopener" class="instagram-btn">
+                  <span class="btn-icon">📷</span>
+                  Seguir en Instagram
+                  <span class="btn-arrow">→</span>
+                </a>
+              </div>
+              <div class="step-connector"></div>
+            </div>
+
+            <div class="instructions-card" data-step="2">
+              <div class="step-icon">💬</div>
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h3>Envía el mensaje</h3>
+                <p>Mándanos un mensaje directo con la palabra:</p>
+                <div class="code-word-wrapper">
+                  <div class="code-word" id="codeWord">"cafecito"</div>
+                  <button class="copy-btn" id="copyBtn" aria-label="Copiar código">
+                    <span id="copyIcon">📋</span>
+                  </button>
+                </div>
+              </div>
+              <div class="step-connector"></div>
+            </div>
+
+            <div class="instructions-card" data-step="3">
+              <div class="step-icon">🎉</div>
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h3>¡Listo!</h3>
+                <p>Te llegará inmediatamente un cupón de café a $1000</p>
+                <div class="success-badge">
+                  <span class="badge-shimmer">✨</span>
+                  Cupón válido
+                  <span class="badge-shimmer">✨</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="coffee-options">
+            <h3>☕ Puedes escoger entre:</h3>
+            <div class="options-grid">
+              <div class="option" data-coffee="espresso">
+                <span class="coffee-emoji">⚡</span>
+                <span>Expresso</span>
+              </div>
+              <div class="option" data-coffee="americano">
+                <span class="coffee-emoji">☕</span>
+                <span>Americano</span>
+              </div>
+              <div class="option" data-coffee="cortado">
+                <span class="coffee-emoji">🥛</span>
+                <span>Cortado</span>
+              </div>
+              <div class="option" data-coffee="long-black">
+                <span class="coffee-emoji">☕</span>
+                <span>Long Black</span>
+              </div>
+              <div class="option" data-coffee="negro">
+                <span class="coffee-emoji">🧋</span>
+                <span>Ice Expresso Negro</span>
+              </div>
+              <div class="option" data-coffee="orange">
+                <span class="coffee-emoji">🍊</span>
+                <span>Ice Expresso Naranja</span>
+              </div>
+              <div class="option" data-coffee="hazelnut">
+                <span class="coffee-emoji">🌰</span>
+                <span>Ice Expresso Avellana</span>
+              </div>
+              <div class="option" data-coffee="vanilla">
+                <span class="coffee-emoji">🍦</span>
+                <span>Ice Expresso Vainilla</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="love">Hecho con ❤ en Chile</div>
+      <nav class="footer-links">
+        <a href="https://instagram.com/muralla.cafe" target="_blank" rel="noopener">Instagram</a>
+        <a href="/" rel="noopener">Inicio</a>
+      </nav>
+    </footer>
+
+    <script src="/assets/js/shared.js"></script>
+    <script>
+      // Copy button functionality
+      const copyBtn = document.getElementById('copyBtn');
+      const codeWord = document.getElementById('codeWord');
+      const copyIcon = document.getElementById('copyIcon');
+
+      if (copyBtn && codeWord) {
+        copyBtn.addEventListener('click', async () => {
+          const text = 'cafecito';
+
+          try {
+            await navigator.clipboard.writeText(text);
+            copyBtn.classList.add('copied');
+            copyIcon.textContent = '✓';
+
+            setTimeout(() => {
+              copyBtn.classList.remove('copied');
+              copyIcon.textContent = '📋';
+            }, 2000);
+          } catch (err) {
+            console.error('Failed to copy:', err);
+          }
+        });
+      }
+
+      // Scroll animations for instruction cards
+      const observerOptions = {
+        threshold: 0.2,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll('.instructions-card').forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = `all 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.15}s`;
+        observer.observe(card);
+      });
+
+      // Coffee options animation
+      document.querySelectorAll('.option').forEach((option, index) => {
+        option.style.opacity = '0';
+        option.style.transform = 'translateY(20px)';
+        option.style.transition = `all 0.5s cubic-bezier(0.4, 0, 0.2, 1) ${0.6 + index * 0.1}s`;
+
+        const optionObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0)';
+            }
+          });
+        }, observerOptions);
+
+        optionObserver.observe(option);
+      });
+    </script>
+  </body>
+</html>

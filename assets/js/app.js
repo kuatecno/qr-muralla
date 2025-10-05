@@ -1,0 +1,649 @@
+// Import color palette
+import { COLOR_PALETTE } from './color-palette.js';
+
+// API Configuration
+const MURALLA_API_URL = "https://muralla-kua.vercel.app";
+
+// Prefer Muralla 5.0 API endpoints; if unavailable, fall back to local JSON files
+const CONFIG_URLS = ["/api/config", "/assets/data/config.json"];
+const TODAY_URLS = ["/api/today", "/assets/data/today.json"];
+const PRODUCTS_URLS = [`${MURALLA_API_URL}/api/products`, "/assets/data/products.json"];
+
+const el = {
+  tickerTrack: document.getElementById("tickerTrack"),
+  ctaTop: document.getElementById("ctaTop"),
+  carouselTrack: document.getElementById("carouselTrack"),
+  prevSlide: document.getElementById("prevSlide"),
+  nextSlide: document.getElementById("nextSlide"),
+  igLink: document.getElementById("igLink"),
+  brandLogo: document.getElementById("brandLogo"),
+  brandText: document.getElementById("brandText"),
+  categoryChips: document.getElementById("categoryChips"),
+  subcategoryChips: document.getElementById("subcategoryChips"),
+  chips: document.getElementById("chips"),
+  products: document.getElementById("products"),
+  qaInstagram: document.getElementById("qaInstagram"),
+  qaMaps: document.getElementById("qaMaps"),
+  qaProvWA: document.getElementById("qaProvWA"),
+  qaProvEmail: document.getElementById("qaProvEmail"),
+  qaEmail: document.getElementById("qaEmail"),
+  fInstagram: document.getElementById("fInstagram"),
+  fMaps: document.getElementById("fMaps"),
+  fProvWA: document.getElementById("fProvWA"),
+  fProvEmail: document.getElementById("fProvEmail"),
+  fEmail: document.getElementById("fEmail"),
+  mapOpen: document.getElementById("mapOpen"),
+  sheet: document.getElementById("productSheet"),
+  sheetBody: document.getElementById("sheetBody"),
+  sheetClose: document.getElementById("sheetClose"),
+  searchTrigger: document.getElementById("searchTrigger"),
+  searchBarContainer: document.getElementById("searchBarContainer"),
+  searchInput: document.getElementById("searchInput"),
+  searchClose: document.getElementById("searchClose"),
+  categorySection: document.getElementById("categorySection"),
+};
+
+const TAGS = [
+  "vegano",
+  "low carb / sin azúcar",
+  "sin gluten",
+  "sin procesar",
+];
+
+const CATEGORIES = [
+  "Comidas",
+  "Dulces",
+  "Bebidas Calientes",
+  "Ice Coffee",
+  "Frapés",
+  "Mocktails",
+  "Jugos y Limonadas"
+];
+
+const state = {
+  config: null,
+  today: null,
+  products: [],
+  selectedTags: new Set(),
+  selectedCategory: null,
+  searchQuery: "",
+  slideIndex: 0,
+  hasShuffled: false,
+};
+
+// Fallback data if JSON not available
+const FALLBACK = {
+  config: {
+    instagram: "https://instagram.com/tu_instagram",
+    mapsUrl: "https://maps.google.com/?q=Muralla",
+    email: "hola@muralla.cl",
+    providers: { whatsapp: "+56900000000", email: "proveedores@muralla.cl" },
+    booking: {
+      mode: "whatsapp",
+      whatsapp: "+56900000000",
+      message: "Hola! Quiero reservar/comprar: {item} para hoy {date}.",
+    },
+    hero: {
+      slides: [
+        { image: "", caption: "Sabor que abraza" },
+        { image: "", caption: "Hecho con amor" },
+        { image: "", caption: "Hoy cocinamos" },
+      ],
+    },
+    map: {
+      provider: "google",
+      apiKey: "", // leave empty to use iframe fallback
+      lat: -33.4489,
+      lng: -70.6693,
+      zoom: 15,
+      placeUrl: "https://maps.app.goo.gl/zb6gp98xDLEj6npa8",
+      styles: [],
+    },
+  },
+  today: {
+    date: new Date().toISOString().slice(0, 10),
+    items: [
+      { id: "lasana", name: "Lasaña Casera", tags: ["sin procesar"], price: 6900 },
+      { id: "pizza", name: "Pizza Margarita", tags: ["sin procesar"], price: 5500 },
+      { id: "veggie", name: "Bowl Veggie", tags: ["vegano"], price: 6200 },
+    ],
+  },
+  products: [
+    // Comidas - Dulce
+    { id: "01", name: "Pastel de Chocolate", category: "Pasteles", price: 3200, tags: ["sin gluten"], description: "Húmedo y rico en cacao.", image: "" },
+    { id: "02", name: "Galletas de Avena", category: "Galletas", price: 1800, tags: ["vegano", "sin procesar"], description: "Crujientes y caseras.", image: "" },
+    { id: "03", name: "Cheesecake de Frambuesa", category: "Postres", price: 3800, tags: [], description: "Cremoso con coulis.", image: "" },
+    { id: "04", name: "Croissant de Almendras", category: "Bollería", price: 2500, tags: ["sin procesar"], description: "Hojaldrado y dulce.", image: "" },
+    { id: "05", name: "Helado de Vainilla", category: "Helados", price: 2800, tags: ["sin gluten"], description: "Cremoso artesanal.", image: "" },
+
+    // Comidas - Salada
+    { id: "06", name: "Pasta Carbonara", category: "Pasta", price: 6500, tags: ["sin procesar"], description: "Cremosa y tradicional.", image: "" },
+    { id: "07", name: "Empanadas de Pino", category: "Empanadas", price: 2200, tags: ["sin procesar"], description: "Relleno jugoso.", image: "" },
+    { id: "08", name: "Pizza Margarita", category: "Pizza", price: 5800, tags: ["vegano"], description: "Clásica napolitana.", image: "" },
+    { id: "09", name: "Ceviche Mixto", category: "Ceviche", price: 7200, tags: ["low carb / sin azúcar", "sin gluten"], description: "Fresco del día.", image: "" },
+    { id: "10", name: "Ensalada César", category: "Ensaladas", price: 5200, tags: ["low carb / sin azúcar"], description: "Con pollo grillé.", image: "" },
+
+    // Bebidas - Calientes
+    { id: "11", name: "Café Americano", category: "Café", price: 2000, tags: [], description: "Intenso y aromático.", image: "" },
+    { id: "12", name: "Matcha Latte", category: "Matcha", price: 3500, tags: ["vegano"], description: "Cremoso y verde.", image: "" },
+    { id: "13", name: "Té Chai", category: "Té", price: 2500, tags: ["vegano", "sin procesar"], description: "Especiado y reconfortante.", image: "" },
+
+    // Bebidas - Frías - Preparadas en Barra
+    { id: "14", name: "Ice Coffee Vainilla", category: "Ice Coffee", price: 3200, tags: [], description: "Frío y dulce.", image: "" },
+    { id: "15", name: "Frapé de Chocolate", category: "Frapés", price: 3800, tags: [], description: "Cremoso y helado.", image: "" },
+    { id: "16", name: "Mocktail de Fresa", category: "Mocktails", price: 3500, tags: ["vegano"], description: "Sin alcohol, pura fruta.", image: "" },
+    { id: "17", name: "Jugo de Naranja", category: "Jugos", price: 2800, tags: ["vegano", "sin procesar"], description: "Recién exprimido.", image: "" },
+    { id: "18", name: "Limonada Menta", category: "Limonadas", price: 2500, tags: ["vegano", "sin azúcar"], description: "Refrescante natural.", image: "" },
+
+    // Bebidas - Frías - Embotelladas
+    { id: "19", name: "Kombucha de Jengibre", category: "Kombucha", price: 3200, tags: ["vegano", "sin procesar"], description: "Probiótico artesanal.", image: "" },
+    { id: "20", name: "Agua de Chía Limón", category: "Agua de Chía", price: 2500, tags: ["vegano", "sin gluten"], description: "Hidratante y nutritiva.", image: "" },
+    { id: "21", name: "Agua Mineral", category: "Agua", price: 1500, tags: [], description: "Pura y fresca.", image: "" },
+    { id: "22", name: "Bless Té Verde", category: "Bless", price: 1800, tags: [], description: "Refrescante y ligero.", image: "" },
+  ],
+};
+
+async function safeFetch(url) {
+  try {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    return await res.json();
+  } catch (e) {
+    return null;
+  }
+}
+
+async function loadData() {
+  async function firstAvailable(urls) {
+    for (const u of urls) {
+      const data = await safeFetch(u);
+      if (data) return data;
+    }
+    return null;
+  }
+  const [config, today, productsResponse] = await Promise.all([
+    firstAvailable(CONFIG_URLS),
+    firstAvailable(TODAY_URLS),
+    firstAvailable(PRODUCTS_URLS),
+  ]);
+  state.config = config || FALLBACK.config;
+  state.today = today || FALLBACK.today;
+
+  // Handle Muralla 5.0 API response format (with pagination) or local JSON array
+  let productsData;
+  if (productsResponse && productsResponse.data && Array.isArray(productsResponse.data)) {
+    // Muralla 5.0 API format: { data: [...], pagination: {...} }
+    productsData = productsResponse.data;
+  } else if (Array.isArray(productsResponse)) {
+    // Local JSON format: [...]
+    productsData = productsResponse;
+  } else {
+    // Fallback
+    productsData = FALLBACK.products;
+  }
+
+  state.products = productsData.map(normalizeProduct);
+}
+
+function normalizeTag(t) {
+  return String(t || "").trim().toLowerCase();
+}
+
+function normalizeProduct(p) {
+  // Handle both Muralla 5.0 API format and local JSON format
+  return {
+    id: p.id || p.sku || "",
+    name: p.name || "",
+    description: p.description || "",
+    category: p.category || "",
+    price: p.unitPrice || p.price || 0,
+    tags: (p.tags || []).map(normalizeTag),
+    image: p.image || "",
+    type: p.type || "",
+    sku: p.sku || p.id || "",
+  };
+}
+
+function setQuickLinks() {
+  const c = state.config;
+  // Brand
+  if (c.brand?.logo) {
+    el.brandLogo.src = c.brand.logo;
+    el.brandLogo.hidden = false;
+    if (c.brand?.alt) el.brandLogo.alt = c.brand.alt;
+    if (el.brandText) el.brandText.style.display = "none";
+  }
+  const links = [
+    [el.qaInstagram, c.instagram],
+    [el.qaMaps, c.mapsUrl],
+    [el.qaProvWA, waLink(c.providers?.whatsapp, "Hola! Proveedores aquí 👋")],
+    [el.qaProvEmail, `mailto:${c.providers?.email || ""}`],
+    [el.qaEmail, `mailto:${c.email || ""}`],
+    [el.fInstagram, c.instagram],
+    [el.fMaps, c.mapsUrl],
+    [el.fProvWA, waLink(c.providers?.whatsapp, "Hola! Proveedores aquí 👋")],
+    [el.fProvEmail, `mailto:${c.providers?.email || ""}`],
+    [el.fEmail, `mailto:${c.email || ""}`],
+  ];
+  links.forEach(([a, href]) => { if (a && href) a.href = href; });
+  if (state.config.instagram && el.igLink) el.igLink.href = state.config.instagram;
+  if (el.mapOpen && c?.map?.placeUrl) el.mapOpen.href = c.map.placeUrl;
+}
+
+function waLink(number, text) {
+  if (!number) return "#";
+  const num = String(number).replace(/[^0-9]/g, "");
+  const q = text ? `?text=${encodeURIComponent(text)}` : "";
+  return `https://wa.me/${num}${q}`;
+}
+
+function bookingLink(itemName) {
+  const { booking } = state.config;
+  const date = state.today?.date || new Date().toISOString().slice(0, 10);
+  const msg = (booking?.message || "Hola! Quiero reservar/comprar: {item} para hoy {date}.")
+    .replace("{item}", itemName || "(sin especificar)")
+    .replace("{date}", date);
+  if (booking?.mode === "whatsapp") {
+    return waLink(booking.whatsapp, msg);
+  }
+  if (booking?.mode === "url") {
+    if (booking.url) {
+      // Support optional placeholders in the URL
+      return booking.url
+        .replace("{item}", encodeURIComponent(itemName || ""))
+        .replace("{date}", encodeURIComponent(date))
+        .replace("{message}", encodeURIComponent(msg));
+    }
+  }
+  return "#";
+}
+
+function loadGoogleMaps(apiKey) {
+  return new Promise((resolve, reject) => {
+    if (window.google && window.google.maps) return resolve(window.google.maps);
+    const cbName = 'gmapsInit_' + Math.random().toString(36).slice(2);
+    window[cbName] = () => {
+      resolve(window.google.maps);
+      try { delete window[cbName]; } catch {}
+    };
+  const s = document.createElement('script');
+    s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(apiKey)}&callback=${cbName}&libraries=marker&loading=async`;
+    s.async = true; s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+async function renderMap() {
+  const m = state.config?.map;
+  const container = document.getElementById('map');
+  if (!container || !m) return;
+  const lat = Number(m.lat) || -33.4489; // Santiago fallback
+  const lng = Number(m.lng) || -70.6693;
+  const zoom = Number(m.zoom) || 15;
+
+  if (m.apiKey) {
+    try {
+      const gmaps = await loadGoogleMaps(m.apiKey);
+      const mapOptions = {
+        center: { lat, lng },
+        zoom,
+        styles: Array.isArray(m.styles) ? m.styles : undefined,
+        disableDefaultUI: true,
+        gestureHandling: 'greedy',
+      };
+
+      // Add mapId if available for Advanced Markers support
+      if (m.mapId) {
+        mapOptions.mapId = m.mapId;
+      }
+
+      const map = new gmaps.Map(container, mapOptions);
+      // Use AdvancedMarkerElement if available, fallback to Marker for compatibility
+      if (gmaps.marker?.AdvancedMarkerElement) {
+        new gmaps.marker.AdvancedMarkerElement({
+          position: { lat, lng },
+          map,
+          title: 'Muralla'
+        });
+      } else {
+        new gmaps.Marker({ position: { lat, lng }, map, title: 'Muralla' });
+      }
+      try { renderMetro(map); } catch {}
+      return;
+    } catch (e) {
+      // fall through to iframe
+    }
+  }
+  const url = m.placeUrl || `https://www.google.com/maps?q=${lat},${lng}&z=${zoom}`;
+  container.innerHTML = `<iframe title="Mapa" width="100%" height="100%" frameborder="0" style="border:0" referrerpolicy="no-referrer-when-downgrade" loading="lazy" src="${url}"></iframe>`;
+}
+
+function renderMetro(map) {
+  const cfg = state.config?.map || {};
+  const list = Array.isArray(cfg.metroStations) ? cfg.metroStations : [];
+  if (!list.length) return;
+  const g = window.google;
+  const AdvancedMarker = g?.maps?.marker?.AdvancedMarkerElement;
+  list.forEach((st) => {
+    const pos = { lat: Number(st.lat), lng: Number(st.lng) };
+    if (AdvancedMarker) {
+      const el = document.createElement('div');
+      el.style.padding = '4px 8px';
+      el.style.background = 'rgba(0,0,0,0.85)';
+      el.style.border = '1px solid rgba(255,255,255,0.35)';
+      el.style.borderRadius = '10px';
+      el.style.color = '#fff';
+      el.style.font = '600 12px/1.2 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial';
+      el.style.textShadow = '0 1px 0 rgba(0,0,0,0.6)';
+      el.textContent = st.name || 'Estación';
+      new AdvancedMarker({ map, position: pos, content: el, zIndex: 10 });
+    } else {
+      new g.maps.Marker({ map, position: pos, title: st.name || 'Estación' });
+    }
+  });
+}
+
+function renderTicker() {
+  const items = (state.today?.items || []).slice();
+  if (!items.length) return;
+  // Duplicate to create continuous feel
+  const dup = items.concat(items).concat(items);
+  el.tickerTrack.innerHTML = dup
+    .map((it) => {
+      const price = it.price ? `<span class="price">$${Number(it.price).toLocaleString("es-CL")}</span>` : "";
+      const tags = (it.tags || []).map(t => `<span class="tag">${t}</span>`).join(" ");
+      return `<a class="tick" href="${bookingLink(it.name)}" title="Reservar ${it.name}">
+        <strong>${it.name}</strong> ${price} ${tags}
+      </a>`;
+    })
+    .join("");
+}
+
+// renderToday function removed - "Hoy" section has been removed from the site
+
+// Generate a consistent hash from product ID/SKU/name for color assignment
+function getProductHash(product) {
+  const key = product.id || product.sku || product.name || '';
+  let hash = 0;
+  for (let i = 0; i < key.length; i++) {
+    const char = key.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return Math.abs(hash);
+}
+
+function gradientPlaceholder(product) {
+  const hash = getProductHash(product);
+  return COLOR_PALETTE[hash % COLOR_PALETTE.length];
+}
+
+// Shuffle array using Fisher-Yates algorithm
+function shuffleArray(array) {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+function initCarousel() {
+  const slides = state.config?.hero?.slides || [];
+  if (!slides.length) return;
+  el.carouselTrack.innerHTML = slides
+    .map((s, i) => {
+      const colors = s.image ? null : gradientPlaceholder(i);
+      const bgStyle = s.image ? `background-image:url('${s.image}')` : `background-color:${colors.bg}`;
+      return `<div class="slide" style="${bgStyle}"></div>`;
+    })
+    .join("");
+  const total = slides.length;
+  const go = (dir) => {
+    state.slideIndex = (state.slideIndex + dir + total) % total;
+    el.carouselTrack.style.transform = `translateX(-${state.slideIndex * 100}%)`;
+  };
+  let auto = setInterval(() => go(1), 5000);
+  const poke = (dir) => { go(dir); clearInterval(auto); auto = setInterval(() => go(1), 5000); };
+  el.prevSlide?.addEventListener("click", () => poke(-1));
+  el.nextSlide?.addEventListener("click", () => poke(1));
+}
+
+function renderCategoryChips() {
+  el.categoryChips.innerHTML = CATEGORIES.map(cat =>
+    `<button class="category-chip" data-category="${cat}">${cat}</button>`
+  ).join("");
+
+  el.categoryChips.querySelectorAll(".category-chip").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const cat = btn.dataset.category;
+      if (state.selectedCategory === cat) {
+        // Deselect
+        state.selectedCategory = null;
+      } else {
+        state.selectedCategory = cat;
+      }
+      updateCategoryStyles();
+      renderProducts();
+    });
+  });
+  updateCategoryStyles();
+}
+
+function renderSubcategoryChips() {
+  // No subcategories needed with flat structure
+  el.subcategoryChips.innerHTML = "";
+}
+
+function updateCategoryStyles() {
+  el.categoryChips.querySelectorAll(".category-chip").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.category === state.selectedCategory);
+  });
+}
+
+function renderChips() {
+  const chips = TAGS.map((t) => `<button class="chip" data-tag="${t}">${t}</button>`).join("");
+  el.chips.innerHTML = chips;
+  el.chips.querySelectorAll(".chip").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const tag = normalizeTag(btn.dataset.tag);
+      if (state.selectedTags.has(tag)) state.selectedTags.delete(tag); else state.selectedTags.add(tag);
+      updateChipStyles();
+      renderProducts();
+    });
+  });
+}
+
+function updateChipStyles() {
+  el.chips.querySelectorAll(".chip").forEach((btn) => {
+    const tag = normalizeTag(btn.dataset.tag);
+    btn.classList.toggle("active", state.selectedTags.has(tag));
+  });
+}
+
+function matchTags(p) {
+  if (state.selectedTags.size === 0) return true;
+  const set = new Set(p.tags || []);
+  for (const t of state.selectedTags) {
+    if (!set.has(t)) return false;
+  }
+  return true;
+}
+
+function matchCategories(p) {
+  if (!state.selectedCategory) return true;
+  const pCategory = normalizeTag(p.category || "");
+  const selectedCat = normalizeTag(state.selectedCategory);
+  // Check if product's category matches the selected category
+  return pCategory === selectedCat ||
+         normalizeTag(p.name || "").includes(selectedCat) ||
+         pCategory.includes(selectedCat);
+}
+
+function matchSearch(p) {
+  if (!state.searchQuery) return true;
+  const query = normalizeTag(state.searchQuery);
+  const name = normalizeTag(p.name || "");
+  const desc = normalizeTag(p.description || "");
+  const category = normalizeTag(p.category || "");
+  const tags = (p.tags || []).map(t => normalizeTag(t)).join(" ");
+
+  return name.includes(query) ||
+         desc.includes(query) ||
+         category.includes(query) ||
+         tags.includes(query);
+}
+
+function renderProducts() {
+  let items = state.products.filter(p => matchTags(p) && matchCategories(p) && matchSearch(p));
+
+  // Sort alphabetically if category or search is active, otherwise shuffle
+  if (state.selectedCategory || state.searchQuery) {
+    items = items.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+  } else {
+    // Shuffle only on initial load (check if we haven't shuffled yet)
+    if (!state.hasShuffled) {
+      state.products = shuffleArray(state.products);
+      state.hasShuffled = true;
+      items = state.products; // Use the shuffled array
+    }
+  }
+
+  el.products.innerHTML = items
+    .map((p, i) => {
+      const colors = p.image ? null : gradientPlaceholder(p);
+      const bgStyle = p.image ? `background-image:url('${p.image}')` : `background-color:${colors.bg}`;
+      const textColor = colors ? colors.text : '#fff';
+      const badges = (p.tags || []).map(t => `<span class="badge">${t}</span>`).join(" ");
+      const price = p.price ? `$${Number(p.price).toLocaleString("es-CL")}` : "";
+      const desc = p.description || "The quick, brown fox jumped over the lazy dog.";
+      return `<article class="card-flip-container" data-id="${p.id}" style="${bgStyle}">
+        <div class="card-flip">
+          <div class="card-front" style="color:${textColor}">
+            <div class="card-content">
+              <h3 class="card-main-title">${p.name}</h3>
+              <p class="card-subtitle">${badges ? `${badges} —` : ''} ${price}</p>
+              <p class="card-description">${desc}</p>
+            </div>
+            <div class="card-number" style="color:${textColor}">${String(i + 1).padStart(2, '0')}</div>
+          </div>
+          <div class="card-back" style="${bgStyle}">
+            <div class="card-back-overlay">
+              <div class="card-title" style="color:${textColor}">${p.name}</div>
+              <a class="today-cta" href="${bookingLink(p.name)}">Reservar</a>
+            </div>
+          </div>
+        </div>
+      </article>`;
+    })
+    .join("");
+
+  // Toggle flip on click/tap
+  el.products.querySelectorAll(".card-flip-container").forEach((node) => {
+    node.addEventListener("click", (e) => {
+      // Avoid duplicate open when clicking CTA link
+      if (e.target.closest("a")) return;
+      node.classList.toggle("flipped");
+    });
+  });
+}
+
+function openSheet(p, i = 0) {
+  const colors = p.image ? null : gradientPlaceholder(i);
+  const bgStyle = p.image ? `background-image:url('${p.image}')` : `background-color:${colors.bg}`;
+  el.sheetBody.innerHTML = `
+    <div class="card-img" style="${bgStyle}"></div>
+    <h3 style="margin:10px 0 6px">${p.name}</h3>
+    <p style="color:var(--muted); margin:0 0 8px">${p.description || ""}</p>
+    <div class="badges" style="margin-bottom:10px">${(p.tags||[]).map(t=>`<span class='badge'>${t}</span>`).join(" ")}</div>
+    <div style="display:flex;gap:10px;align-items:center;justify-content:space-between">
+      <strong>${p.price ? `$${Number(p.price).toLocaleString("es-CL")}` : ""}</strong>
+      <a class="cta" href="${bookingLink(p.name)}" target="_blank" rel="noopener">Reservar</a>
+    </div>
+  `;
+  el.sheet.setAttribute("aria-hidden", "false");
+}
+
+function closeSheet() {
+  el.sheet.setAttribute("aria-hidden", "true");
+}
+
+function wireSheet() {
+  el.sheetClose?.addEventListener("click", closeSheet);
+  el.sheet?.addEventListener("click", (e) => {
+    if (e.target === el.sheet) closeSheet();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeSheet();
+  });
+}
+
+function wireTopCTA() {
+  el.ctaTop?.addEventListener("click", () => {
+    const first = state.today?.items?.[0];
+    const href = bookingLink(first?.name);
+    window.open(href, "_blank");
+  });
+}
+
+function wireSearch() {
+  // Toggle search bar
+  el.searchTrigger?.addEventListener("click", () => {
+    const isVisible = el.searchBarContainer.style.display !== "none";
+
+    if (isVisible) {
+      // Close search
+      el.searchBarContainer.style.display = "none";
+      el.categoryChips.style.display = "flex";
+      el.searchInput.value = "";
+      state.searchQuery = "";
+      renderProducts();
+    } else {
+      // Open search
+      el.searchBarContainer.style.display = "block";
+      el.categoryChips.style.display = "none";
+      // Clear category selection when opening search
+      state.selectedCategory = null;
+      updateCategoryStyles();
+      el.searchInput.focus();
+    }
+  });
+
+  // Close search
+  el.searchClose?.addEventListener("click", () => {
+    el.searchBarContainer.style.display = "none";
+    el.categoryChips.style.display = "flex";
+    el.searchInput.value = "";
+    state.searchQuery = "";
+    renderProducts();
+  });
+
+  // Close on Escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && el.searchBarContainer.style.display !== "none") {
+      el.searchClose.click();
+    }
+  });
+
+  // Real-time search filtering
+  el.searchInput?.addEventListener("input", (e) => {
+    state.searchQuery = e.target.value.trim();
+    renderProducts();
+  });
+}
+
+async function main() {
+  await loadData();
+  setQuickLinks();
+  renderTicker();
+  initCarousel();
+  renderCategoryChips();
+  renderChips();
+  renderProducts();
+  renderMap();
+  wireSheet();
+  wireTopCTA();
+  wireSearch();
+}
+
+main();

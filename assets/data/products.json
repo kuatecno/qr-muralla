@@ -1,0 +1,200 @@
+[
+  {
+    "id": "01",
+    "name": "Pastel de Chocolate",
+    "category": "Pasteles",
+    "price": 3200,
+    "tags": ["sin gluten"],
+    "description": "Húmedo y rico en cacao.",
+    "image": ""
+  },
+  {
+    "id": "02",
+    "name": "Galletas de Avena",
+    "category": "Galletas",
+    "price": 1800,
+    "tags": ["vegano", "sin procesar"],
+    "description": "Crujientes y caseras.",
+    "image": ""
+  },
+  {
+    "id": "03",
+    "name": "Cheesecake de Frambuesa",
+    "category": "Postres",
+    "price": 3800,
+    "tags": [],
+    "description": "Cremoso con coulis.",
+    "image": ""
+  },
+  {
+    "id": "04",
+    "name": "Croissant de Almendras",
+    "category": "Bollería",
+    "price": 2500,
+    "tags": ["sin procesar"],
+    "description": "Hojaldrado y dulce.",
+    "image": ""
+  },
+  {
+    "id": "05",
+    "name": "Helado de Vainilla",
+    "category": "Helados",
+    "price": 2800,
+    "tags": ["sin gluten"],
+    "description": "Cremoso artesanal.",
+    "image": ""
+  },
+  {
+    "id": "06",
+    "name": "Pasta Carbonara",
+    "category": "Pasta",
+    "price": 6500,
+    "tags": ["sin procesar"],
+    "description": "Cremosa y tradicional.",
+    "image": ""
+  },
+  {
+    "id": "07",
+    "name": "Empanadas de Pino",
+    "category": "Empanadas",
+    "price": 2200,
+    "tags": ["sin procesar"],
+    "description": "Relleno jugoso.",
+    "image": ""
+  },
+  {
+    "id": "08",
+    "name": "Pizza Margarita",
+    "category": "Pizza",
+    "price": 5800,
+    "tags": ["vegano"],
+    "description": "Clásica napolitana.",
+    "image": ""
+  },
+  {
+    "id": "09",
+    "name": "Ceviche Mixto",
+    "category": "Ceviche",
+    "price": 7200,
+    "tags": ["low carb / sin azúcar", "sin gluten"],
+    "description": "Fresco del día.",
+    "image": ""
+  },
+  {
+    "id": "10",
+    "name": "Ensalada César",
+    "category": "Ensaladas",
+    "price": 5200,
+    "tags": ["low carb / sin azúcar"],
+    "description": "Con pollo grillé.",
+    "image": ""
+  },
+  {
+    "id": "11",
+    "name": "Café Americano",
+    "category": "Café",
+    "price": 2000,
+    "tags": [],
+    "description": "Intenso y aromático.",
+    "image": ""
+  },
+  {
+    "id": "12",
+    "name": "Matcha Latte",
+    "category": "Matcha",
+    "price": 3500,
+    "tags": ["vegano"],
+    "description": "Cremoso y verde.",
+    "image": ""
+  },
+  {
+    "id": "13",
+    "name": "Té Chai",
+    "category": "Té",
+    "price": 2500,
+    "tags": ["vegano", "sin procesar"],
+    "description": "Especiado y reconfortante.",
+    "image": ""
+  },
+  {
+    "id": "14",
+    "name": "Ice Coffee Vainilla",
+    "category": "Ice Coffee",
+    "price": 3200,
+    "tags": [],
+    "description": "Frío y dulce.",
+    "image": ""
+  },
+  {
+    "id": "15",
+    "name": "Frapé de Chocolate",
+    "category": "Frapés",
+    "price": 3800,
+    "tags": [],
+    "description": "Cremoso y helado.",
+    "image": ""
+  },
+  {
+    "id": "16",
+    "name": "Mocktail de Fresa",
+    "category": "Mocktails",
+    "price": 3500,
+    "tags": ["vegano"],
+    "description": "Sin alcohol, pura fruta.",
+    "image": ""
+  },
+  {
+    "id": "17",
+    "name": "Jugo de Naranja",
+    "category": "Jugos",
+    "price": 2800,
+    "tags": ["vegano", "sin procesar"],
+    "description": "Recién exprimido.",
+    "image": ""
+  },
+  {
+    "id": "18",
+    "name": "Limonada Menta",
+    "category": "Limonadas",
+    "price": 2500,
+    "tags": ["vegano", "low carb / sin azúcar"],
+    "description": "Refrescante natural.",
+    "image": ""
+  },
+  {
+    "id": "19",
+    "name": "Kombucha de Jengibre",
+    "category": "Kombucha",
+    "price": 3200,
+    "tags": ["vegano", "sin procesar"],
+    "description": "Probiótico artesanal.",
+    "image": ""
+  },
+  {
+    "id": "20",
+    "name": "Agua de Chía Limón",
+    "category": "Agua de Chía",
+    "price": 2500,
+    "tags": ["vegano", "sin gluten"],
+    "description": "Hidratante y nutritiva.",
+    "image": ""
+  },
+  {
+    "id": "21",
+    "name": "Agua Mineral",
+    "category": "Agua",
+    "price": 1500,
+    "tags": [],
+    "description": "Pura y fresca.",
+    "image": ""
+  },
+  {
+    "id": "22",
+    "name": "Bless Té Verde",
+    "category": "Bless",
+    "price": 1800,
+    "tags": [],
+    "description": "Refrescante y ligero.",
+    "image": ""
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "date": "2025-09-24",
+  "items": [
+    {
+      "id": "lasana",
+      "name": "Lasaña Casera",
+      "tags": ["sin procesar"],
+      "price": 6900,
+      "image": "/assets/img/prod-01.svg"
+    },
+    {
+      "id": "pizza",
+      "name": "Pizza Margarita",
+      "tags": ["sin procesar"],
+      "price": 5500,
+      "image": "/assets/img/prod-02.svg"
+    },
+    {
+      "id": "veggie",
+      "name": "Bowl Veggie",
+      "tags": ["vegano"],
+      "price": 6200,
+      "image": "/assets/img/prod-03.svg"
+    }
+  ]
+}

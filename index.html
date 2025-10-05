@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Muralla — Hoy</title>
+    <meta name="description" content="Muralla — Hoy cocinamos. Especiales, menús y amor desde Chile." />
+    <link rel="stylesheet" href="https://use.typekit.net/xas4kcy.css">
+    <link rel="preload" href="/assets/css/style.css" as="style" />
+    <link rel="stylesheet" href="/assets/css/style.css" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🍜</text></svg>">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <img id="brandLogo" class="brand-logo" alt="Muralla logo" hidden>
+        <span class="logo" id="brandText">Muralla</span>
+      </div>
+      <div class="ticker" id="ticker" aria-label="Especiales de hoy">
+        <div class="ticker-track" id="tickerTrack"></div>
+      </div>
+    </header>
+
+    <main>
+      <section class="promotion" aria-label="Promoción Café a luca">
+        <div class="promotion-container">
+          <a href="/promo.html" class="banner-wrapper">
+            <img src="/assets/img/editable9.png" alt="Café a luca promoción" class="promotion-banner promotion-banner-desktop">
+            <img src="/assets/img/editable7.png" alt="Café a luca promoción" class="promotion-banner promotion-banner-mobile">
+          </a>
+        </div>
+      </section>
+
+      <section class="menu" aria-label="Menú y categorías">
+        <div class="category-section" id="categorySection">
+          <button class="search-trigger-chip" id="searchTrigger" aria-label="Buscar">🔍</button>
+          <div class="category-chips" id="categoryChips">
+            <!-- Category chips injected by JS -->
+          </div>
+        </div>
+        <div class="search-bar-container" id="searchBarContainer" style="display:none;">
+          <input type="text" id="searchInput" class="search-input-inline" placeholder="Buscar productos..." autocomplete="off">
+          <button class="search-close-inline" id="searchClose" aria-label="Cerrar búsqueda">✕</button>
+        </div>
+        <div class="subcategory-chips" id="subcategoryChips">
+          <!-- Subcategory chips injected by JS -->
+        </div>
+        <div class="chips" id="chips">
+          <!-- Filter chips injected by JS -->
+        </div>
+        <div class="products" id="products">
+          <!-- Product cards injected by JS -->
+        </div>
+      </section>
+
+      <section class="hero" id="hero">
+        <div class="carousel" id="carousel" aria-label="Destacados">
+          <button class="carousel-nav prev" aria-label="Anterior" id="prevSlide">◀</button>
+          <div class="carousel-track" id="carouselTrack"></div>
+          <button class="carousel-nav next" aria-label="Siguiente" id="nextSlide">▶</button>
+        </div>
+        <div class="hero-caption">
+          <h1>Hoy cocinamos</h1>
+          <p class="sub">Comida honesta, hecha con amor en Chile.</p>
+          <a class="inline-link" id="igLink" target="_blank" rel="noopener">Ver más en Instagram ↗</a>
+        </div>
+      </section>
+
+      <section class="quick-actions" aria-label="Accesos rápidos">
+        <a class="qa" id="qaInstagram" target="_blank" rel="noopener">
+          <span>Instagram</span>
+        </a>
+        <a class="qa" id="qaMaps" target="_blank" rel="noopener">
+          <span>Mapa</span>
+        </a>
+        <a class="qa" id="qaProvWA" target="_blank" rel="noopener">
+          <span>Proveedores WhatsApp</span>
+        </a>
+        <a class="qa" id="qaProvEmail" target="_blank" rel="noopener">
+          <span>Proveedores Email</span>
+        </a>
+        <a class="qa" id="qaEmail" target="_blank" rel="noopener">
+          <span>Email</span>
+        </a>
+      </section>
+
+      <section class="map-section" aria-label="Ubicación">
+        <div class="map-head">
+          <h2>Dónde estamos</h2>
+          <a class="inline-link" id="mapOpen" target="_blank" rel="noopener">Abrir en Google Maps ↗</a>
+        </div>
+        <div class="map-card">
+          <div id="map" class="map-embed" aria-label="Mapa"></div>
+        </div>
+      </section>
+
+      <section class="instagram-section" aria-label="Síguenos en Instagram">
+        <div class="instagram-head">
+          <h2>Síguenos en Instagram</h2>
+          <a class="inline-link" href="https://www.instagram.com/muralla.cafe/" target="_blank" rel="noopener">@muralla.cafe ↗</a>
+        </div>
+        <div class="instagram-feed-container">
+          <script type="text/javascript" src="https://www.juicer.io/embed/muralla-cafe/embed-code.js" async defer></script>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="love">Hecho con ❤ en Chile</div>
+      <nav class="footer-links">
+        <a id="fInstagram" target="_blank" rel="noopener">Instagram</a>
+        <a id="fMaps" target="_blank" rel="noopener">Google Maps</a>
+        <a id="fProvWA" target="_blank" rel="noopener">Proveedores WhatsApp</a>
+        <a id="fProvEmail" target="_blank" rel="noopener">Proveedores Email</a>
+        <a id="fEmail" target="_blank" rel="noopener">Email</a>
+      </nav>
+    </footer>
+
+    <div id="productSheet" class="sheet" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="sheet-content" role="document">
+        <button class="sheet-close" id="sheetClose" aria-label="Cerrar">×</button>
+        <div class="sheet-body" id="sheetBody"></div>
+      </div>
+    </div>
+
+    <script src="/assets/js/shared.js"></script>
+    <script src="/assets/js/app.js" type="module"></script>
+  </body>
+  </html>

@@ -1,0 +1,66 @@
+{
+  "brand": {
+    "logo": "/assets/img/muralla-logo.png",
+    "alt": "Muralla Café"
+  },
+  "instagram": "https://instagram.com/muralla.cafe",
+  "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Muralla%20Chile",
+  "email": "hola@muralla.cl",
+  "providers": {
+    "whatsapp": "+56987654321",
+    "email": "proveedores@muralla.cl"
+  },
+  "map": {
+    "provider": "google",
+    "apiKey": "AIzaSyCeRZR78iNnoOkQBhq1z1UGexo0T52pXu0",
+    "mapId": "muralla_cafe_map",
+    "lat": -33.4489,
+    "lng": -70.6693,
+    "zoom": 15,
+    "placeUrl": "https://maps.app.goo.gl/zb6gp98xDLEj6npa8",
+    "styles": [
+      {"featureType":"all","elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},
+      {"featureType":"all","elementType":"labels.text.stroke","stylers":[{"color":"#000000"},{"lightness":13}]},
+      {"featureType":"all","elementType":"labels.icon","stylers":[{"saturation":"19"},{"lightness":"-21"},{"gamma":"0.92"},{"visibility":"simplified"}]},
+      {"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#000000"}]},
+      {"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#144b53"},{"lightness":14},{"weight":1.4}]},
+      {"featureType":"landscape","elementType":"all","stylers":[{"color":"#08304b"}]},
+      {"featureType":"poi","elementType":"geometry","stylers":[{"color":"#0c4152"},{"lightness":5}]},
+      {"featureType":"poi.medical","elementType":"geometry.fill","stylers":[{"lightness":"8"}]},
+      {"featureType":"poi.park","elementType":"geometry.fill","stylers":[{"hue":"#00ffeb"}]},
+      {"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#000000"}]},
+      {"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#0b434f"},{"lightness":25}]},
+      {"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#000000"}]},
+      {"featureType":"road.arterial","elementType":"geometry.stroke","stylers":[{"color":"#0b3d51"},{"lightness":16}]},
+      {"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#000000"}]},
+      {"featureType":"transit","elementType":"all","stylers":[{"color":"#146474"}]},
+      {"featureType":"transit.station.rail","elementType":"labels.text.fill","stylers":[{"invert_lightness":true},{"saturation":"100"},{"lightness":"9"},{"hue":"#6900ff"}]},
+      {"featureType":"transit.station.rail","elementType":"labels.icon","stylers":[{"weight":"1.19"},{"lightness":"1"},{"saturation":"54"},{"hue":"#6900ff"}]},
+      {"featureType":"water","elementType":"all","stylers":[{"color":"#021019"}]}
+    ],
+    "metroStations": [
+      {"name":"Estación Baquedano","lat":-33.4372,"lng":-70.6343}
+    ]
+  },
+  "booking": {
+    "mode": "url",
+    "url": "https://ig.me/m/muralla.cafe?ref=reservacomida",
+    "message": "Hola! Quiero reservar/comprar: {item} para hoy {date}."
+  },
+  "hero": {
+    "slides": [
+      {
+        "image": "/assets/img/hero-1.svg",
+        "caption": "Sabor que abraza"
+      },
+      {
+        "image": "/assets/img/hero-2.svg",
+        "caption": "Hecho con amor"
+      },
+      {
+        "image": "/assets/img/hero-3.svg",
+        "caption": "Hoy cocinamos"
+      }
+    ]
+  }
+}

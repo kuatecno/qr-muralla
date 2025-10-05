@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="g3" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#202033"/>
+      <stop offset="1" stop-color="#2a2437"/>
+    </linearGradient>
+    <radialGradient id="r3" cx="85%" cy="15%" r="55%">
+      <stop offset="0" stop-color="#b6ff4d" stop-opacity="0.7"/>
+      <stop offset="1" stop-color="#0b0b10" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#g3)"/>
+  <rect width="100%" height="100%" fill="url(#r3)"/>
+  <g font-family="'Inter', system-ui, -apple-system" fill="#ffffff" text-anchor="middle">
+    <text x="50%" y="48%" font-size="120" opacity="0.95">本日</text>
+    <text x="50%" y="58%" font-size="48" fill="#c7ffd1">Hoy cocinamos</text>
+  </g>
+</svg>
+
