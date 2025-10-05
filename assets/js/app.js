@@ -96,7 +96,7 @@ const FALLBACK = {
       lat: -33.4489,
       lng: -70.6693,
       zoom: 15,
-      placeUrl: "https://maps.app.goo.gl/zb6gp98xDLEj6npa8",
+      placeUrl: "https://maps.app.goo.gl/XNC8be4Y53Xkyiba8",
       styles: [],
     },
   },
