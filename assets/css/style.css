@@ -554,11 +554,27 @@ body{
   overflow:hidden;
   padding:10px;
   position:relative;
+  max-height:400px;
 }
 
 .instagram-feed-container iframe{
   display:block;
   border:none;
+}
+
+/* Aggressively hide all Juicer branding */
+a[href*="juicer.io"],
+.j-powered,
+.j-branding,
+.juicer-feed > ul > li:last-child,
+.juicer-feed a[href*="juicer"],
+[class*="powered"],
+[class*="branding"]{
+  display:none !important;
+  visibility:hidden !important;
+  opacity:0 !important;
+  height:0 !important;
+  overflow:hidden !important;
 }
 
 /* Promo instructions page */
