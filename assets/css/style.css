@@ -557,15 +557,13 @@ body{
   max-height:400px;
 }
 
-.instagram-feed-container::after{
-  content:'Síguenos en Instagram';
+.social-overlay{
   position:absolute;
   top:10px;
   left:10px;
   right:10px;
   height:50px;
   background:#2B2B2B;
-  pointer-events:none;
   z-index:999;
   display:flex;
   align-items:center;
@@ -574,6 +572,15 @@ body{
   color:#e67e5f;
   font-size:22px;
   font-weight:400;
+}
+
+.social-overlay a{
+  color:#e67e5f;
+  text-decoration:underline;
+}
+
+.social-overlay a:hover{
+  color:#ff9f82;
 }
 
 .instagram-feed-container iframe{
