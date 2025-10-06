@@ -553,26 +553,12 @@ body{
   border-radius:16px;
   overflow:hidden;
   padding:10px;
-  max-height:400px;
-  overflow-y:scroll;
   position:relative;
 }
 
-.instagram-feed-container::before{
-  content:'';
-  position:absolute;
-  bottom:0;
-  left:0;
-  right:0;
-  height:30px;
-  background:linear-gradient(to top, #0b0b10 20%, transparent 100%);
-  pointer-events:none;
-  z-index:10;
-}
-
-/* Hide Juicer branding */
-.instagram-feed-container ul li:last-child{
-  display:none !important;
+.instagram-feed-container iframe{
+  display:block;
+  border:none;
 }
 
 /* Promo instructions page */
