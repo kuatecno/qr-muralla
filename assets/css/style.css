@@ -557,6 +557,18 @@ body{
   max-height:400px;
 }
 
+.instagram-feed-container::after{
+  content:'';
+  position:absolute;
+  bottom:10px;
+  left:10px;
+  right:10px;
+  height:40px;
+  background:#0b0b10;
+  pointer-events:none;
+  z-index:999;
+}
+
 .instagram-feed-container iframe{
   display:block;
   border:none;
