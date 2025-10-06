@@ -558,7 +558,7 @@ body{
 }
 
 .instagram-feed-container::after{
-  content:'';
+  content:'Síguenos en Instagram';
   position:absolute;
   top:10px;
   left:10px;
@@ -567,6 +567,12 @@ body{
   background:#2B2B2B;
   pointer-events:none;
   z-index:999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#e67e5f;
+  font-size:16px;
+  font-weight:600;
 }
 
 .instagram-feed-container iframe{
