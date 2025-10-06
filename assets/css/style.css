@@ -56,13 +56,12 @@ body{
   max-height:200px;
   height:auto;
   object-fit:contain;
-  filter:drop-shadow(0 4px 12px rgba(0,0,0,0.3));
   transition:filter 0.3s ease;
   cursor:pointer;
 }
 
 .promotion-banner:hover{
-  filter:invert(1) brightness(0.7) hue-rotate(120deg) drop-shadow(0 4px 12px rgba(255,255,255,0.3));
+  filter:invert(1) brightness(0.7) hue-rotate(120deg);
 }
 
 
