@@ -569,10 +569,11 @@ body{
   z-index:999;
   display:flex;
   align-items:center;
-  justify-content:center;
+  justify-content:flex-start;
+  padding-left:10px;
   color:#e67e5f;
-  font-size:16px;
-  font-weight:600;
+  font-size:22px;
+  font-weight:400;
 }
 
 .instagram-feed-container iframe{
