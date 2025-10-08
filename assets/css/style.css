@@ -569,19 +569,19 @@ body{
   align-items:center;
   justify-content:flex-start;
   padding-left:10px;
-  color:#e67e5f;
-  font-size:22px;
+  color:#ffffff;
+  font-size:18px;
   font-weight:400;
   gap:6px;
 }
 
 .social-overlay a{
-  color:#e67e5f;
+  color:#ffffff;
   text-decoration:underline;
 }
 
 .social-overlay a:hover{
-  color:#ff9f82;
+  color:#e67e5f;
 }
 
 .instagram-feed-container iframe{
