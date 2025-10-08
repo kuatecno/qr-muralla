@@ -171,7 +171,7 @@ async function loadData() {
   state.today = today || FALLBACK.today;
 
   // Inject API key from serverless function if available
-  if (apiConfig && apiConfig.googleMapsApiKey) {
+  if (apiConfig && apiConfig.googleMapsApiKey && state.config.map) {
     state.config.map.apiKey = apiConfig.googleMapsApiKey;
   }
 
