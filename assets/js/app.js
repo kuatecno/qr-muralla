@@ -161,13 +161,19 @@ async function loadData() {
     }
     return null;
   }
-  const [config, today, productsResponse] = await Promise.all([
+  const [config, today, productsResponse, apiConfig] = await Promise.all([
     firstAvailable(CONFIG_URLS),
     firstAvailable(TODAY_URLS),
     firstAvailable(PRODUCTS_URLS),
+    safeFetch('/api/config'),
   ]);
   state.config = config || FALLBACK.config;
   state.today = today || FALLBACK.today;
+
+  // Inject API key from serverless function if available
+  if (apiConfig && apiConfig.googleMapsApiKey) {
+    state.config.map.apiKey = apiConfig.googleMapsApiKey;
+  }
 
   // Handle Muralla 5.0 API response format (with pagination) or local JSON array
   let productsData;
