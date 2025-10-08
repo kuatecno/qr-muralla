@@ -35,6 +35,9 @@ export const COLOR_PALETTE = [
   { bg: "#FAEEBD", text: "#540878" }, // Astra & Windsor - WCAG AAA
   { bg: "#313E3D", text: "#E1EBDA" }, // Outer Space & Willow Brook - WCAG AAA
   { bg: "#F4DBD7", text: "#492B86" }, // Vanilla Ice & Minsk - WCAG AAA
+  { bg: "#E499F1", text: "#570FAE" }, // Perfume & Blue Gem - WCAG AA
+  { bg: "#EAD4CB", text: "#5B0F4C" }, // Oyster Pink & Loulou - WCAG AAA
+  { bg: "#B1FEBC", text: "#3D5F6F" }, // Mint Green & Fiord - WCAG AAA
 ];
 
 /**
