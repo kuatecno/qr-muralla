@@ -572,6 +572,7 @@ body{
   color:#e67e5f;
   font-size:22px;
   font-weight:400;
+  gap:6px;
 }
 
 .social-overlay a{
