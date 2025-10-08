@@ -12,7 +12,7 @@
   },
   "map": {
     "provider": "google",
-    "apiKey": "AIzaSyCeRZR78iNnoOkQBhq1z1UGexo0T52pXu0",
+    "apiKey": "",
     "mapId": "muralla_cafe_map",
     "lat": -33.4489,
     "lng": -70.6693,
