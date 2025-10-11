@@ -102,6 +102,10 @@ body{
     gap:8px;
   }
 
+  .card-main-title{
+    font-size:28px;
+  }
+
   .today-card{
     min-width:0;
   }
