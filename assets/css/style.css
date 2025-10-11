@@ -114,6 +114,10 @@ body{
     gap:12px;
   }
 
+  .card-main-title{
+    font-size:clamp(24px, 8vw, 42px);
+  }
+
 }
 
 @media (min-width: 769px) {
