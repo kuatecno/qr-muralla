@@ -107,8 +107,8 @@ body{
   }
 
   .card-flip-container{
-    aspect-ratio:3/2;
-    min-height:90px;
+    aspect-ratio:2/1;
+    min-height:80px;
   }
 
   .products{
@@ -116,19 +116,19 @@ body{
   }
 
   .card-main-title{
-    font-size:clamp(18px, 5vw, 42px);
+    font-size:clamp(16px, 4.5vw, 42px);
   }
 
   .card-price{
-    font-size:clamp(12px, 3.5vw, 18px);
+    font-size:clamp(11px, 3vw, 18px);
   }
 
   .card-meta{
-    font-size:clamp(11px, 2.5vw, 14px);
+    font-size:clamp(10px, 2.5vw, 14px);
   }
 
   .card-main, .card-back{
-    padding:16px;
+    padding:12px;
   }
 
 }
