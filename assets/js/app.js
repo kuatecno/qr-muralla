@@ -97,7 +97,22 @@ const FALLBACK = {
       lng: -70.6693,
       zoom: 15,
       placeUrl: "https://maps.app.goo.gl/XNC8be4Y53Xkyiba8",
-      styles: [],
+      styles: [
+        {"featureType":"all","elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},
+        {"featureType":"all","elementType":"labels.text.stroke","stylers":[{"color":"#000000"},{"lightness":13}]},
+        {"featureType":"all","elementType":"labels.icon","stylers":[{"saturation":"19"},{"lightness":"-21"},{"gamma":"0.92"},{"visibility":"simplified"}]},
+        {"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#000000"}]},
+        {"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#144b53"},{"lightness":14},{"weight":1.4}]},
+        {"featureType":"landscape","elementType":"all","stylers":[{"color":"#08304b"}]},
+        {"featureType":"poi","elementType":"geometry","stylers":[{"color":"#0c4152"},{"lightness":5}]},
+        {"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#000000"}]},
+        {"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#0b434f"},{"lightness":25}]},
+        {"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#000000"}]},
+        {"featureType":"road.arterial","elementType":"geometry.stroke","stylers":[{"color":"#0b3d51"},{"lightness":16}]},
+        {"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#000000"}]},
+        {"featureType":"transit","elementType":"all","stylers":[{"color":"#146474"}]},
+        {"featureType":"water","elementType":"all","stylers":[{"color":"#021019"}]}
+      ],
     },
   },
   today: {
@@ -171,9 +186,14 @@ async function loadData() {
   state.today = today || FALLBACK.today;
 
   // Inject API key from serverless function if available
+  console.log('[Map Debug] API Config response:', apiConfig);
   if (apiConfig && apiConfig.googleMapsApiKey && state.config.map) {
     state.config.map.apiKey = apiConfig.googleMapsApiKey;
+    console.log('[Map Debug] API key injected successfully');
+  } else {
+    console.log('[Map Debug] No API key available, will use iframe fallback');
   }
+  console.log('[Map Debug] Final map config:', state.config.map);
 
   // Handle Muralla 5.0 API response format (with pagination) or local JSON array
   let productsData;
@@ -287,9 +307,13 @@ async function renderMap() {
   const lng = Number(m.lng) || -70.6693;
   const zoom = Number(m.zoom) || 15;
 
+  console.log('[Map Debug] Rendering map with config:', { hasApiKey: !!m.apiKey, lat, lng, zoom, stylesCount: m.styles?.length });
+
   if (m.apiKey) {
+    console.log('[Map Debug] Attempting to load Google Maps with API key');
     try {
       const gmaps = await loadGoogleMaps(m.apiKey);
+      console.log('[Map Debug] Google Maps loaded successfully');
       const mapOptions = {
         center: { lat, lng },
         zoom,
@@ -304,6 +328,7 @@ async function renderMap() {
       }
 
       const map = new gmaps.Map(container, mapOptions);
+      console.log('[Map Debug] Map instance created');
       // Use AdvancedMarkerElement if available, fallback to Marker for compatibility
       if (gmaps.marker?.AdvancedMarkerElement) {
         new gmaps.marker.AdvancedMarkerElement({
@@ -314,13 +339,17 @@ async function renderMap() {
       } else {
         new gmaps.Marker({ position: { lat, lng }, map, title: 'Muralla' });
       }
+      console.log('[Map Debug] Marker added');
       try { renderMetro(map); } catch {}
       return;
     } catch (e) {
-      // fall through to iframe
+      console.error('[Map Debug] Failed to load Google Maps, falling back to iframe:', e);
     }
+  } else {
+    console.log('[Map Debug] No API key, using iframe fallback');
   }
   const url = m.placeUrl || `https://www.google.com/maps?q=${lat},${lng}&z=${zoom}`;
+  console.log('[Map Debug] Rendering iframe with URL:', url);
   container.innerHTML = `<iframe title="Mapa" width="100%" height="100%" frameborder="0" style="border:0" referrerpolicy="no-referrer-when-downgrade" loading="lazy" src="${url}"></iframe>`;
 }
 
