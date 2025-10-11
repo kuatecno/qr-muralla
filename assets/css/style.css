@@ -107,6 +107,7 @@ body{
   }
 
   .card-flip-container{
+    aspect-ratio:3/2;
     min-height:90px;
   }
 
