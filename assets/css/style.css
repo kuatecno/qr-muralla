@@ -107,7 +107,11 @@ body{
   }
 
   .card-flip-container{
-    min-height:200px;
+    min-height:160px;
+  }
+
+  .products{
+    gap:12px;
   }
 
 }
