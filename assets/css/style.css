@@ -106,29 +106,8 @@ body{
     min-width:0;
   }
 
-  .card-flip-container{
-    min-height:160px !important;
-    max-height:240px !important;
-  }
-
   .products{
     gap:10px;
-  }
-
-  .card-main-title{
-    font-size:clamp(32px, 8vw, 42px);
-  }
-
-  .card-price{
-    font-size:clamp(16px, 4vw, 20px);
-  }
-
-  .card-meta{
-    font-size:clamp(13px, 3.5vw, 16px);
-  }
-
-  .card-main, .card-back{
-    padding:20px;
   }
 
 }
