@@ -107,8 +107,8 @@ body{
   }
 
   .card-flip-container{
-    min-height:80px !important;
-    max-height:120px !important;
+    min-height:160px !important;
+    max-height:240px !important;
   }
 
   .products{
