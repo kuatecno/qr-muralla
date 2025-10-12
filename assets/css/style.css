@@ -116,15 +116,15 @@ body{
   }
 
   .card-main-title{
-    font-size:clamp(16px, 4.5vw, 42px);
+    font-size:clamp(21px, 5vw, 21px);
   }
 
   .card-price{
-    font-size:clamp(11px, 3vw, 18px);
+    font-size:9px;
   }
 
   .card-meta{
-    font-size:clamp(10px, 2.5vw, 14px);
+    font-size:7px;
   }
 
   .card-main, .card-back{
