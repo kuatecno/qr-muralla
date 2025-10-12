@@ -899,6 +899,28 @@ a[href*="juicer.io"],
     padding:6px 12px;font-size:12px;
   }
   .sign-arrow{font-size:16px}
+
+  /* Product cards - must come AFTER base styles */
+  .card-flip-container{
+    min-height:160px !important;
+    max-height:240px !important;
+  }
+
+  .card-main-title{
+    font-size:clamp(32px, 8vw, 42px) !important;
+  }
+
+  .card-price{
+    font-size:clamp(16px, 4vw, 20px) !important;
+  }
+
+  .card-meta{
+    font-size:clamp(13px, 3.5vw, 16px) !important;
+  }
+
+  .card-main, .card-back{
+    padding:20px !important;
+  }
 }
 
 @media (min-width: 768px){
