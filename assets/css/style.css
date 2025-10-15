@@ -910,10 +910,6 @@ a[href*="juicer.io"],
     padding:20px !important;
   }
 
-  /* Hide card numbers on mobile */
-  .card-number{
-    display:none !important;
-  }
 }
 
 @media (min-width: 768px){

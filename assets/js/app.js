@@ -560,7 +560,6 @@ function renderProducts() {
               <p class="card-subtitle">${badges ? `${badges} —` : ''} ${price}</p>
               <p class="card-description">${desc}</p>
             </div>
-            <div class="card-number" style="color:${textColor}">${String(i + 1).padStart(2, '0')}</div>
           </div>
           <div class="card-back" style="${bgStyle}">
             <div class="card-back-overlay">
