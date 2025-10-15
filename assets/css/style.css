@@ -900,6 +900,30 @@ a[href*="juicer.io"],
   .card-main, .card-back{
     padding:20px !important;
   }
+
+  /* Reduce ALL subtitle/price text to 50% on mobile */
+  .price{
+    font-size:7.5px !important;
+  }
+
+  .card-front .card-subtitle,
+  .card-subtitle,
+  .card-content .card-subtitle,
+  p.card-subtitle{
+    font-size:9px !important;
+    line-height:1.2 !important;
+    font-weight:600 !important;
+  }
+
+  .card-subtitle .badge,
+  .badge{
+    font-size:6px !important;
+  }
+
+  /* Also reduce the description for better proportion */
+  .card-description{
+    font-size:7.5px !important;
+  }
 }
 
 @media (min-width: 768px){
