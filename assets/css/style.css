@@ -885,9 +885,17 @@ a[href*="juicer.io"],
     max-height:240px !important;
   }
 
-  /* Reduce TITLE to 50% on mobile */
+  /* Adjust mobile card text sizes */
   .card-main-title{
-    font-size:21px !important;
+    font-size:24px !important;
+  }
+
+  .card-subtitle{
+    font-size:14px !important;
+  }
+
+  .card-description{
+    font-size:12px !important;
   }
 
   .card-price{
