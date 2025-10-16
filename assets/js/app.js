@@ -669,14 +669,14 @@ function wireSearch() {
 async function main() {
   await loadData();
   setQuickLinks();
-  renderTicker();
-  initCarousel();
+  // renderTicker(); // Removed - ticker no longer in HTML
+  // initCarousel(); // Removed - carousel no longer in HTML
   renderCategoryChips();
   renderChips();
   renderProducts();
   renderMap();
   wireSheet();
-  wireTopCTA();
+  // wireTopCTA(); // Removed - CTA no longer in HTML
   wireSearch();
   startVerbRotation();
 }
