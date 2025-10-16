@@ -760,8 +760,8 @@ function startSpinnerAnimation() {
   const spinner = document.getElementById("verbSpinner");
   if (!spinner) return;
 
-  // Braille spinner frames (like Claude Code)
-  const frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+  // Star characters getting bigger and smaller
+  const frames = ["·", "✶", "✳", "✶", "·"];
   let currentFrame = 0;
 
   function updateSpinner() {
@@ -769,8 +769,8 @@ function startSpinnerAnimation() {
     currentFrame = (currentFrame + 1) % frames.length;
   }
 
-  // Update every 80ms for smooth animation
-  setInterval(updateSpinner, 80);
+  // Update every 300ms for pulsing effect
+  setInterval(updateSpinner, 300);
 }
 
 main();
