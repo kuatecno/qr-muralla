@@ -696,31 +696,75 @@ function showHeaderElements() {
   if (status) status.classList.add("loaded");
 }
 
-// Google Reviews - Placeholder data (replace with actual Google My Business API)
-function renderReviews() {
+// Google Reviews - Fetch from Google Places API
+async function renderReviews() {
   const container = document.getElementById("reviewsContainer");
   const reviewsLink = document.getElementById("googleReviewsLink");
 
   if (!container) return;
 
-  // Set Google reviews link (use your actual Google Maps place URL)
+  // Set Google reviews link
   const googleMapsUrl = state.config?.map?.placeUrl || "https://maps.app.goo.gl/XNC8be4Y53Xkyiba8";
   if (reviewsLink) reviewsLink.href = googleMapsUrl;
 
-  // Placeholder reviews - replace with actual API data
+  const apiKey = "AIzaSyC3OV5lXrclV730t0Zke0SG0HNbTKqH-rM";
+  const placeId = state.config?.map?.placeId || "ChIJN1t_tDeuEmsRUsoyG83frY4"; // Replace with actual Place ID
+
+  try {
+    // Load Google Maps Places library
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=initPlacesService`;
+
+    window.initPlacesService = () => {
+      const service = new google.maps.places.PlacesService(document.createElement('div'));
+
+      service.getDetails({
+        placeId: placeId,
+        fields: ['reviews', 'rating']
+      }, (place, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK && place.reviews) {
+          // Get top 3 reviews
+          const topReviews = place.reviews.slice(0, 3);
+
+          container.innerHTML = topReviews.map(review => {
+            return `
+              <div class="review-card">
+                <p class="review-text">"${review.text}"</p>
+                <div class="review-footer">
+                  <div class="review-author">${review.author_name}</div>
+                  <div class="review-rating">${review.rating}/5</div>
+                </div>
+              </div>
+            `;
+          }).join("");
+        } else {
+          // Fallback to placeholder reviews
+          showPlaceholderReviews(container);
+        }
+      });
+    };
+
+    document.head.appendChild(script);
+  } catch (error) {
+    console.error('Error loading reviews:', error);
+    showPlaceholderReviews(container);
+  }
+}
+
+function showPlaceholderReviews(container) {
   const reviews = [
     {
-      rating: "5.0",
-      text: "Increíble lugar! El café está espectacular y el ambiente es súper acogedor. Definitivamente volveré.",
+      rating: "5/5",
+      text: "Increíble lugar! El café está espectacular y el ambiente es súper acogedor.",
       author: "María G."
     },
     {
-      rating: "5.0",
+      rating: "5/5",
       text: "La comida está deliciosa y el servicio es excelente. Me encanta venir aquí a trabajar.",
       author: "Carlos P."
     },
     {
-      rating: "4.0",
+      rating: "4/5",
       text: "Muy buen café y postres caseros. El lugar es pequeño pero muy bonito.",
       author: "Ana S."
     }
