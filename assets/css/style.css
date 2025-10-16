@@ -162,15 +162,15 @@ body{
 }
 
 .open-status.open{
-  background:rgba(16,253,40,0.2);
-  border:2px solid rgba(16,253,40,0.6);
-  box-shadow:0 0 10px rgba(16,253,40,0.5), 0 0 20px rgba(16,253,40,0.3), inset 0 0 10px rgba(16,253,40,0.1);
+  background:rgba(16,253,40,0.08);
+  border:2px solid rgba(16,253,40,0.4);
+  box-shadow:0 0 10px rgba(16,253,40,0.4), 0 0 20px rgba(16,253,40,0.2), inset 0 0 10px rgba(16,253,40,0.05);
 }
 
 .open-status.closed{
-  background:rgba(239,68,68,0.2);
-  border:2px solid rgba(239,68,68,0.6);
-  box-shadow:0 0 10px rgba(239,68,68,0.5), 0 0 20px rgba(239,68,68,0.3), inset 0 0 10px rgba(239,68,68,0.1);
+  background:rgba(239,68,68,0.08);
+  border:2px solid rgba(239,68,68,0.4);
+  box-shadow:0 0 10px rgba(239,68,68,0.4), 0 0 20px rgba(239,68,68,0.2), inset 0 0 10px rgba(239,68,68,0.05);
 }
 
 .status-text{
