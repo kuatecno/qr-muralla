@@ -144,43 +144,43 @@ body{
   backdrop-filter:saturate(130%) blur(8px);background:linear-gradient(180deg, rgba(12,12,18,0.7), rgba(12,12,18,0.35));
 }
 
-/* Open/Closed status */
+/* Open/Closed status - Neon sign style */
 .open-status{
-  padding:8px 16px;
-  border-radius:8px;
+  padding:10px 20px;
+  border-radius:10px;
   backdrop-filter:saturate(130%) blur(8px);
   text-align:center;
   animation:neon-pulse 2s ease-in-out infinite;
+  background:rgba(0,20,40,0.3);
+  border:3px solid;
 }
 
 .open-status.open{
-  background:rgba(16,253,40,0.08);
-  border:2px solid rgba(16,253,40,0.4);
-  box-shadow:0 0 10px rgba(16,253,40,0.4), 0 0 20px rgba(16,253,40,0.2), inset 0 0 10px rgba(16,253,40,0.05);
+  border-color:rgba(0,255,255,0.8);
+  box-shadow:0 0 15px rgba(0,255,255,0.6), 0 0 30px rgba(0,255,255,0.4), inset 0 0 15px rgba(0,255,255,0.1);
 }
 
 .open-status.closed{
-  background:rgba(239,68,68,0.08);
-  border:2px solid rgba(239,68,68,0.4);
-  box-shadow:0 0 10px rgba(239,68,68,0.4), 0 0 20px rgba(239,68,68,0.2), inset 0 0 10px rgba(239,68,68,0.05);
+  border-color:rgba(0,255,255,0.8);
+  box-shadow:0 0 15px rgba(0,255,255,0.6), 0 0 30px rgba(0,255,255,0.4), inset 0 0 15px rgba(0,255,255,0.1);
 }
 
 .status-text{
   font-family:monospace;
-  font-size:14px;
-  font-weight:700;
-  letter-spacing:1px;
+  font-size:15px;
+  font-weight:900;
+  letter-spacing:2px;
   text-transform:uppercase;
 }
 
 .open-status.open .status-text{
-  color:#10FD28;
-  text-shadow:0 0 8px rgba(16,253,40,0.8), 0 0 15px rgba(16,253,40,0.5);
+  color:rgba(16,253,40,0.9);
+  text-shadow:0 0 10px rgba(16,253,40,1), 0 0 20px rgba(16,253,40,0.8), 0 0 30px rgba(16,253,40,0.6);
 }
 
 .open-status.closed .status-text{
-  color:#EF4444;
-  text-shadow:0 0 8px rgba(239,68,68,0.8), 0 0 15px rgba(239,68,68,0.5);
+  color:rgba(255,30,30,0.9);
+  text-shadow:0 0 10px rgba(255,30,30,1), 0 0 20px rgba(255,30,30,0.8), 0 0 30px rgba(255,30,30,0.6);
 }
 
 @keyframes neon-pulse{
