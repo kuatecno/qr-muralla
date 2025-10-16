@@ -93,10 +93,12 @@ const FALLBACK = {
     map: {
       provider: "google",
       apiKey: "", // leave empty to use iframe fallback
-      lat: -33.4489,
-      lng: -70.6693,
-      zoom: 15,
-      placeUrl: "https://maps.app.goo.gl/XNC8be4Y53Xkyiba8",
+      mapId: "73f23a273562e2f19d1560a3",
+      placeId: "ChIJ2Wmo--LFYpYRjjZvjlHBkYg",
+      lat: -33.443009,
+      lng: -70.666931,
+      zoom: 17,
+      placeUrl: "https://maps.app.goo.gl/hkvftZnfX1sZZ2ucA",
       styles: [
         {"featureType":"all","elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},
         {"featureType":"all","elementType":"labels.text.stroke","stylers":[{"color":"#000000"},{"lightness":13}]},
