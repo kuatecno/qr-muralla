@@ -678,6 +678,81 @@ async function main() {
   wireSheet();
   wireTopCTA();
   wireSearch();
+  startVerbRotation();
+}
+
+// Rotating verbs display
+const VERBS = [
+  "Harmonizando",
+  "Germinando",
+  "Cultivando",
+  "Sanando",
+  "Destilando",
+  "Langüeteando",
+  "Desaprendiendo",
+  "Sapeando",
+  "Acicalándonos",
+  "Perforando",
+  "Ecualizando",
+  "Auto-tuneando",
+  "Desmalezando",
+  "Exorcizando",
+  "Resetiando",
+  "Decantando",
+  "Goteando",
+  "Degustando",
+  "Tanteando",
+  "Desapegándonos",
+  "Husmeando",
+  "Exfoliando",
+  "Distorsionando",
+  "Procrastinando",
+  "Energizando",
+  "Provocando",
+  "Condimentando",
+  "Bailando",
+  "Incomodando",
+  "Ghosteando",
+  "Fermentando",
+  "Susurrando",
+  "Desenredando",
+  "Burbujeando",
+  "Reposando",
+  "Filtrando",
+  "Aromatizando",
+  "Espumando",
+  "Tostando",
+  "Revolviendo",
+  "Reconciliando",
+  "Abrazando",
+  "Recalculando",
+  "Divagando",
+  "Mariconeando",
+  "Carreteando",
+  "Oxigenando",
+  "Maquillándonos",
+  "Fantaseando",
+  "Melodizando",
+  "Delirando",
+  "Anidando"
+];
+
+function startVerbRotation() {
+  const verbText = document.getElementById("verbText");
+  if (!verbText) return;
+
+  let currentIndex = 0;
+
+  function updateVerb() {
+    verbText.textContent = VERBS[currentIndex];
+    currentIndex = (currentIndex + 1) % VERBS.length;
+  }
+
+  // Show first verb immediately
+  updateVerb();
+
+  // Rotate every 2 minutes (120000ms)
+  setInterval(updateVerb, 120000);
 }
 
 main();
