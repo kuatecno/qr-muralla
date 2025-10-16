@@ -148,10 +148,9 @@ body{
 .verb-display{
   justify-self:end;
   padding:8px 16px;
-  background:#0a0a0a;
-  border:2px solid #1a1a1a;
+  background:#b5b09e;
+  border:2px solid #9a9685;
   border-radius:8px;
-  box-shadow:inset 0 0 10px rgba(0,255,100,0.1);
   min-width:220px;
   text-align:center;
   display:flex;
@@ -163,17 +162,16 @@ body{
 .verb-spinner{
   font-family:monospace;
   font-size:16px;
-  color:#00ff66;
-  text-shadow:0 0 8px rgba(0,255,102,0.8);
+  color:#3030ff;
+  font-weight:700;
 }
 
 .verb-text{
   font-family:monospace;
   font-size:14px;
-  font-weight:600;
-  color:#00ff66;
-  text-shadow:0 0 8px rgba(0,255,102,0.8), 0 0 3px rgba(0,255,102,0.6);
-  letter-spacing:1px;
+  font-weight:700;
+  color:#3030ff;
+  letter-spacing:0.5px;
 }
 
 @keyframes led-flicker{
