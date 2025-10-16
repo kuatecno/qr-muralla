@@ -680,7 +680,7 @@ body{
   background:var(--panel);
   border:1px solid rgba(255,255,255,0.08);
   border-radius:12px;
-  padding:20px;
+  padding:14px 16px;
   transition:all 0.2s ease;
 }
 
@@ -691,9 +691,9 @@ body{
 
 .review-text{
   color:#fff;
-  font-size:15px;
-  line-height:1.6;
-  margin:0 0 16px 0;
+  font-size:14px;
+  line-height:1.5;
+  margin:0 0 12px 0;
 }
 
 .review-footer{
@@ -704,12 +704,12 @@ body{
 
 .review-author{
   color:var(--muted);
-  font-size:13px;
+  font-size:12px;
 }
 
 .review-rating{
   color:#c8b5d1;
-  font-size:14px;
+  font-size:13px;
   font-weight:600;
 }
 
