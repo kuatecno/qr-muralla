@@ -683,6 +683,16 @@ async function main() {
   updateOpenStatus();
   // Check status every minute
   setInterval(updateOpenStatus, 60000);
+
+  // Show ticker and status after everything is loaded
+  showHeaderElements();
+}
+
+function showHeaderElements() {
+  const ticker = document.getElementById("ticker");
+  const status = document.getElementById("openStatus");
+  if (ticker) ticker.classList.add("loaded");
+  if (status) status.classList.add("loaded");
 }
 
 // Rotating verbs display
