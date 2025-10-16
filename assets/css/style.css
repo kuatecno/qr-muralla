@@ -148,9 +148,10 @@ body{
 .verb-display{
   justify-self:end;
   padding:8px 16px;
-  background:#b5b09e;
-  border:2px solid #9a9685;
+  background:rgba(181,176,158,0.4);
+  border:2px solid rgba(154,150,133,0.5);
   border-radius:8px;
+  backdrop-filter:saturate(130%) blur(8px);
   min-width:220px;
   text-align:center;
   display:flex;
