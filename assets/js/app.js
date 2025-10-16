@@ -7,7 +7,7 @@ const MURALLA_API_URL = "https://muralla-kua.vercel.app";
 // Prefer Muralla 5.0 API endpoints; if unavailable, fall back to local JSON files
 const CONFIG_URLS = ["/api/config", "/assets/data/config.json"];
 const TODAY_URLS = ["/api/today", "/assets/data/today.json"];
-const PRODUCTS_URLS = [`${MURALLA_API_URL}/api/products`, "/assets/data/products.json"];
+const PRODUCTS_URLS = ["/assets/data/products.json"]; // Use local file for fast loading
 
 const el = {
   tickerTrack: document.getElementById("tickerTrack"),
