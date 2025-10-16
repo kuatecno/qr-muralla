@@ -349,10 +349,18 @@ async function renderMap() {
 
       // Use AdvancedMarkerElement if available, fallback to Marker for compatibility
       if (gmaps.marker?.AdvancedMarkerElement) {
+        // Create custom black pin element
+        const pinElement = new gmaps.marker.PinElement({
+          background: '#0b0b10',
+          borderColor: '#0b0b10',
+          glyphColor: '#ffffff'
+        });
+
         const marker = new gmaps.marker.AdvancedMarkerElement({
           position: { lat, lng },
           map,
-          title: 'Muralla'
+          title: 'Muralla',
+          content: pinElement.element
         });
         // Show info window on click
         marker.addListener('click', () => {
@@ -364,7 +372,15 @@ async function renderMap() {
         const marker = new gmaps.Marker({
           position: { lat, lng },
           map,
-          title: 'Muralla'
+          title: 'Muralla',
+          icon: {
+            path: gmaps.SymbolPath.CIRCLE,
+            fillColor: '#0b0b10',
+            fillOpacity: 1,
+            strokeColor: '#ffffff',
+            strokeWeight: 2,
+            scale: 8
+          }
         });
         // Show info window on click
         marker.addListener('click', () => {
