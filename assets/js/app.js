@@ -847,6 +847,7 @@ OPENING_HOURS[0] = [{start: "12:00", end: "20:00"}]; // 12 PM - 8 PM
 function updateOpenStatus() {
   const statusEl = document.getElementById("openStatus");
   const statusText = document.getElementById("statusText");
+  const tooltip = document.getElementById("statusTooltip");
   if (!statusEl || !statusText) return;
 
   // Use Chile timezone
@@ -859,6 +860,8 @@ function updateOpenStatus() {
 
   const todayHours = OPENING_HOURS[day];
   let isOpen = false;
+  let nextChangeTime = null;
+  let nextChangeDay = null;
 
   if (todayHours && todayHours.length > 0) {
     for (const period of todayHours) {
@@ -869,13 +872,50 @@ function updateOpenStatus() {
 
       if (currentTime >= startTime && currentTime < endTime) {
         isOpen = true;
+        nextChangeTime = period.end;
+        nextChangeDay = day;
+        break;
+      } else if (currentTime < startTime && !nextChangeTime) {
+        nextChangeTime = period.start;
+        nextChangeDay = day;
+      }
+    }
+  }
+
+  // If no change found today, find next opening day
+  if (!nextChangeTime) {
+    for (let i = 1; i <= 7; i++) {
+      const nextDay = (day + i) % 7;
+      const nextDayHours = OPENING_HOURS[nextDay];
+      if (nextDayHours && nextDayHours.length > 0) {
+        nextChangeTime = nextDayHours[0].start;
+        nextChangeDay = nextDay;
         break;
       }
     }
   }
 
-  statusEl.className = isOpen ? "open-status open" : "open-status closed";
+  statusEl.className = isOpen ? "open-status open loaded" : "open-status closed loaded";
   statusText.textContent = isOpen ? "abierto" : "cerrado";
+
+  // Setup click handler to show tooltip
+  if (tooltip && nextChangeTime) {
+    const dayNames = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+    const message = isOpen
+      ? `Cerramos a las ${nextChangeTime}`
+      : (nextChangeDay === day
+          ? `Abrimos a las ${nextChangeTime}`
+          : `Abrimos ${dayNames[nextChangeDay]} a las ${nextChangeTime}`);
+
+    tooltip.textContent = message;
+
+    statusEl.onclick = () => {
+      tooltip.classList.add("show");
+      setTimeout(() => {
+        tooltip.classList.remove("show");
+      }, 3000);
+    };
+  }
 }
 
 main();
