@@ -436,8 +436,7 @@ body{
   box-shadow:0 4px 12px rgba(0,0,0,0.2);
 }
 .category-chip:hover{
-  transform:translateY(-2px);
-  box-shadow:0 6px 16px rgba(200,181,209,0.4);
+  filter:invert(1) hue-rotate(180deg);
   border-color:var(--violet);
 }
 .category-chip.active{
