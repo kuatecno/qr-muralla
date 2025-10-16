@@ -742,18 +742,18 @@ function startVerbRotation() {
   const verbText = document.getElementById("verbText");
   if (!verbText) return;
 
-  let currentIndex = 0;
-
   function updateVerb() {
-    verbText.textContent = VERBS[currentIndex];
-    currentIndex = (currentIndex + 1) % VERBS.length;
+    // Pick a random verb
+    const randomIndex = Math.floor(Math.random() * VERBS.length);
+    verbText.textContent = VERBS[randomIndex];
   }
 
-  // Show first verb immediately
-  updateVerb();
-
-  // Rotate every 2 minutes (120000ms)
-  setInterval(updateVerb, 120000);
+  // Wait 5 seconds before starting random verbs (show "cargando..." first)
+  setTimeout(() => {
+    updateVerb();
+    // Then rotate every 2 minutes (120000ms)
+    setInterval(updateVerb, 120000);
+  }, 5000);
 }
 
 function startSpinnerAnimation() {
