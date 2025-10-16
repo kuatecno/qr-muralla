@@ -681,6 +681,7 @@ async function main() {
   startVerbRotation();
   startSpinnerAnimation();
   updateOpenStatus();
+  renderReviews();
   // Check status every minute
   setInterval(updateOpenStatus, 60000);
 
@@ -693,6 +694,52 @@ function showHeaderElements() {
   const status = document.getElementById("openStatus");
   if (ticker) ticker.classList.add("loaded");
   if (status) status.classList.add("loaded");
+}
+
+// Google Reviews - Placeholder data (replace with actual Google My Business API)
+function renderReviews() {
+  const container = document.getElementById("reviewsContainer");
+  const reviewsLink = document.getElementById("googleReviewsLink");
+
+  if (!container) return;
+
+  // Set Google reviews link (use your actual Google Maps place URL)
+  const googleMapsUrl = state.config?.map?.placeUrl || "https://maps.app.goo.gl/XNC8be4Y53Xkyiba8";
+  if (reviewsLink) reviewsLink.href = googleMapsUrl;
+
+  // Placeholder reviews - replace with actual API data
+  const reviews = [
+    {
+      stars: 5,
+      text: "Increíble lugar! El café está espectacular y el ambiente es súper acogedor. Definitivamente volveré.",
+      author: "María González",
+      date: "hace 2 semanas"
+    },
+    {
+      stars: 5,
+      text: "La comida está deliciosa y el servicio es excelente. Me encanta venir aquí a trabajar.",
+      author: "Carlos Pérez",
+      date: "hace 1 mes"
+    },
+    {
+      stars: 4,
+      text: "Muy buen café y postres caseros. El lugar es pequeño pero muy bonito.",
+      author: "Ana Silva",
+      date: "hace 3 semanas"
+    }
+  ];
+
+  container.innerHTML = reviews.map(review => {
+    const stars = "⭐".repeat(review.stars);
+    return `
+      <div class="review-card">
+        <div class="review-stars">${stars}</div>
+        <p class="review-text">"${review.text}"</p>
+        <div class="review-author">— ${review.author}</div>
+        <div class="review-date">${review.date}</div>
+      </div>
+    `;
+  }).join("");
 }
 
 // Rotating verbs display
