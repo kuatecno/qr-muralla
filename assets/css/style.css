@@ -144,9 +144,49 @@ body{
   backdrop-filter:saturate(130%) blur(8px);background:linear-gradient(180deg, rgba(12,12,18,0.7), rgba(12,12,18,0.35));
 }
 
+/* Status group container */
+.status-group{
+  justify-self:end;
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+/* Open/Closed status */
+.open-status{
+  padding:8px 16px;
+  border-radius:8px;
+  backdrop-filter:saturate(130%) blur(8px);
+  text-align:center;
+}
+
+.open-status.open{
+  background:rgba(182,240,192,0.95);
+  border:2px solid rgba(10,10,133,0.3);
+}
+
+.open-status.closed{
+  background:rgba(166,58,58,0.95);
+  border:2px solid rgba(255,255,255,0.3);
+}
+
+.status-text{
+  font-family:monospace;
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:0.5px;
+}
+
+.open-status.open .status-text{
+  color:#0A0A85;
+}
+
+.open-status.closed .status-text{
+  color:#ffffff;
+}
+
 /* Verb display - LED loading style */
 .verb-display{
-  justify-self:end;
   padding:8px 16px;
   background:rgba(229,220,207,0.95);
   border:2px solid rgba(11,7,123,0.3);

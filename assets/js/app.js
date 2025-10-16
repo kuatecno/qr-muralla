@@ -680,6 +680,9 @@ async function main() {
   wireSearch();
   startVerbRotation();
   startSpinnerAnimation();
+  updateOpenStatus();
+  // Check status every minute
+  setInterval(updateOpenStatus, 60000);
 }
 
 // Rotating verbs display
@@ -771,6 +774,54 @@ function startSpinnerAnimation() {
 
   // Update every 300ms for pulsing effect
   setInterval(updateSpinner, 300);
+}
+
+// Opening hours - using Chile timezone (America/Santiago)
+const OPENING_HOURS = {
+  0: [], // Domingo - use second range: 12:00 PM - 8:00 PM
+  1: [{start: "09:00", end: "21:00"}], // Lunes - only second range
+  2: [{start: "10:00", end: "21:00"}], // Martes - only second range
+  3: [{start: "10:00", end: "21:00"}], // Miércoles - only second range
+  4: [{start: "10:00", end: "21:00"}], // Jueves - only second range
+  5: [{start: "10:00", end: "21:00"}], // Viernes - only second range
+  6: [{start: "12:00", end: "21:00"}], // Sábado
+};
+
+// Add Domingo hours
+OPENING_HOURS[0] = [{start: "12:00", end: "20:00"}]; // 12 PM - 8 PM
+
+function updateOpenStatus() {
+  const statusEl = document.getElementById("openStatus");
+  const statusText = document.getElementById("statusText");
+  if (!statusEl || !statusText) return;
+
+  // Use Chile timezone
+  const now = new Date();
+  const chileTime = new Date(now.toLocaleString("en-US", {timeZone: "America/Santiago"}));
+  const day = chileTime.getDay();
+  const hours = chileTime.getHours();
+  const minutes = chileTime.getMinutes();
+  const currentTime = hours * 60 + minutes;
+
+  const todayHours = OPENING_HOURS[day];
+  let isOpen = false;
+
+  if (todayHours && todayHours.length > 0) {
+    for (const period of todayHours) {
+      const [startH, startM] = period.start.split(":").map(Number);
+      const [endH, endM] = period.end.split(":").map(Number);
+      const startTime = startH * 60 + startM;
+      const endTime = endH * 60 + endM;
+
+      if (currentTime >= startTime && currentTime < endTime) {
+        isOpen = true;
+        break;
+      }
+    }
+  }
+
+  statusEl.className = isOpen ? "open-status open" : "open-status closed";
+  statusText.textContent = isOpen ? "abierto" : "cerrado";
 }
 
 main();
