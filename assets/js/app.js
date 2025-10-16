@@ -669,7 +669,7 @@ function wireSearch() {
 async function main() {
   await loadData();
   setQuickLinks();
-  // renderTicker(); // Removed - ticker no longer in HTML
+  renderTicker();
   // initCarousel(); // Removed - carousel no longer in HTML
   renderCategoryChips();
   renderChips();
@@ -679,6 +679,7 @@ async function main() {
   // wireTopCTA(); // Removed - CTA no longer in HTML
   wireSearch();
   startVerbRotation();
+  startSpinnerAnimation();
 }
 
 // Rotating verbs display
@@ -753,6 +754,23 @@ function startVerbRotation() {
 
   // Rotate every 2 minutes (120000ms)
   setInterval(updateVerb, 120000);
+}
+
+function startSpinnerAnimation() {
+  const spinner = document.getElementById("verbSpinner");
+  if (!spinner) return;
+
+  // Braille spinner frames (like Claude Code)
+  const frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+  let currentFrame = 0;
+
+  function updateSpinner() {
+    spinner.textContent = frames[currentFrame];
+    currentFrame = (currentFrame + 1) % frames.length;
+  }
+
+  // Update every 80ms for smooth animation
+  setInterval(updateSpinner, 80);
 }
 
 main();
