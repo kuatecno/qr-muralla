@@ -339,7 +339,7 @@ async function renderMap() {
 
       // Create info window for marker
       const infoWindow = new gmaps.InfoWindow({
-        content: '<div style="padding:8px;font-family:system-ui;"><strong style="color:#0b0b10;font-size:16px;">Muralla</strong></div>'
+        content: '<div style="padding:4px 8px;font-family:system-ui;font-size:14px;color:#0b0b10;font-weight:600;">Muralla</div>'
       });
 
       // Use AdvancedMarkerElement if available, fallback to Marker for compatibility
