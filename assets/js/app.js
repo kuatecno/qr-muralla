@@ -336,17 +336,39 @@ async function renderMap() {
 
       const map = new gmaps.Map(container, mapOptions);
       console.log('[Map Debug] Map instance created');
+
+      // Create info window for marker
+      const infoWindow = new gmaps.InfoWindow({
+        content: '<div style="padding:8px;font-family:system-ui;"><strong style="color:#0b0b10;font-size:16px;">Muralla</strong></div>'
+      });
+
       // Use AdvancedMarkerElement if available, fallback to Marker for compatibility
       if (gmaps.marker?.AdvancedMarkerElement) {
-        new gmaps.marker.AdvancedMarkerElement({
+        const marker = new gmaps.marker.AdvancedMarkerElement({
           position: { lat, lng },
           map,
           title: 'Muralla'
         });
+        // Show info window on click
+        marker.addListener('click', () => {
+          infoWindow.open({ map, anchor: marker });
+        });
+        // Auto-open the info window
+        infoWindow.open({ map, anchor: marker });
       } else {
-        new gmaps.Marker({ position: { lat, lng }, map, title: 'Muralla' });
+        const marker = new gmaps.Marker({
+          position: { lat, lng },
+          map,
+          title: 'Muralla'
+        });
+        // Show info window on click
+        marker.addListener('click', () => {
+          infoWindow.open(map, marker);
+        });
+        // Auto-open the info window
+        infoWindow.open(map, marker);
       }
-      console.log('[Map Debug] Marker added');
+      console.log('[Map Debug] Marker added with info window');
       try { renderMetro(map); } catch {}
       return;
     } catch (e) {
