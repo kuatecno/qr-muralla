@@ -340,9 +340,9 @@ async function renderMap() {
       // Create info window for marker
       const infoWindow = new gmaps.InfoWindow({
         content: `
-          <div style="padding:8px;font-family:system-ui;">
-            <div style="font-size:16px;color:#0b0b10;font-weight:700;margin-bottom:4px;">Muralla</div>
-            <div style="font-size:13px;color:#5a5a5a;line-height:1.4;">Diag Paraguay 276, costado izq super</div>
+          <div style="font-family:system-ui;max-width:200px;">
+            <div style="font-size:14px;color:#0b0b10;font-weight:700;margin-bottom:2px;">Muralla</div>
+            <div style="font-size:12px;color:#5a5a5a;line-height:1.3;">Diag Paraguay 276, costado izq super</div>
           </div>
         `
       });
