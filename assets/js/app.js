@@ -4,9 +4,9 @@ import { COLOR_PALETTE } from './color-palette.js';
 // API Configuration
 const MURALLA_API_URL = "https://muralla-kua.vercel.app";
 
-// Prefer Muralla 5.0 API endpoints; if unavailable, fall back to local JSON files
-const CONFIG_URLS = ["/api/config", "/assets/data/config.json"];
-const TODAY_URLS = ["/api/today", "/assets/data/today.json"];
+// Prefer local JSON files for fast loading; fall back to Muralla 5.0 API if needed
+const CONFIG_URLS = ["/assets/data/config.json", "/api/config"];
+const TODAY_URLS = ["/assets/data/today.json", "/api/today"];
 const PRODUCTS_URLS = ["/assets/data/products.json"]; // Use local file for fast loading
 
 const el = {
@@ -715,45 +715,9 @@ async function renderReviews() {
   const apiKey = "AIzaSyC3OV5lXrclV730t0Zke0SG0HNbTKqH-rM";
   const placeId = state.config?.map?.placeId || "ChIJN1t_tDeuEmsRUsoyG83frY4"; // Replace with actual Place ID
 
-  try {
-    // Load Google Maps Places library
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=initPlacesService`;
-
-    window.initPlacesService = () => {
-      const service = new google.maps.places.PlacesService(document.createElement('div'));
-
-      service.getDetails({
-        placeId: placeId,
-        fields: ['reviews', 'rating']
-      }, (place, status) => {
-        if (status === google.maps.places.PlacesServiceStatus.OK && place.reviews) {
-          // Get top 3 reviews
-          const topReviews = place.reviews.slice(0, 3);
-
-          container.innerHTML = topReviews.map(review => {
-            return `
-              <div class="review-card">
-                <p class="review-text">"${review.text}"</p>
-                <div class="review-footer">
-                  <div class="review-author">${review.author_name}</div>
-                  <div class="review-rating">${review.rating}/5</div>
-                </div>
-              </div>
-            `;
-          }).join("");
-        } else {
-          // Fallback to placeholder reviews
-          showPlaceholderReviews(container);
-        }
-      });
-    };
-
-    document.head.appendChild(script);
-  } catch (error) {
-    console.error('Error loading reviews:', error);
-    showPlaceholderReviews(container);
-  }
+  // Use placeholder reviews for now - Google Places API has migration requirements
+  // TODO: Migrate to new google.maps.places.Place API
+  showPlaceholderReviews(container);
 }
 
 function showPlaceholderReviews(container) {
