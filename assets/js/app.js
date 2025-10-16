@@ -748,12 +748,12 @@ function startVerbRotation() {
     verbText.textContent = VERBS[randomIndex];
   }
 
-  // Wait 5 seconds before starting random verbs (show "cargando..." first)
+  // Wait 2 seconds before starting random verbs (show "cargando" first)
   setTimeout(() => {
     updateVerb();
     // Then rotate every 2 minutes (120000ms)
     setInterval(updateVerb, 120000);
-  }, 5000);
+  }, 2000);
 }
 
 function startSpinnerAnimation() {
