@@ -710,33 +710,30 @@ function renderReviews() {
   // Placeholder reviews - replace with actual API data
   const reviews = [
     {
-      stars: 5,
+      rating: "5.0",
       text: "Increíble lugar! El café está espectacular y el ambiente es súper acogedor. Definitivamente volveré.",
-      author: "María González",
-      date: "hace 2 semanas"
+      author: "María G."
     },
     {
-      stars: 5,
+      rating: "5.0",
       text: "La comida está deliciosa y el servicio es excelente. Me encanta venir aquí a trabajar.",
-      author: "Carlos Pérez",
-      date: "hace 1 mes"
+      author: "Carlos P."
     },
     {
-      stars: 4,
+      rating: "4.0",
       text: "Muy buen café y postres caseros. El lugar es pequeño pero muy bonito.",
-      author: "Ana Silva",
-      date: "hace 3 semanas"
+      author: "Ana S."
     }
   ];
 
   container.innerHTML = reviews.map(review => {
-    const stars = "⭐".repeat(review.stars);
     return `
       <div class="review-card">
-        <div class="review-stars">${stars}</div>
         <p class="review-text">"${review.text}"</p>
-        <div class="review-author">— ${review.author}</div>
-        <div class="review-date">${review.date}</div>
+        <div class="review-footer">
+          <div class="review-author">${review.author}</div>
+          <div class="review-rating">${review.rating}</div>
+        </div>
       </div>
     `;
   }).join("");
