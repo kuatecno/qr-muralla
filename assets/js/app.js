@@ -758,12 +758,37 @@ async function renderReviews() {
   const googleMapsUrl = state.config?.map?.placeUrl || "https://maps.app.goo.gl/XNC8be4Y53Xkyiba8";
   if (reviewsLink) reviewsLink.href = googleMapsUrl;
 
-  const apiKey = "AIzaSyC3OV5lXrclV730t0Zke0SG0HNbTKqH-rM";
-  const placeId = state.config?.map?.placeId || "ChIJN1t_tDeuEmsRUsoyG83frY4"; // Replace with actual Place ID
+  const placeId = state.config?.map?.placeId || "ChIJ2Wmo--LFYpYRjjZvjlHBkYg";
 
-  // Use placeholder reviews for now - Google Places API has migration requirements
-  // TODO: Migrate to new google.maps.places.Place API
-  showPlaceholderReviews(container);
+  try {
+    // Fetch reviews from Google Places API via backend proxy
+    const response = await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=reviews,rating&key=${state.config?.map?.apiKey || ''}`);
+
+    if (!response.ok) throw new Error('Failed to fetch reviews');
+
+    const data = await response.json();
+
+    if (data.status === 'OK' && data.result?.reviews) {
+      const topReviews = data.result.reviews.slice(0, 3);
+
+      container.innerHTML = topReviews.map(review => {
+        return `
+          <div class="review-card">
+            <p class="review-text">"${review.text}"</p>
+            <div class="review-footer">
+              <div class="review-author">${review.author_name}</div>
+              <div class="review-rating">${review.rating}/5</div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    } else {
+      throw new Error('No reviews available');
+    }
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+    showPlaceholderReviews(container);
+  }
 }
 
 function showPlaceholderReviews(container) {
