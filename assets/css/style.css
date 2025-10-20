@@ -882,7 +882,7 @@ body{
   overflow:hidden;
   padding:10px;
   position:relative;
-  max-height:400px;
+  max-height:300px;
 }
 
 .social-overlay{
