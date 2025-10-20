@@ -32,9 +32,18 @@ export default async function handler(req, res) {
       });
     }
 
-    // Return only the reviews and rating
+    // Return reviews with profile photos and rating
+    const reviews = (data.result?.reviews || []).map(review => ({
+      author_name: review.author_name,
+      rating: review.rating,
+      text: review.text,
+      time: review.time,
+      profile_photo_url: review.profile_photo_url,
+      relative_time_description: review.relative_time_description
+    }));
+
     res.status(200).json({
-      reviews: data.result?.reviews || [],
+      reviews,
       rating: data.result?.rating || 0
     });
 

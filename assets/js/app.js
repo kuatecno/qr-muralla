@@ -772,13 +772,17 @@ async function renderReviews() {
       const topReviews = data.reviews.slice(0, 3);
 
       container.innerHTML = topReviews.map(review => {
+        const avatarUrl = review.profile_photo_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(review.author_name) + '&background=c8b5d1&color=0b0b10&size=80';
         return `
           <div class="review-card">
-            <p class="review-text">"${review.text}"</p>
-            <div class="review-footer">
-              <div class="review-author">${review.author_name}</div>
-              <div class="review-rating">${review.rating}/5</div>
+            <div class="review-header">
+              <img src="${avatarUrl}" alt="${review.author_name}" class="review-avatar">
+              <div class="review-author-info">
+                <div class="review-author">${review.author_name}</div>
+                <div class="review-rating">${review.rating}/5</div>
+              </div>
             </div>
+            <p class="review-text">"${review.text}"</p>
           </div>
         `;
       }).join("");
@@ -794,30 +798,34 @@ async function renderReviews() {
 function showPlaceholderReviews(container) {
   const reviews = [
     {
-      rating: "5/5",
+      rating: 5,
       text: "Increíble lugar! El café está espectacular y el ambiente es súper acogedor.",
-      author: "María G."
+      author_name: "María G."
     },
     {
-      rating: "5/5",
+      rating: 5,
       text: "La comida está deliciosa y el servicio es excelente. Me encanta venir aquí a trabajar.",
-      author: "Carlos P."
+      author_name: "Carlos P."
     },
     {
-      rating: "4/5",
+      rating: 4,
       text: "Muy buen café y postres caseros. El lugar es pequeño pero muy bonito.",
-      author: "Ana S."
+      author_name: "Ana S."
     }
   ];
 
   container.innerHTML = reviews.map(review => {
+    const avatarUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(review.author_name) + '&background=c8b5d1&color=0b0b10&size=80';
     return `
       <div class="review-card">
-        <p class="review-text">"${review.text}"</p>
-        <div class="review-footer">
-          <div class="review-author">${review.author}</div>
-          <div class="review-rating">${review.rating}</div>
+        <div class="review-header">
+          <img src="${avatarUrl}" alt="${review.author_name}" class="review-avatar">
+          <div class="review-author-info">
+            <div class="review-author">${review.author_name}</div>
+            <div class="review-rating">${review.rating}/5</div>
+          </div>
         </div>
+        <p class="review-text">"${review.text}"</p>
       </div>
     `;
   }).join("");
