@@ -1,0 +1,58 @@
+[
+  {
+    "id": "post-1",
+    "image": "/assets/img/instagram/post-1.jpg",
+    "link": "https://www.instagram.com/p/example1/",
+    "caption": "Ejemplo de post de Instagram",
+    "date": "2025-12-15"
+  },
+  {
+    "id": "post-2",
+    "image": "/assets/img/instagram/post-2.jpg",
+    "link": "https://www.instagram.com/p/example2/",
+    "caption": "Otro ejemplo de post",
+    "date": "2025-12-14"
+  },
+  {
+    "id": "post-3",
+    "image": "/assets/img/instagram/post-3.jpg",
+    "link": "https://www.instagram.com/p/example3/",
+    "caption": "Más contenido",
+    "date": "2025-12-13"
+  },
+  {
+    "id": "post-4",
+    "image": "/assets/img/instagram/post-4.jpg",
+    "link": "https://www.instagram.com/p/example4/",
+    "caption": "Post ejemplo 4",
+    "date": "2025-12-12"
+  },
+  {
+    "id": "post-5",
+    "image": "/assets/img/instagram/post-5.jpg",
+    "link": "https://www.instagram.com/p/example5/",
+    "caption": "Post ejemplo 5",
+    "date": "2025-12-11"
+  },
+  {
+    "id": "post-6",
+    "image": "/assets/img/instagram/post-6.jpg",
+    "link": "https://www.instagram.com/p/example6/",
+    "caption": "Post ejemplo 6",
+    "date": "2025-12-10"
+  },
+  {
+    "id": "post-7",
+    "image": "/assets/img/instagram/post-7.jpg",
+    "link": "https://www.instagram.com/p/example7/",
+    "caption": "Post ejemplo 7",
+    "date": "2025-12-09"
+  },
+  {
+    "id": "post-8",
+    "image": "/assets/img/instagram/post-8.jpg",
+    "link": "https://www.instagram.com/p/example8/",
+    "caption": "Post ejemplo 8",
+    "date": "2025-12-08"
+  }
+]

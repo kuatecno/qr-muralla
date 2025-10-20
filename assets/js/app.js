@@ -9,6 +9,7 @@ const CONFIG_URLS = ["/assets/data/config.json", "/api/config"];
 const TODAY_URLS = ["/assets/data/today.json", "/api/today"];
 const PRODUCTS_URLS = ["/assets/data/products.json"]; // Use local file for fast loading
 const EVENTS_URLS = ["/assets/data/events.json", "/api/events"];
+const INSTAGRAM_URLS = ["/assets/data/instagram.json"];
 
 const el = {
   tickerTrack: document.getElementById("tickerTrack"),
@@ -66,6 +67,7 @@ const state = {
   today: null,
   products: [],
   events: [],
+  instagramPosts: [],
   selectedTags: new Set(),
   selectedCategory: null,
   searchQuery: "",
@@ -181,11 +183,12 @@ async function loadData() {
     }
     return null;
   }
-  const [config, today, productsResponse, eventsResponse, apiConfig] = await Promise.all([
+  const [config, today, productsResponse, eventsResponse, instagramResponse, apiConfig] = await Promise.all([
     firstAvailable(CONFIG_URLS),
     firstAvailable(TODAY_URLS),
     firstAvailable(PRODUCTS_URLS),
     firstAvailable(EVENTS_URLS),
+    firstAvailable(INSTAGRAM_URLS),
     safeFetch('/api/config'),
   ]);
   state.config = config || FALLBACK.config;
@@ -223,6 +226,9 @@ async function loadData() {
 
   // Load events
   state.events = Array.isArray(eventsResponse) ? eventsResponse : [];
+
+  // Load instagram posts
+  state.instagramPosts = Array.isArray(instagramResponse) ? instagramResponse : [];
 }
 
 function normalizeTag(t) {
@@ -817,6 +823,21 @@ function wireEventCarousel() {
   });
 }
 
+// Instagram Grid
+function renderInstagram() {
+  const grid = document.getElementById('instagramGrid');
+  if (!grid || !state.instagramPosts || state.instagramPosts.length === 0) return;
+
+  grid.innerHTML = state.instagramPosts.map(post => `
+    <a href="${post.link}" class="instagram-post" target="_blank" rel="noopener" title="${post.caption || ''}">
+      <img src="${post.image}" alt="${post.caption || 'Instagram post'}" loading="lazy">
+      <div class="instagram-post-overlay">
+        <span>📷</span>
+      </div>
+    </a>
+  `).join('');
+}
+
 async function main() {
   await loadData();
   setQuickLinks();
@@ -826,6 +847,7 @@ async function main() {
   renderChips();
   renderProducts();
   renderEvents();
+  renderInstagram();
   renderMap();
   wireSheet();
   // wireTopCTA(); // Removed - CTA no longer in HTML
