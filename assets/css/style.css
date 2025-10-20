@@ -765,11 +765,51 @@ body{
   background:#d4c2de;transform:translateY(-2px);
 }
 
+/* Calendar card */
+.event-card-calendar{
+  background:var(--panel);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:32px;cursor:default;
+}
+.event-card-calendar:hover{
+  transform:none;
+  box-shadow:0 4px 16px rgba(0,0,0,0.2);
+}
+.calendar-header{
+  text-align:center;width:100%;
+  margin-bottom:20px;
+}
+.calendar-month{
+  font-size:18px;font-weight:600;
+  color:var(--violet);text-transform:uppercase;
+  letter-spacing:1px;margin-bottom:4px;
+}
+.calendar-year{
+  font-size:14px;color:var(--muted);
+  font-weight:500;
+}
+.calendar-day{
+  font-size:96px;font-weight:700;
+  color:#fff;line-height:1;
+  text-align:center;margin-bottom:20px;
+}
+.calendar-footer{
+  text-align:center;width:100%;
+  padding-top:20px;
+  border-top:1px solid rgba(255,255,255,0.1);
+}
+.calendar-count{
+  font-size:14px;color:var(--muted);
+  font-weight:600;
+}
+
 @media (max-width: 768px){
   .event-card{flex:0 0 280px;height:340px}
   .event-title{font-size:20px}
   .event-date-day{font-size:28px}
   .events-track{gap:12px}
+  .calendar-day{font-size:72px}
 }
 
 /* Reviews section */

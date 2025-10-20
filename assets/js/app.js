@@ -746,7 +746,26 @@ function renderEvents() {
     return;
   }
 
-  track.innerHTML = futureEvents.map((event, index) => {
+  // Calendar card
+  const currentDate = new Date();
+  const currentDay = currentDate.getDate();
+  const currentMonth = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][currentDate.getMonth()];
+  const currentYear = currentDate.getFullYear();
+
+  const calendarCard = `
+    <div class="event-card event-card-calendar">
+      <div class="calendar-header">
+        <div class="calendar-month">${currentMonth}</div>
+        <div class="calendar-year">${currentYear}</div>
+      </div>
+      <div class="calendar-day">${currentDay}</div>
+      <div class="calendar-footer">
+        <div class="calendar-count">${futureEvents.length} evento${futureEvents.length !== 1 ? 's' : ''}</div>
+      </div>
+    </div>
+  `;
+
+  const eventCards = futureEvents.map((event, index) => {
     const date = new Date(event.date);
     const day = date.getDate();
     const monthNames = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
@@ -779,6 +798,8 @@ function renderEvents() {
       </div>
     `;
   }).join('');
+
+  track.innerHTML = calendarCard + eventCards;
 
   wireEventCarousel();
 }
