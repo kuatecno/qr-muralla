@@ -1,0 +1,42 @@
+[
+  {
+    "id": "jazz-night-dec",
+    "title": "Noche de Jazz en Vivo",
+    "description": "Música en vivo con artistas locales. Ambiente íntimo y acogedor.",
+    "date": "2025-12-15",
+    "time": "20:00",
+    "image": "",
+    "category": "música",
+    "bookingUrl": "https://ig.me/m/muralla.cafe?ref=evento-jazz"
+  },
+  {
+    "id": "art-exhibition",
+    "title": "Exposición de Arte Local",
+    "description": "Muestra de artistas emergentes de Santiago. Entrada libre.",
+    "date": "2025-12-20",
+    "time": "18:00",
+    "image": "",
+    "category": "arte",
+    "bookingUrl": "https://ig.me/m/muralla.cafe?ref=evento-arte"
+  },
+  {
+    "id": "wine-tasting",
+    "title": "Cata de Vinos Chilenos",
+    "description": "Degustación de vinos del valle con sommelier profesional.",
+    "date": "2025-12-28",
+    "time": "19:30",
+    "image": "",
+    "category": "gastronomía",
+    "bookingUrl": "https://ig.me/m/muralla.cafe?ref=evento-vino"
+  },
+  {
+    "id": "poetry-reading",
+    "title": "Lectura de Poesía Abierta",
+    "description": "Micrófono abierto para poetas y escritores. Comparte tu obra.",
+    "date": "2026-01-05",
+    "time": "19:00",
+    "image": "",
+    "category": "literatura",
+    "bookingUrl": "https://ig.me/m/muralla.cafe?ref=evento-poesia"
+  }
+]

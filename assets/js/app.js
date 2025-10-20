@@ -8,6 +8,7 @@ const MURALLA_API_URL = "https://muralla-kua.vercel.app";
 const CONFIG_URLS = ["/assets/data/config.json", "/api/config"];
 const TODAY_URLS = ["/assets/data/today.json", "/api/today"];
 const PRODUCTS_URLS = ["/assets/data/products.json"]; // Use local file for fast loading
+const EVENTS_URLS = ["/assets/data/events.json", "/api/events"];
 
 const el = {
   tickerTrack: document.getElementById("tickerTrack"),
@@ -64,11 +65,13 @@ const state = {
   config: null,
   today: null,
   products: [],
+  events: [],
   selectedTags: new Set(),
   selectedCategory: null,
   searchQuery: "",
   slideIndex: 0,
   hasShuffled: false,
+  eventSlideIndex: 0,
 };
 
 // Fallback data if JSON not available
@@ -178,10 +181,11 @@ async function loadData() {
     }
     return null;
   }
-  const [config, today, productsResponse, apiConfig] = await Promise.all([
+  const [config, today, productsResponse, eventsResponse, apiConfig] = await Promise.all([
     firstAvailable(CONFIG_URLS),
     firstAvailable(TODAY_URLS),
     firstAvailable(PRODUCTS_URLS),
+    firstAvailable(EVENTS_URLS),
     safeFetch('/api/config'),
   ]);
   state.config = config || FALLBACK.config;
@@ -216,6 +220,9 @@ async function loadData() {
   }
 
   state.products = productsData.map(normalizeProduct);
+
+  // Load events
+  state.events = Array.isArray(eventsResponse) ? eventsResponse : [];
 }
 
 function normalizeTag(t) {
@@ -717,6 +724,99 @@ function wireSearch() {
   });
 }
 
+// Events rendering and carousel
+function renderEvents() {
+  const track = document.getElementById('eventsTrack');
+  if (!track || !state.events || state.events.length === 0) return;
+
+  // Filter future events only
+  const now = new Date();
+  const futureEvents = state.events
+    .filter(event => new Date(event.date) >= now)
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  if (futureEvents.length === 0) {
+    track.innerHTML = '<p style="color:var(--muted);padding:40px;text-align:center;">No hay eventos próximos por ahora. ¡Vuelve pronto!</p>';
+    return;
+  }
+
+  track.innerHTML = futureEvents.map((event, index) => {
+    const date = new Date(event.date);
+    const day = date.getDate();
+    const monthNames = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+    const month = monthNames[date.getMonth()];
+
+    // Use color palette if no image
+    const colors = event.image ? null : gradientPlaceholder(event);
+    const bgStyle = event.image
+      ? `<div class="event-card-bg" style="background-image:url('${event.image}')"></div>`
+      : `<div class="event-card-bg" style="background-color:${colors.bg}"></div>`;
+
+    return `
+      <div class="event-card">
+        ${bgStyle}
+        <div class="event-date-badge">
+          <span class="event-date-day">${day}</span>
+          <span class="event-date-month">${month}</span>
+        </div>
+        <div class="event-content">
+          <span class="event-category">${event.category}</span>
+          <h3 class="event-title">${event.title}</h3>
+          <p class="event-description">${event.description}</p>
+          <div class="event-meta">
+            <span class="event-meta-item">🕐 ${event.time}</span>
+          </div>
+          <a href="${event.bookingUrl || bookingLink(event.title)}" class="event-cta" target="_blank" rel="noopener">
+            Más info →
+          </a>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  wireEventCarousel();
+}
+
+function wireEventCarousel() {
+  const track = document.getElementById('eventsTrack');
+  const prevBtn = document.getElementById('eventPrev');
+  const nextBtn = document.getElementById('eventNext');
+
+  if (!track || !prevBtn || !nextBtn) return;
+
+  const cards = track.querySelectorAll('.event-card');
+  const cardWidth = 320 + 16; // card width + gap
+  const maxSlide = Math.max(0, cards.length - Math.floor(track.parentElement.offsetWidth / cardWidth));
+
+  function updateButtons() {
+    prevBtn.disabled = state.eventSlideIndex <= 0;
+    nextBtn.disabled = state.eventSlideIndex >= maxSlide;
+  }
+
+  function slide(direction) {
+    state.eventSlideIndex = Math.max(0, Math.min(maxSlide, state.eventSlideIndex + direction));
+    track.style.transform = `translateX(-${state.eventSlideIndex * cardWidth}px)`;
+    updateButtons();
+  }
+
+  prevBtn.addEventListener('click', () => slide(-1));
+  nextBtn.addEventListener('click', () => slide(1));
+  updateButtons();
+
+  // Touch/swipe support
+  let startX = 0;
+  track.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+  });
+  track.addEventListener('touchend', (e) => {
+    const endX = e.changedTouches[0].clientX;
+    const diff = startX - endX;
+    if (Math.abs(diff) > 50) {
+      slide(diff > 0 ? 1 : -1);
+    }
+  });
+}
+
 async function main() {
   await loadData();
   setQuickLinks();
@@ -725,6 +825,7 @@ async function main() {
   renderCategoryChips();
   renderChips();
   renderProducts();
+  renderEvents();
   renderMap();
   wireSheet();
   // wireTopCTA(); // Removed - CTA no longer in HTML
