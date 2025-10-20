@@ -746,11 +746,40 @@ function renderEvents() {
     return;
   }
 
-  // Calendar card
+  // Calendar card with 4-week grid
   const currentDate = new Date();
   const currentDay = currentDate.getDate();
   const currentMonth = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][currentDate.getMonth()];
   const currentYear = currentDate.getFullYear();
+
+  // Generate 4 weeks of calendar days
+  const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+  const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+  const startingDayOfWeek = firstDay.getDay(); // 0 = Sunday
+  const daysInMonth = lastDay.getDate();
+
+  // Get event dates for highlighting
+  const eventDates = new Set(futureEvents.map(e => new Date(e.date).getDate()));
+
+  let calendarDays = '';
+  let dayCounter = 1;
+
+  // Generate 4 weeks (28 days max to fit nicely)
+  for (let week = 0; week < 4; week++) {
+    for (let day = 0; day < 7; day++) {
+      const cellIndex = week * 7 + day;
+
+      if (cellIndex < startingDayOfWeek || dayCounter > daysInMonth) {
+        calendarDays += '<div class="calendar-grid-day empty"></div>';
+      } else {
+        const isToday = dayCounter === currentDay;
+        const hasEvent = eventDates.has(dayCounter);
+        const classes = `calendar-grid-day${isToday ? ' today' : ''}${hasEvent ? ' has-event' : ''}`;
+        calendarDays += `<div class="${classes}">${dayCounter}</div>`;
+        dayCounter++;
+      }
+    }
+  }
 
   const calendarCard = `
     <div class="event-card event-card-calendar">
@@ -758,7 +787,14 @@ function renderEvents() {
         <div class="calendar-month">${currentMonth}</div>
         <div class="calendar-year">${currentYear}</div>
       </div>
-      <div class="calendar-day">${currentDay}</div>
+      <div class="calendar-grid">
+        <div class="calendar-weekdays">
+          <div>D</div><div>L</div><div>M</div><div>M</div><div>J</div><div>V</div><div>S</div>
+        </div>
+        <div class="calendar-days">
+          ${calendarDays}
+        </div>
+      </div>
       <div class="calendar-footer">
         <div class="calendar-count">${futureEvents.length} evento${futureEvents.length !== 1 ? 's' : ''}</div>
       </div>
