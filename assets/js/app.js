@@ -761,15 +761,15 @@ async function renderReviews() {
   const placeId = state.config?.map?.placeId || "ChIJ2Wmo--LFYpYRjjZvjlHBkYg";
 
   try {
-    // Fetch reviews from Google Places API via backend proxy
-    const response = await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=reviews,rating&key=${state.config?.map?.apiKey || ''}`);
+    // Fetch reviews from backend proxy
+    const response = await fetch(`/api/reviews?placeId=${placeId}`);
 
     if (!response.ok) throw new Error('Failed to fetch reviews');
 
     const data = await response.json();
 
-    if (data.status === 'OK' && data.result?.reviews) {
-      const topReviews = data.result.reviews.slice(0, 3);
+    if (data.reviews && data.reviews.length > 0) {
+      const topReviews = data.reviews.slice(0, 3);
 
       container.innerHTML = topReviews.map(review => {
         return `
