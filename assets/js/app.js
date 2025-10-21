@@ -897,7 +897,7 @@ function renderInstagram() {
 
   grid.innerHTML = validPosts.map(post => `
     <a href="${post.link}" class="instagram-post" target="_blank" rel="noopener" title="${post.caption || ''}">
-      <img src="${post.image}" alt="${post.caption || 'Instagram post'}" loading="lazy" onerror="this.parentElement.style.display='none'">
+      <img src="${post.image}" alt="${post.caption || 'Instagram post'}" loading="lazy" crossorigin="anonymous" referrerpolicy="no-referrer" onerror="console.error('Failed to load:', this.src); this.parentElement.style.display='none'">
       <div class="instagram-post-overlay">
         <span>📷</span>
       </div>
