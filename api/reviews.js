@@ -90,10 +90,6 @@ export default async function handler(req, res) {
     // Transform Apify data to match existing format
     const reviews = (place.reviews || [])
       .map(review => {
-        // Try different possible field names for images
-        const images = review.reviewPhotos || review.photos || review.images ||
-                       review.responseFromOwnerPhotos || [];
-
         return {
           author_name: review.name,
           rating: review.stars || 0,
@@ -101,7 +97,7 @@ export default async function handler(req, res) {
           time: review.publishAt ? new Date(review.publishAt).getTime() / 1000 : Date.now() / 1000,
           profile_photo_url: review.reviewerPhotoUrl || review.reviewerUrl || '',
           relative_time_description: review.publishedAtDate || '',
-          images: Array.isArray(images) ? images : []
+          images: review.reviewImageUrls || []
         };
       })
       // Filter: only 4+ stars and reviews with text
