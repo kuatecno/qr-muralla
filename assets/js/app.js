@@ -898,22 +898,47 @@ function renderInstagram() {
   console.log('[Social Grid] Instagram posts:', instagramPosts.length);
   console.log('[Social Grid] TikTok posts:', tiktokPosts.length);
 
-  // Combine all posts and shuffle
-  const allPosts = [
-    ...instagramPosts,
-    ...tiktokPosts
-  ];
+  // Filter valid posts first
+  const validInstagram = instagramPosts.filter(post => post.image && post.image.trim() !== '');
+  const validTikTok = tiktokPosts.filter(post => post.image && post.image.trim() !== '');
 
-  // Shuffle the posts randomly
-  for (let i = allPosts.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [allPosts[i], allPosts[j]] = [allPosts[j], allPosts[i]];
+  // Aim for 50/50 split - 5 from each platform for 10 total posts
+  const targetTotal = 10;
+  const targetPerPlatform = targetTotal / 2; // 5 each
+
+  // Shuffle each platform's posts
+  const shuffleArray = (array) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  const shuffledInstagram = shuffleArray(validInstagram);
+  const shuffledTikTok = shuffleArray(validTikTok);
+
+  // Calculate how many to take from each platform
+  let instagramCount = Math.min(targetPerPlatform, shuffledInstagram.length);
+  let tiktokCount = Math.min(targetPerPlatform, shuffledTikTok.length);
+
+  // If one platform has fewer posts, take more from the other to reach target
+  if (instagramCount < targetPerPlatform) {
+    tiktokCount = Math.min(targetTotal - instagramCount, shuffledTikTok.length);
+  } else if (tiktokCount < targetPerPlatform) {
+    instagramCount = Math.min(targetTotal - tiktokCount, shuffledInstagram.length);
   }
 
-  // Filter out posts without valid images
-  const validPosts = allPosts
-    .filter(post => post.image && post.image.trim() !== '')
-    .slice(0, 10); // Take max 10 posts total
+  // Take the calculated number from each platform
+  const selectedInstagram = shuffledInstagram.slice(0, instagramCount);
+  const selectedTikTok = shuffledTikTok.slice(0, tiktokCount);
+
+  // Combine and shuffle again for final random order
+  const allPosts = [...selectedInstagram, ...selectedTikTok];
+  const validPosts = shuffleArray(allPosts);
+
+  console.log('[Social Grid] Final mix:', instagramCount, 'Instagram +', tiktokCount, 'TikTok =', validPosts.length, 'total');
 
   if (validPosts.length === 0) {
     grid.innerHTML = '<p style="color:var(--muted);padding:20px;text-align:center;grid-column:1/-1;">No hay posts disponibles</p>';
