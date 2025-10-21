@@ -468,7 +468,8 @@ function renderTicker() {
 
 // Generate a consistent hash from product ID/SKU/name for color assignment
 function getProductHash(product) {
-  const key = product.id || product.sku || product.name || '';
+  // Handle both products and events
+  const key = product.id || product.sku || product.name || product.title || '';
   let hash = 0;
   for (let i = 0; i < key.length; i++) {
     const char = key.charCodeAt(i);
@@ -739,15 +740,7 @@ function wireSearch() {
 // Events rendering and carousel
 function renderEvents() {
   const track = document.getElementById('eventsTrack');
-  if (!track || !state.events) return;
-
-  // Ensure state.events is an array
-  if (!Array.isArray(state.events)) {
-    console.error('state.events is not an array:', state.events);
-    return;
-  }
-
-  if (state.events.length === 0) return;
+  if (!track || !state.events || state.events.length === 0) return;
 
   // Filter future events only
   const now = new Date();
