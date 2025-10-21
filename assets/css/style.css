@@ -948,48 +948,37 @@ body{
 .instagram-section{padding:24px 14px;margin-bottom:20px}
 .instagram-head{display:flex;align-items:baseline;gap:10px;justify-content:space-between;margin-bottom:10px}
 .instagram-head h2{margin:0;font-size:22px;color:#e67e5f}
+
+.social-links{
+  color:#fff;
+  font-size:14px;
+  font-weight:400;
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+
+.social-links a{
+  color:#fff;
+  text-decoration:underline;
+}
+
+.social-links a:hover{
+  color:#e67e5f;
+}
+
 .instagram-feed-container{
   border:1px solid rgba(255,255,255,0.08);
   background:var(--panel);
   border-radius:16px;
   overflow:hidden;
   padding:10px;
-  position:relative;
-  max-height:300px;
-}
-
-.social-overlay{
-  position:absolute;
-  top:10px;
-  left:10px;
-  right:10px;
-  height:50px;
-  background:#2B2B2B;
-  z-index:999;
-  display:flex;
-  align-items:center;
-  justify-content:flex-start;
-  padding-left:10px;
-  color:#ffffff;
-  font-size:18px;
-  font-weight:400;
-  gap:6px;
-}
-
-.social-overlay a{
-  color:#ffffff;
-  text-decoration:underline;
-}
-
-.social-overlay a:hover{
-  color:#e67e5f;
 }
 
 .instagram-grid{
   display:grid;
   grid-template-columns:repeat(4, 1fr);
   gap:8px;
-  padding-top:60px;
 }
 
 .instagram-post{
