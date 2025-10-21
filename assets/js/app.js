@@ -898,10 +898,15 @@ function renderInstagram() {
   console.log('[Social Grid] Instagram posts:', instagramPosts.length);
   console.log('[Social Grid] TikTok posts:', tiktokPosts.length);
 
-  const allPosts = [
-    ...instagramPosts,
-    ...tiktokPosts
-  ];
+  // Mix posts by interleaving TikTok and Instagram
+  // This ensures TikTok posts appear even if there are many Instagram posts
+  const allPosts = [];
+  const maxLength = Math.max(instagramPosts.length, tiktokPosts.length);
+
+  for (let i = 0; i < maxLength; i++) {
+    if (i < tiktokPosts.length) allPosts.push(tiktokPosts[i]);
+    if (i < instagramPosts.length) allPosts.push(instagramPosts[i]);
+  }
 
   // Filter out posts without valid images
   const validPosts = allPosts
