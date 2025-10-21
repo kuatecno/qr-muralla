@@ -10,6 +10,7 @@ const TODAY_URLS = ["/assets/data/today.json", "/api/today"];
 const PRODUCTS_URLS = ["/assets/data/products.json"]; // Use local file for fast loading
 const EVENTS_URLS = ["/assets/data/events.json", "/api/events"];
 const INSTAGRAM_URLS = ["/api/instagram", "/assets/data/instagram.json"];
+const TIKTOK_URLS = ["/api/tiktok"];
 
 const el = {
   tickerTrack: document.getElementById("tickerTrack"),
@@ -68,6 +69,7 @@ const state = {
   products: [],
   events: [],
   instagramPosts: [],
+  tiktokPosts: [],
   selectedTags: new Set(),
   selectedCategory: null,
   searchQuery: "",
@@ -183,12 +185,13 @@ async function loadData() {
     }
     return null;
   }
-  const [config, today, productsResponse, eventsResponse, instagramResponse, apiConfig] = await Promise.all([
+  const [config, today, productsResponse, eventsResponse, instagramResponse, tiktokResponse, apiConfig] = await Promise.all([
     firstAvailable(CONFIG_URLS),
     firstAvailable(TODAY_URLS),
     firstAvailable(PRODUCTS_URLS),
     firstAvailable(EVENTS_URLS),
     firstAvailable(INSTAGRAM_URLS),
+    firstAvailable(TIKTOK_URLS),
     safeFetch('/api/config'),
   ]);
   state.config = config || FALLBACK.config;
@@ -229,6 +232,9 @@ async function loadData() {
 
   // Load instagram posts
   state.instagramPosts = Array.isArray(instagramResponse) ? instagramResponse : [];
+
+  // Load TikTok posts
+  state.tiktokPosts = Array.isArray(tiktokResponse) ? tiktokResponse : [];
 }
 
 function normalizeTag(t) {
@@ -880,29 +886,40 @@ function wireEventCarousel() {
   });
 }
 
-// Instagram Grid
+// Social Media Grid - Mix Instagram and TikTok
 function renderInstagram() {
   const grid = document.getElementById('instagramGrid');
-  if (!grid || !state.instagramPosts || state.instagramPosts.length === 0) return;
+  if (!grid) return;
 
-  // Filter out posts without valid images and take only 10
-  const validPosts = state.instagramPosts
+  // Combine Instagram and TikTok posts
+  const allPosts = [
+    ...(state.instagramPosts || []),
+    ...(state.tiktokPosts || [])
+  ];
+
+  // Filter out posts without valid images
+  const validPosts = allPosts
     .filter(post => post.image && post.image.trim() !== '')
-    .slice(0, 10);
+    .slice(0, 10); // Take max 10 posts total
 
   if (validPosts.length === 0) {
     grid.innerHTML = '<p style="color:var(--muted);padding:20px;text-align:center;grid-column:1/-1;">No hay posts disponibles</p>';
     return;
   }
 
-  grid.innerHTML = validPosts.map(post => `
-    <a href="${post.link}" class="instagram-post" target="_blank" rel="noopener" title="${post.caption || ''}">
-      <img src="${post.image}" alt="${post.caption || 'Instagram post'}" loading="lazy" crossorigin="anonymous" referrerpolicy="no-referrer" onerror="console.error('Failed to load:', this.src); this.parentElement.style.display='none'">
-      <div class="instagram-post-overlay">
-        <span>📷</span>
-      </div>
-    </a>
-  `).join('');
+  grid.innerHTML = validPosts.map(post => {
+    const platform = post.platform === 'tiktok' ? 'TikTok' : 'Instagram';
+    const icon = post.platform === 'tiktok' ? '🎵' : '📷';
+
+    return `
+      <a href="${post.link}" class="instagram-post" target="_blank" rel="noopener" title="${post.caption || ''} (${platform})">
+        <img src="${post.image}" alt="${post.caption || platform + ' post'}" loading="lazy" crossorigin="anonymous" referrerpolicy="no-referrer" onerror="console.error('Failed to load:', this.src); this.parentElement.style.display='none'">
+        <div class="instagram-post-overlay">
+          <span>${icon}</span>
+        </div>
+      </a>
+    `;
+  }).join('');
 }
 
 async function main() {
