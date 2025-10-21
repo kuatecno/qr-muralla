@@ -982,6 +982,72 @@ function renderInstagram() {
   }).join('');
 }
 
+// Social comments scrolling animation
+const SOCIAL_COMMENTS = [
+  { author: "María G.", text: "El mejor café de Santiago! El ambiente es perfecto para trabajar ☕✨" },
+  { author: "Diego R.", text: "Increíble lugar, la comida vegana está deliciosa 🌱" },
+  { author: "Valentina M.", text: "Me encanta venir aquí a leer. Súper tranquilo y acogedor 📚" },
+  { author: "Pablo S.", text: "El matcha latte es mi favorito! Y los postres sin azúcar son geniales 🍰" },
+  { author: "Camila L.", text: "Ambiente único, arte local y música en vivo. 100% recomendado 🎨" },
+  { author: "Andrés P.", text: "El espacio de coworking es perfecto, wifi rápido y buen café ☕💻" },
+  { author: "Sofía T.", text: "Adoro este lugar! La gente es súper amable y la vibra inigualable ✨" },
+  { author: "Lucas V.", text: "Los eventos culturales son lo máximo. Siempre hay algo nuevo 🎭" },
+  { author: "Francisca K.", text: "Mi café favorito en Lastarria. Todo es delicioso! 😍" },
+  { author: "Martín H.", text: "Excelente para una primera cita o reunión casual. Muy buen ambiente 💕" },
+  { author: "Isabella C.", text: "El café de especialidad es top. Baristas muy profesionales ☕👌" },
+  { author: "Tomás B.", text: "Gran variedad de opciones veganas y sin gluten. Súper inclusivo! 🌱" },
+  { author: "Catalina F.", text: "Me encanta trabajar acá. El ambiente creativo es inspirador 💡" },
+  { author: "Joaquín M.", text: "La música en vivo es increíble! Artistas locales de primer nivel 🎵" },
+  { author: "Amanda R.", text: "Postres caseros buenísimos. Mi favorito es el brownie vegano 🍫" },
+];
+
+function initSocialComments() {
+  const column1 = document.getElementById('commentsColumn1');
+  const column2 = document.getElementById('commentsColumn2');
+  const column3 = document.getElementById('commentsColumn3');
+
+  if (!column1 || !column2 || !column3) return;
+
+  const columns = [column1, column2, column3];
+
+  // Shuffle comments for variety
+  const shuffled = [...SOCIAL_COMMENTS].sort(() => Math.random() - 0.5);
+
+  columns.forEach((column, colIndex) => {
+    // Each column gets 3 comments
+    const startIndex = colIndex * 3;
+    let commentIndex = startIndex;
+
+    function addComment() {
+      const comment = shuffled[commentIndex % shuffled.length];
+      const commentEl = document.createElement('div');
+      commentEl.className = 'social-comment';
+      commentEl.style.animationDelay = `${colIndex * 2}s`; // Stagger columns
+      commentEl.innerHTML = `
+        <div class="social-comment-author">${comment.author}</div>
+        <div class="social-comment-text">${comment.text}</div>
+      `;
+      column.appendChild(commentEl);
+
+      // Remove comment after animation completes
+      setTimeout(() => {
+        if (commentEl.parentNode) {
+          commentEl.remove();
+        }
+      }, 15000);
+
+      commentIndex++;
+      // Add next comment after delay
+      setTimeout(addComment, 5000); // New comment every 5 seconds
+    }
+
+    // Start with initial 3 comments per column
+    for (let i = 0; i < 3; i++) {
+      setTimeout(() => addComment(), i * 1000 + colIndex * 500);
+    }
+  });
+}
+
 async function main() {
   await loadData();
   setQuickLinks();
@@ -1000,6 +1066,7 @@ async function main() {
   startSpinnerAnimation();
   updateOpenStatus();
   renderReviews();
+  initSocialComments();
   // Check status every minute
   setInterval(updateOpenStatus, 60000);
 
