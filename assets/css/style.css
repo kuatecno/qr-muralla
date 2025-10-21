@@ -713,10 +713,6 @@ body{
   position:absolute;inset:0;
   background-size:cover;background-position:center;
 }
-.event-card-bg::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(180deg, rgba(0,0,0,0.3), rgba(0,0,0,0.85) 70%);
-}
 
 .event-date-badge{
   position:absolute;top:16px;left:16px;z-index:2;

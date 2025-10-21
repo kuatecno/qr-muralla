@@ -813,12 +813,10 @@ function renderEvents() {
     const monthNames = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
     const month = monthNames[date.getMonth()];
 
-    // Use color palette if no image
-    const colors = event.image ? null : gradientPlaceholder(event);
-    const bgStyle = event.image
-      ? `<div class="event-card-bg" style="background-image:url('${event.image}')"></div>`
-      : `<div class="event-card-bg" style="background-color:${colors.bg}"></div>`;
-    const textColor = colors ? colors.text : '#fff';
+    // Use color palette for all events (solid background like products)
+    const colors = gradientPlaceholder(event);
+    const bgStyle = `<div class="event-card-bg" style="background-color:${colors.bg}"></div>`;
+    const textColor = colors.text;
 
     return `
       <div class="event-card">
