@@ -52,7 +52,10 @@ export default async function handler(req, res) {
     const results = await resultsResponse.json();
 
     // Transform Apify data to our format
-    const posts = results.map((post, index) => {
+    // Handle carousel posts - expand them into individual posts
+    const allPosts = [];
+
+    results.forEach((post, index) => {
       let dateStr = new Date().toISOString().split('T')[0];
 
       // Try to parse timestamp
@@ -67,14 +70,34 @@ export default async function handler(req, res) {
         }
       }
 
-      return {
-        id: post.shortCode || `post-${index}`,
-        image: post.displayUrl || post.thumbnailUrl || post.url,
-        link: post.url || `https://www.instagram.com/p/${post.shortCode}/`,
-        caption: post.caption || '',
-        date: dateStr,
-      };
+      const postUrl = post.url || `https://www.instagram.com/p/${post.shortCode}/`;
+      const caption = post.caption || '';
+
+      // Check if this is a carousel post
+      if (post.type === 'Sidecar' && post.childPosts && post.childPosts.length > 0) {
+        // Add each image from the carousel as a separate post
+        post.childPosts.forEach((childPost, childIndex) => {
+          allPosts.push({
+            id: `${post.shortCode}-${childIndex}`,
+            image: childPost.displayUrl || childPost.url,
+            link: postUrl,
+            caption: caption,
+            date: dateStr,
+          });
+        });
+      } else {
+        // Regular post
+        allPosts.push({
+          id: post.shortCode || `post-${index}`,
+          image: post.displayUrl || post.thumbnailUrl || post.url,
+          link: postUrl,
+          caption: caption,
+          date: dateStr,
+        });
+      }
     });
+
+    const posts = allPosts;
 
     // Set cache headers - cache for 1 hour
     res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate');

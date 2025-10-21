@@ -885,9 +885,19 @@ function renderInstagram() {
   const grid = document.getElementById('instagramGrid');
   if (!grid || !state.instagramPosts || state.instagramPosts.length === 0) return;
 
-  grid.innerHTML = state.instagramPosts.map(post => `
+  // Filter out posts without valid images and take only 10
+  const validPosts = state.instagramPosts
+    .filter(post => post.image && post.image.trim() !== '')
+    .slice(0, 10);
+
+  if (validPosts.length === 0) {
+    grid.innerHTML = '<p style="color:var(--muted);padding:20px;text-align:center;grid-column:1/-1;">No hay posts disponibles</p>';
+    return;
+  }
+
+  grid.innerHTML = validPosts.map(post => `
     <a href="${post.link}" class="instagram-post" target="_blank" rel="noopener" title="${post.caption || ''}">
-      <img src="${post.image}" alt="${post.caption || 'Instagram post'}" loading="lazy">
+      <img src="${post.image}" alt="${post.caption || 'Instagram post'}" loading="lazy" onerror="this.parentElement.style.display='none'">
       <div class="instagram-post-overlay">
         <span>📷</span>
       </div>
