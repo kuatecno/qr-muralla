@@ -9,7 +9,7 @@ const CONFIG_URLS = ["/assets/data/config.json", "/api/config"];
 const TODAY_URLS = ["/assets/data/today.json", "/api/today"];
 const PRODUCTS_URLS = ["/assets/data/products.json"]; // Use local file for fast loading
 const EVENTS_URLS = ["/assets/data/events.json", "/api/events"];
-const INSTAGRAM_URLS = ["/assets/data/instagram.json"];
+const INSTAGRAM_URLS = ["/api/instagram", "/assets/data/instagram.json"];
 
 const el = {
   tickerTrack: document.getElementById("tickerTrack"),
