@@ -82,14 +82,21 @@ export default async function handler(req, res) {
     console.log('[Reviews API] Reviews count:', place.reviews?.length || 0);
 
     // Transform Apify data to match existing format
-    const reviews = (place.reviews || []).map(review => ({
-      author_name: review.name,
-      rating: review.stars || 0,
-      text: review.text || review.textTranslated || '',
-      time: review.publishAt ? new Date(review.publishAt).getTime() / 1000 : Date.now() / 1000,
-      profile_photo_url: review.reviewerPhotoUrl || review.reviewerUrl || '',
-      relative_time_description: review.publishedAtDate || ''
-    }));
+    const reviews = (place.reviews || [])
+      .map(review => ({
+        author_name: review.name,
+        rating: review.stars || 0,
+        text: review.text || review.textTranslated || '',
+        time: review.publishAt ? new Date(review.publishAt).getTime() / 1000 : Date.now() / 1000,
+        profile_photo_url: review.reviewerPhotoUrl || review.reviewerUrl || '',
+        relative_time_description: review.publishedAtDate || ''
+      }))
+      // Filter: only 4+ stars and reviews with text
+      .filter(review => {
+        const hasText = review.text && review.text.trim().length > 0;
+        const isHighRated = review.rating >= 4;
+        return hasText && isHighRated;
+      });
 
     res.status(200).json({
       reviews: reviews.slice(0, 10), // Return max 10 reviews
