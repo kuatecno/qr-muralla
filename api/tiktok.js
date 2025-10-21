@@ -75,6 +75,10 @@ export default async function handler(req, res) {
                       video.authorMeta?.avatar ||
                       video.covers?.default;
 
+      // Extract comments if available
+      const comments = video.comments || [];
+      const commentCount = video.commentCount || video.diggCount || comments.length || 0;
+
       return {
         id: video.id || `tiktok-${index}`,
         image: imageUrl ? `/api/instagram-image?url=${encodeURIComponent(imageUrl)}` : '',
@@ -82,6 +86,8 @@ export default async function handler(req, res) {
         caption: video.text || '',
         date: dateStr,
         platform: 'tiktok',
+        comments: comments,
+        commentCount: commentCount,
       };
     });
 

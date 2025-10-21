@@ -117,6 +117,10 @@ export default async function handler(req, res) {
       const postUrl = post.url || `https://www.instagram.com/p/${post.shortCode}/`;
       const caption = post.caption || '';
 
+      // Extract comments if available (latestComments is the field used by Apify Instagram Scraper)
+      const comments = post.latestComments || post.comments || [];
+      const commentCount = post.commentsCount || comments.length || 0;
+
       // Check if this is a carousel post
       if (post.type === 'Sidecar' && post.childPosts && post.childPosts.length > 0) {
         // Add each image from the carousel as a separate post
@@ -128,6 +132,8 @@ export default async function handler(req, res) {
             link: postUrl,
             caption: caption,
             date: dateStr,
+            comments: comments,
+            commentCount: commentCount,
           });
         });
       } else {
@@ -139,6 +145,8 @@ export default async function handler(req, res) {
           link: postUrl,
           caption: caption,
           date: dateStr,
+          comments: comments,
+          commentCount: commentCount,
         });
       }
     });
