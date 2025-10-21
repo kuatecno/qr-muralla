@@ -1098,7 +1098,7 @@ const VERBS = [
   "licuando",
   "devorando",
   "crasheando",
-  "glowing",
+  "glowing up",
   "glitching",
   "cafeineando",
   "ayunando",
