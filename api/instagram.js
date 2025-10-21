@@ -51,6 +51,10 @@ export default async function handler(req, res) {
 
     const results = await resultsResponse.json();
 
+    // Log the raw data to help debug
+    console.log('[Instagram API] Dataset items count:', results.length);
+    console.log('[Instagram API] First item sample:', JSON.stringify(results[0], null, 2));
+
     // Transform Apify data to our format
     // Handle carousel posts - expand them into individual posts
     const allPosts = [];
@@ -98,6 +102,9 @@ export default async function handler(req, res) {
     });
 
     const posts = allPosts;
+
+    console.log('[Instagram API] Total posts after processing:', posts.length);
+    console.log('[Instagram API] Sample transformed post:', JSON.stringify(posts[0], null, 2));
 
     // Set cache headers - cache for 1 hour
     res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate');
