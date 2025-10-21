@@ -112,6 +112,7 @@ export default async function handler(req, res) {
       // Extract comments (included in post if scrapePostComments was enabled)
       const comments = post.latestComments || post.comments || [];
       const commentCount = post.commentsCount || comments.length || 0;
+      const likesCount = post.likesCount || 0;
 
       // Check if this is a carousel post
       if (post.type === 'Sidecar' && post.childPosts && post.childPosts.length > 0) {
@@ -126,6 +127,7 @@ export default async function handler(req, res) {
             date: dateStr,
             comments: comments,
             commentCount: commentCount,
+            likesCount: likesCount,
           });
         });
       } else {
@@ -139,6 +141,7 @@ export default async function handler(req, res) {
           date: dateStr,
           comments: comments,
           commentCount: commentCount,
+          likesCount: likesCount,
         });
       }
     });

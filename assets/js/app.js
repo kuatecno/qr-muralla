@@ -930,11 +930,26 @@ function renderInstagram() {
 
     const logo = post.platform === 'tiktok' ? tiktokLogo : instagramLogo;
 
+    // Format engagement numbers (1234 -> 1.2k)
+    const formatCount = (num) => {
+      if (!num || num === 0) return '0';
+      if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+      if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
+      return num.toString();
+    };
+
+    const likes = formatCount(post.likesCount || 0);
+    const comments = formatCount(post.commentCount || 0);
+
     return `
       <a href="${post.link}" class="instagram-post" target="_blank" rel="noopener" title="${post.caption || ''} (${platform})">
         <img src="${post.image}" alt="${post.caption || platform + ' post'}" loading="lazy" crossorigin="anonymous" referrerpolicy="no-referrer" onerror="console.error('Failed to load:', this.src); this.parentElement.style.display='none'">
         <div class="instagram-post-overlay">
           ${logo}
+          <div class="instagram-post-stats">
+            <span>❤️ ${likes}</span>
+            <span>💬 ${comments}</span>
+          </div>
         </div>
       </a>
     `;

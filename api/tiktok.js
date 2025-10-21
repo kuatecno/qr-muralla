@@ -75,9 +75,10 @@ export default async function handler(req, res) {
                       video.authorMeta?.avatar ||
                       video.covers?.default;
 
-      // Extract comments if available
+      // Extract comments and engagement metrics
       const comments = video.comments || [];
-      const commentCount = video.commentCount || video.diggCount || comments.length || 0;
+      const commentCount = video.commentCount || comments.length || 0;
+      const likesCount = video.diggCount || video.likesCount || 0;
 
       return {
         id: video.id || `tiktok-${index}`,
@@ -88,6 +89,7 @@ export default async function handler(req, res) {
         platform: 'tiktok',
         comments: comments,
         commentCount: commentCount,
+        likesCount: likesCount,
       };
     });
 
