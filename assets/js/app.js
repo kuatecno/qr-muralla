@@ -1059,10 +1059,16 @@ function displayReviewsWithPagination() {
 
     const images = review.images || [];
     const imagesHTML = images.length > 0 ? `
-      <div class="review-images">
-        ${images.map((img, imgIndex) => `
-          <img src="${img}" alt="Review image ${imgIndex + 1}" class="review-thumbnail" onclick="openImageCarousel(${index}, ${imgIndex})" loading="lazy">
-        `).join('')}
+      <div class="review-images-carousel">
+        <div class="review-images-track" id="reviewImages${index}">
+          ${images.map((img, imgIndex) => `
+            <img src="${img}" alt="Review image ${imgIndex + 1}" class="review-thumbnail" onclick="openImageCarousel(${index}, ${imgIndex})" loading="lazy">
+          `).join('')}
+        </div>
+        ${images.length > 1 ? `
+          <button class="review-images-prev" onclick="scrollReviewImages(${index}, -1)" aria-label="Previous">‹</button>
+          <button class="review-images-next" onclick="scrollReviewImages(${index}, 1)" aria-label="Next">›</button>
+        ` : ''}
       </div>
     ` : '';
 
@@ -1191,6 +1197,19 @@ function carouselGoTo(index) {
   });
 }
 
+function scrollReviewImages(reviewIndex, direction) {
+  const track = document.getElementById(`reviewImages${reviewIndex}`);
+  if (!track) return;
+
+  const thumbnailWidth = 50; // 50px width + gap
+  const scrollAmount = thumbnailWidth * direction;
+
+  track.scrollBy({
+    left: scrollAmount,
+    behavior: 'smooth'
+  });
+}
+
 // Make functions global for onclick handlers
 window.toggleReviewText = toggleReviewText;
 window.showMoreReviews = showMoreReviews;
@@ -1199,6 +1218,7 @@ window.closeImageCarousel = closeImageCarousel;
 window.carouselPrev = carouselPrev;
 window.carouselNext = carouselNext;
 window.carouselGoTo = carouselGoTo;
+window.scrollReviewImages = scrollReviewImages;
 
 function showPlaceholderReviews(container) {
   const reviews = [
