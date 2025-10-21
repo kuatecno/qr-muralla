@@ -1084,13 +1084,26 @@ function displayReviewsWithPagination() {
     `;
   }).join("");
 
-  const showMoreButton = displayedReviewsCount < allReviews.length ? `
-    <button class="reviews-show-more" onclick="showMoreReviews()">
-      Ver más reseñas (${allReviews.length - displayedReviewsCount} más)
-    </button>
-  ` : '';
+  container.innerHTML = reviewsHTML;
 
-  container.innerHTML = reviewsHTML + showMoreButton;
+  // Add show more button to the reviews head section
+  const reviewsSection = document.querySelector('.reviews-section');
+  const reviewsHead = reviewsSection?.querySelector('.reviews-head');
+
+  if (reviewsHead) {
+    // Remove existing button if any
+    const existingButton = reviewsHead.querySelector('.reviews-show-more');
+    if (existingButton) existingButton.remove();
+
+    // Add new button if there are more reviews
+    if (displayedReviewsCount < allReviews.length) {
+      const showMoreButton = document.createElement('button');
+      showMoreButton.className = 'reviews-show-more';
+      showMoreButton.onclick = showMoreReviews;
+      showMoreButton.textContent = `Ver más reseñas (${allReviews.length - displayedReviewsCount} más)`;
+      reviewsHead.appendChild(showMoreButton);
+    }
+  }
 }
 
 function toggleReviewText(index) {
