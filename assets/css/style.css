@@ -1227,17 +1227,16 @@ body{
 .instagram-head h2{margin:0;font-size:22px;color:#e67e5f}
 
 .social-links{
-  color:#fff;
-  font-size:14px;
-  font-weight:400;
   display:flex;
   align-items:center;
-  gap:4px;
+  gap:8px;
 }
 
 .social-links a{
-  color:#fff;
-  text-decoration:underline;
+  color:var(--primary);
+  text-decoration:none;
+  border-bottom:1px dashed rgba(185,102,255,0.5);
+  font-size:inherit;
 }
 
 .social-links a:hover{
