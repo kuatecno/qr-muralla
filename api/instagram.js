@@ -5,12 +5,12 @@ export default async function handler(req, res) {
   }
 
   const APIFY_API_TOKEN = process.env.APIFY_API_TOKEN;
-  const INSTAGRAM_USER_ID = process.env.INSTAGRAM_USER_ID;
+  const APIFY_USER_ID = process.env.APIFY_USER_ID;
 
-  if (!APIFY_API_TOKEN || !INSTAGRAM_USER_ID) {
+  if (!APIFY_API_TOKEN || !APIFY_USER_ID) {
     return res.status(500).json({
       error: 'Missing configuration',
-      message: 'APIFY_API_TOKEN and INSTAGRAM_USER_ID must be set in environment variables'
+      message: 'APIFY_API_TOKEN and APIFY_USER_ID must be set in environment variables'
     });
   }
 
@@ -20,14 +20,14 @@ export default async function handler(req, res) {
 
     // Start the actor run
     const runResponse = await fetch(
-      `https://api.apify.com/v2/acts/${actorId}/runs?token=${APIFY_API_TOKEN}`,
+      `https://api.apify.com/v2/acts/${actorId}/runs?token=${APIFY_API_TOKEN}&userId=${APIFY_USER_ID}`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          usernames: [`${INSTAGRAM_USER_ID}`],
+          usernames: ['muralla.cafe'],
           resultsLimit: 10,
         }),
       }
