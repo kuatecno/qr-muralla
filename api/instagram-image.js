@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   const allowedDomains = [
     'cdninstagram.com',
     'fbcdn.net',
-    'tiktokcdn.com',
+    'tiktokcdn',  // Matches tiktokcdn.com, tiktokcdn-us.com, etc
     'tiktok.com',
     'bytedance.com'
   ];
@@ -20,6 +20,7 @@ export default async function handler(req, res) {
   const isAllowed = allowedDomains.some(domain => url.includes(domain));
 
   if (!isAllowed) {
+    console.error('[Image Proxy] Blocked URL:', url);
     return res.status(403).json({ error: 'Only Instagram and TikTok CDN URLs allowed' });
   }
 
