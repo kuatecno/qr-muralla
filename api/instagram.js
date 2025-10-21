@@ -81,9 +81,10 @@ export default async function handler(req, res) {
       if (post.type === 'Sidecar' && post.childPosts && post.childPosts.length > 0) {
         // Add each image from the carousel as a separate post
         post.childPosts.forEach((childPost, childIndex) => {
+          const imageUrl = childPost.displayUrl || childPost.url;
           allPosts.push({
             id: `${post.shortCode}-${childIndex}`,
-            image: childPost.displayUrl || childPost.url,
+            image: imageUrl ? `/api/instagram-image?url=${encodeURIComponent(imageUrl)}` : '',
             link: postUrl,
             caption: caption,
             date: dateStr,
@@ -91,9 +92,10 @@ export default async function handler(req, res) {
         });
       } else {
         // Regular post
+        const imageUrl = post.displayUrl || post.thumbnailUrl || post.url;
         allPosts.push({
           id: post.shortCode || `post-${index}`,
-          image: post.displayUrl || post.thumbnailUrl || post.url,
+          image: imageUrl ? `/api/instagram-image?url=${encodeURIComponent(imageUrl)}` : '',
           link: postUrl,
           caption: caption,
           date: dateStr,
