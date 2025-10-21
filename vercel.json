@@ -2,11 +2,5 @@
   "version": 2,
   "public": true,
   "cleanUrls": true,
-  "trailingSlash": false,
-  "crons": [
-    {
-      "path": "/api/cron/update-instagram",
-      "schedule": "0 0 * * 0"
-    }
-  ]
+  "trailingSlash": false
 }
