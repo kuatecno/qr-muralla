@@ -892,9 +892,15 @@ function renderInstagram() {
   if (!grid) return;
 
   // Combine Instagram and TikTok posts
+  const instagramPosts = state.instagramPosts || [];
+  const tiktokPosts = state.tiktokPosts || [];
+
+  console.log('[Social Grid] Instagram posts:', instagramPosts.length);
+  console.log('[Social Grid] TikTok posts:', tiktokPosts.length);
+
   const allPosts = [
-    ...(state.instagramPosts || []),
-    ...(state.tiktokPosts || [])
+    ...instagramPosts,
+    ...tiktokPosts
   ];
 
   // Filter out posts without valid images

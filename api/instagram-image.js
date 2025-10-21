@@ -8,9 +8,19 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'URL parameter required' });
   }
 
-  // Only allow Instagram CDN URLs
-  if (!url.includes('cdninstagram.com') && !url.includes('fbcdn.net')) {
-    return res.status(403).json({ error: 'Only Instagram CDN URLs allowed' });
+  // Only allow Instagram and TikTok CDN URLs
+  const allowedDomains = [
+    'cdninstagram.com',
+    'fbcdn.net',
+    'tiktokcdn.com',
+    'tiktok.com',
+    'bytedance.com'
+  ];
+
+  const isAllowed = allowedDomains.some(domain => url.includes(domain));
+
+  if (!isAllowed) {
+    return res.status(403).json({ error: 'Only Instagram and TikTok CDN URLs allowed' });
   }
 
   try {
