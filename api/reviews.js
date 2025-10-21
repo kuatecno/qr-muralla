@@ -81,17 +81,29 @@ export default async function handler(req, res) {
     console.log('[Reviews API] Place:', place.title);
     console.log('[Reviews API] Reviews count:', place.reviews?.length || 0);
 
+    // Log first review structure to debug
+    if (place.reviews && place.reviews.length > 0) {
+      console.log('[Reviews API] First review keys:', Object.keys(place.reviews[0]));
+      console.log('[Reviews API] First review sample:', JSON.stringify(place.reviews[0], null, 2));
+    }
+
     // Transform Apify data to match existing format
     const reviews = (place.reviews || [])
-      .map(review => ({
-        author_name: review.name,
-        rating: review.stars || 0,
-        text: review.text || review.textTranslated || '',
-        time: review.publishAt ? new Date(review.publishAt).getTime() / 1000 : Date.now() / 1000,
-        profile_photo_url: review.reviewerPhotoUrl || review.reviewerUrl || '',
-        relative_time_description: review.publishedAtDate || '',
-        images: review.responseFromOwnerPhotos || review.photos || []
-      }))
+      .map(review => {
+        // Try different possible field names for images
+        const images = review.reviewPhotos || review.photos || review.images ||
+                       review.responseFromOwnerPhotos || [];
+
+        return {
+          author_name: review.name,
+          rating: review.stars || 0,
+          text: review.text || review.textTranslated || '',
+          time: review.publishAt ? new Date(review.publishAt).getTime() / 1000 : Date.now() / 1000,
+          profile_photo_url: review.reviewerPhotoUrl || review.reviewerUrl || '',
+          relative_time_description: review.publishedAtDate || '',
+          images: Array.isArray(images) ? images : []
+        };
+      })
       // Filter: only 4+ stars and reviews with text
       .filter(review => {
         const hasText = review.text && review.text.trim().length > 0;
