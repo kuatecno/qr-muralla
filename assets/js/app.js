@@ -1074,11 +1074,11 @@ function displayReviewsWithPagination() {
 
     return `
       <div class="review-card" data-review-index="${index}">
+        <div class="review-rating-large">${review.rating}/5</div>
         <div class="review-header">
           <img src="${avatarUrl}" alt="${review.author_name}" class="review-avatar">
           <div class="review-author-info">
             <div class="review-author">${review.author_name}</div>
-            <div class="review-rating">${review.rating}/5</div>
           </div>
         </div>
         <p class="review-text" data-full-text="${review.text.replace(/"/g, '&quot;')}">
