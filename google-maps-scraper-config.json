@@ -1,0 +1,32 @@
+{
+    "startUrls": [
+        {
+            "url": "https://maps.app.goo.gl/HBVmuRbKCFYgoUA1A"
+        }
+    ],
+    "searchStringsArray": [
+        "Muralla"
+    ],
+    "locationQuery": "Santiago",
+    "maxCrawledPlacesPerSearch": 1,
+    "language": "es-419",
+    "maxReviews": 10,
+    "reviewsSort": "newest",
+    "scrapeReviewsPersonalData": true,
+    "scrapeImageAuthors": true,
+    "maxImages": 19,
+    "searchMatching": "all",
+    "placeMinimumStars": "",
+    "website": "allPlaces",
+    "skipClosedPlaces": false,
+    "scrapePlaceDetailPage": false,
+    "scrapeTableReservationProvider": false,
+    "includeWebResults": false,
+    "scrapeDirectories": false,
+    "maxQuestions": 0,
+    "scrapeContacts": false,
+    "maximumLeadsEnrichmentRecords": 0,
+    "reviewsFilterString": "",
+    "reviewsOrigin": "all",
+    "allPlacesNoSearchAction": ""
+}

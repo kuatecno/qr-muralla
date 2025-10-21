@@ -4,51 +4,100 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { placeId } = req.query;
+  const APIFY_API_TOKEN = process.env.APIFY_API_TOKEN;
+  const APIFY_USER_ID = process.env.APIFY_USER_ID;
 
-  if (!placeId) {
-    return res.status(400).json({ error: 'placeId is required' });
-  }
-
-  const apiKey = process.env.GOOGLE_MAPS_API_KEY;
-
-  if (!apiKey) {
-    console.error('GOOGLE_MAPS_API_KEY not configured');
-    return res.status(500).json({ error: 'API key not configured' });
+  if (!APIFY_API_TOKEN || !APIFY_USER_ID) {
+    return res.status(500).json({
+      error: 'Missing configuration',
+      message: 'APIFY_API_TOKEN and APIFY_USER_ID must be set in environment variables'
+    });
   }
 
   try {
-    const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=reviews,rating&key=${apiKey}`;
+    // Get recent successful runs from this user's actor runs
+    const runsResponse = await fetch(
+      `https://api.apify.com/v2/actor-runs?userId=${APIFY_USER_ID}&token=${APIFY_API_TOKEN}&limit=10&status=SUCCEEDED&desc=true`
+    );
 
-    const response = await fetch(url);
-    const data = await response.json();
-
-    if (data.status !== 'OK') {
-      console.error('Google Places API error:', data.status, data.error_message);
-      return res.status(400).json({
-        error: 'Failed to fetch reviews',
-        status: data.status,
-        message: data.error_message
-      });
+    if (!runsResponse.ok) {
+      console.error('Failed to fetch runs:', await runsResponse.text());
+      return res.status(500).json({ error: 'Failed to fetch Google Maps data' });
     }
 
-    // Return reviews with profile photos and rating
-    const reviews = (data.result?.reviews || []).map(review => ({
-      author_name: review.author_name,
-      rating: review.rating,
-      text: review.text,
-      time: review.time,
-      profile_photo_url: review.profile_photo_url,
-      relative_time_description: review.relative_time_description
+    const runsData = await runsResponse.json();
+
+    if (!runsData.data?.items?.length) {
+      return res.status(404).json({ error: 'No Google Maps data available yet' });
+    }
+
+    // Find Google Maps scraper dataset by checking for reviews field
+    let mapsRun = null;
+    for (const run of runsData.data.items.slice(0, 10)) {
+      if (!run.defaultDatasetId) continue;
+
+      const testResponse = await fetch(
+        `https://api.apify.com/v2/datasets/${run.defaultDatasetId}/items?token=${APIFY_API_TOKEN}&limit=1`
+      );
+
+      if (testResponse.ok) {
+        const testData = await testResponse.json();
+        if (testData.length > 0) {
+          const item = testData[0];
+          // Check if this looks like Google Maps data (has reviews, totalScore, etc.)
+          if (item.reviews || item.totalScore || item.placeId) {
+            console.log('[Reviews API] Found Google Maps dataset from run:', run.id);
+            mapsRun = run;
+            break;
+          }
+        }
+      }
+    }
+
+    if (!mapsRun) {
+      return res.status(404).json({ error: 'No Google Maps dataset found in recent runs' });
+    }
+
+    const datasetId = mapsRun.defaultDatasetId;
+
+    // Fetch the place data (should be just 1 item - the Muralla cafe)
+    const resultsResponse = await fetch(
+      `https://api.apify.com/v2/datasets/${datasetId}/items?token=${APIFY_API_TOKEN}&limit=1`
+    );
+
+    if (!resultsResponse.ok) {
+      console.error('Failed to fetch dataset:', await resultsResponse.text());
+      return res.status(500).json({ error: 'Failed to fetch reviews' });
+    }
+
+    const results = await resultsResponse.json();
+
+    if (!results || results.length === 0) {
+      return res.status(404).json({ error: 'No place data found' });
+    }
+
+    const place = results[0];
+
+    console.log('[Reviews API] Place:', place.title);
+    console.log('[Reviews API] Reviews count:', place.reviews?.length || 0);
+
+    // Transform Apify data to match existing format
+    const reviews = (place.reviews || []).map(review => ({
+      author_name: review.name,
+      rating: review.stars || 0,
+      text: review.text || review.textTranslated || '',
+      time: review.publishAt ? new Date(review.publishAt).getTime() / 1000 : Date.now() / 1000,
+      profile_photo_url: review.reviewerPhotoUrl || review.reviewerUrl || '',
+      relative_time_description: review.publishedAtDate || ''
     }));
 
     res.status(200).json({
-      reviews,
-      rating: data.result?.rating || 0
+      reviews: reviews.slice(0, 10), // Return max 10 reviews
+      rating: place.totalScore || 0
     });
 
   } catch (error) {
     console.error('Error fetching reviews:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error', details: error.message });
   }
 }

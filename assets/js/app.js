@@ -1024,11 +1024,9 @@ async function renderReviews() {
   const googleMapsUrl = state.config?.map?.placeUrl || "https://maps.app.goo.gl/XNC8be4Y53Xkyiba8";
   if (reviewsLink) reviewsLink.href = googleMapsUrl;
 
-  const placeId = state.config?.map?.placeId || "ChIJ2Wmo--LFYpYRjjZvjlHBkYg";
-
   try {
-    // Fetch reviews from backend proxy
-    const response = await fetch(`/api/reviews?placeId=${placeId}`);
+    // Fetch reviews from Apify Google Maps scraper
+    const response = await fetch(`/api/reviews`);
 
     if (!response.ok) throw new Error('Failed to fetch reviews');
 
