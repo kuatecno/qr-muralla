@@ -1144,7 +1144,7 @@ const VERBS = [
   "triturando",
   "cuchareando",
   "caceroleando",
-  "derretideando",
+  "derritiendo",
   "cafeteando",
   "vaporizando",
   "bronceando"
