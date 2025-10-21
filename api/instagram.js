@@ -52,13 +52,29 @@ export default async function handler(req, res) {
     const results = await resultsResponse.json();
 
     // Transform Apify data to our format
-    const posts = results.map((post, index) => ({
-      id: post.shortCode || `post-${index}`,
-      image: post.displayUrl || post.thumbnailUrl,
-      link: `https://www.instagram.com/p/${post.shortCode}/`,
-      caption: post.caption || '',
-      date: post.timestamp ? new Date(post.timestamp * 1000).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-    }));
+    const posts = results.map((post, index) => {
+      let dateStr = new Date().toISOString().split('T')[0];
+
+      // Try to parse timestamp
+      if (post.timestamp) {
+        try {
+          const timestamp = typeof post.timestamp === 'string' ? Date.parse(post.timestamp) : post.timestamp * 1000;
+          if (!isNaN(timestamp)) {
+            dateStr = new Date(timestamp).toISOString().split('T')[0];
+          }
+        } catch (e) {
+          console.error('Error parsing timestamp:', post.timestamp, e);
+        }
+      }
+
+      return {
+        id: post.shortCode || `post-${index}`,
+        image: post.displayUrl || post.thumbnailUrl || post.url,
+        link: post.url || `https://www.instagram.com/p/${post.shortCode}/`,
+        caption: post.caption || '',
+        date: dateStr,
+      };
+    });
 
     // Set cache headers - cache for 1 hour
     res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate');
