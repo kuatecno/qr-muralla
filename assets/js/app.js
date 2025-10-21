@@ -814,8 +814,9 @@ function renderEvents() {
     const monthNames = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
     const month = monthNames[date.getMonth()];
 
-    // Use color palette - use index to ensure different colors for each event
-    const colors = COLOR_PALETTE[index % COLOR_PALETTE.length];
+    // Use random color palette
+    const randomIndex = Math.floor(Math.random() * COLOR_PALETTE.length);
+    const colors = COLOR_PALETTE[randomIndex];
     const bgStyle = `<div class="event-card-bg" style="background-color:${colors.bg}"></div>`;
     const textColor = colors.text;
 
