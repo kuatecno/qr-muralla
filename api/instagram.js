@@ -32,18 +32,16 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: 'No Instagram data available yet' });
     }
 
-    // Filter for Instagram POSTS runs specifically by checking multiple recent runs
+    // Filter for Instagram runs specifically by checking multiple recent runs
     // Instagram posts have 'shortCode', 'displayUrl', 'caption' fields
-    // Comments have 'text', 'ownerUsername', 'timestamp'
+    // TikTok has 'videoMeta', 'authorMeta', 'createTimeISO'
     console.log('[Instagram API] Total runs found:', runsData.data.items.length);
 
-    let postsRun = null;
-    let commentsRun = null;
-
-    for (const run of runsData.data.items.slice(0, 20)) {
+    let latestRun = null;
+    for (const run of runsData.data.items.slice(0, 10)) {
       if (!run.defaultDatasetId) continue;
 
-      // Test this dataset to see if it's Instagram posts or comments
+      // Test this dataset to see if it's Instagram data
       const testResponse = await fetch(
         `https://api.apify.com/v2/datasets/${run.defaultDatasetId}/items?token=${APIFY_API_TOKEN}&limit=1`
       );
@@ -52,30 +50,20 @@ export default async function handler(req, res) {
         const testData = await testResponse.json();
         if (testData.length > 0) {
           const item = testData[0];
-
-          // Check if this is posts data (has shortCode or displayUrl)
-          if (!postsRun && (item.shortCode || item.displayUrl)) {
-            console.log('[Instagram API] Found posts dataset from run:', run.id);
-            postsRun = run;
+          // Check if this looks like Instagram data (has shortCode or displayUrl)
+          if (item.shortCode || item.displayUrl) {
+            console.log('[Instagram API] Found Instagram dataset from actor:', run.actId);
+            latestRun = run;
+            break;
           }
-
-          // Check if this is comments data (has text and ownerUsername, but no displayUrl)
-          if (!commentsRun && item.text && item.ownerUsername && !item.displayUrl) {
-            console.log('[Instagram API] Found comments dataset from run:', run.id);
-            commentsRun = run;
-          }
-
-          // Stop if we found both
-          if (postsRun && commentsRun) break;
         }
       }
     }
 
-    if (!postsRun) {
-      return res.status(404).json({ error: 'No Instagram posts dataset found in recent runs' });
+    if (!latestRun) {
+      return res.status(404).json({ error: 'No Instagram dataset found in recent runs' });
     }
-
-    const datasetId = postsRun.defaultDatasetId;
+    const datasetId = latestRun.defaultDatasetId;
 
     if (!datasetId) {
       return res.status(404).json({ error: 'No dataset found' });
@@ -93,47 +81,10 @@ export default async function handler(req, res) {
 
     const results = await resultsResponse.json();
 
-    console.log('[Instagram API] Posts dataset items count:', results.length);
-
-    // Fetch comments dataset if available
-    let commentsMap = new Map(); // Map of postId -> comments array
-
-    if (commentsRun && commentsRun.defaultDatasetId) {
-      try {
-        const commentsResponse = await fetch(
-          `https://api.apify.com/v2/datasets/${commentsRun.defaultDatasetId}/items?token=${APIFY_API_TOKEN}&limit=500`
-        );
-
-        if (commentsResponse.ok) {
-          const commentsData = await commentsResponse.json();
-          console.log('[Instagram API] Comments dataset items count:', commentsData.length);
-
-          // Group comments by post shortCode or URL
-          commentsData.forEach(comment => {
-            // Extract post ID from comment (field might be 'postShortCode', 'shortCode', or parse from URL)
-            const postId = comment.postShortCode || comment.shortCode ||
-                          (comment.url ? comment.url.split('/p/')[1]?.split('/')[0] : null);
-
-            if (postId) {
-              if (!commentsMap.has(postId)) {
-                commentsMap.set(postId, []);
-              }
-              commentsMap.get(postId).push({
-                id: comment.id,
-                text: comment.text,
-                username: comment.ownerUsername,
-                timestamp: comment.timestamp,
-                likesCount: comment.likesCount || 0
-              });
-            }
-          });
-
-          console.log('[Instagram API] Grouped comments for', commentsMap.size, 'posts');
-        }
-      } catch (error) {
-        console.error('[Instagram API] Error fetching comments:', error);
-        // Continue without comments
-      }
+    console.log('[Instagram API] Dataset items count:', results.length);
+    if (results.length > 0) {
+      console.log('[Instagram API] First item keys:', Object.keys(results[0]));
+      console.log('[Instagram API] Has latestComments?', 'latestComments' in results[0]);
     }
 
     // Transform Apify data to our format
@@ -158,9 +109,8 @@ export default async function handler(req, res) {
       const postUrl = post.url || `https://www.instagram.com/p/${post.shortCode}/`;
       const caption = post.caption || '';
 
-      // Get comments for this post from the comments dataset
-      const postShortCode = post.shortCode;
-      const comments = commentsMap.get(postShortCode) || post.latestComments || post.comments || [];
+      // Extract comments (included in post if scrapePostComments was enabled)
+      const comments = post.latestComments || post.comments || [];
       const commentCount = post.commentsCount || comments.length || 0;
 
       // Check if this is a carousel post

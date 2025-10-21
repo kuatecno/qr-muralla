@@ -1,0 +1,17 @@
+{
+    "directUrls": [
+        "https://www.instagram.com/muralla.cafe"
+    ],
+    "resultsType": "posts",
+    "resultsLimit": 200,
+    "searchType": "hashtag",
+    "searchLimit": 1,
+    "addParentData": false,
+    "enhanceUserSearchWithFacebookPage": false,
+    "isUserReelFeedURL": false,
+    "isUserTaggedFeedURL": false,
+    "scrapePostComments": true,
+    "maxPostComments": 50,
+    "scrapePostsUntilDate": "",
+    "scrapePostsFromDate": ""
+}
