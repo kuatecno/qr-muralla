@@ -10,7 +10,7 @@
     "locationQuery": "Santiago",
     "maxCrawledPlacesPerSearch": 1,
     "language": "es-419",
-    "maxReviews": 10,
+    "maxReviews": 50,
     "reviewsSort": "newest",
     "scrapeReviewsPersonalData": true,
     "scrapeImageAuthors": true,

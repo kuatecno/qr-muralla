@@ -89,7 +89,8 @@ export default async function handler(req, res) {
         text: review.text || review.textTranslated || '',
         time: review.publishAt ? new Date(review.publishAt).getTime() / 1000 : Date.now() / 1000,
         profile_photo_url: review.reviewerPhotoUrl || review.reviewerUrl || '',
-        relative_time_description: review.publishedAtDate || ''
+        relative_time_description: review.publishedAtDate || '',
+        images: review.responseFromOwnerPhotos || review.photos || []
       }))
       // Filter: only 4+ stars and reviews with text
       .filter(review => {
@@ -98,9 +99,11 @@ export default async function handler(req, res) {
         return hasText && isHighRated;
       });
 
+    // Return all filtered reviews (frontend will handle pagination)
     res.status(200).json({
-      reviews: reviews.slice(0, 10), // Return max 10 reviews
-      rating: place.totalScore || 0
+      reviews: reviews,
+      rating: place.totalScore || 0,
+      totalReviews: reviews.length
     });
 
   } catch (error) {

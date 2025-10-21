@@ -1013,7 +1013,10 @@ function showHeaderElements() {
   if (status) status.classList.add("loaded");
 }
 
-// Google Reviews - Fetch from Google Places API
+// Google Reviews - Fetch from Apify Google Maps scraper
+let allReviews = [];
+let displayedReviewsCount = 3;
+
 async function renderReviews() {
   const container = document.getElementById("reviewsContainer");
   const reviewsLink = document.getElementById("googleReviewsLink");
@@ -1033,23 +1036,8 @@ async function renderReviews() {
     const data = await response.json();
 
     if (data.reviews && data.reviews.length > 0) {
-      const topReviews = data.reviews.slice(0, 3);
-
-      container.innerHTML = topReviews.map(review => {
-        const avatarUrl = review.profile_photo_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(review.author_name) + '&background=c8b5d1&color=0b0b10&size=80';
-        return `
-          <div class="review-card">
-            <div class="review-header">
-              <img src="${avatarUrl}" alt="${review.author_name}" class="review-avatar">
-              <div class="review-author-info">
-                <div class="review-author">${review.author_name}</div>
-                <div class="review-rating">${review.rating}/5</div>
-              </div>
-            </div>
-            <p class="review-text">"${review.text}"</p>
-          </div>
-        `;
-      }).join("");
+      allReviews = data.reviews;
+      displayReviewsWithPagination();
     } else {
       throw new Error('No reviews available');
     }
@@ -1058,6 +1046,146 @@ async function renderReviews() {
     showPlaceholderReviews(container);
   }
 }
+
+function displayReviewsWithPagination() {
+  const container = document.getElementById("reviewsContainer");
+  const reviewsToShow = allReviews.slice(0, displayedReviewsCount);
+
+  const reviewsHTML = reviewsToShow.map((review, index) => {
+    const avatarUrl = review.profile_photo_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(review.author_name) + '&background=c8b5d1&color=0b0b10&size=80';
+    const maxChars = 150;
+    const isLong = review.text.length > maxChars;
+    const truncatedText = isLong ? review.text.substring(0, maxChars) + '...' : review.text;
+
+    const images = review.images || [];
+    const imagesHTML = images.length > 0 ? `
+      <div class="review-images">
+        ${images.map((img, imgIndex) => `
+          <img src="${img}" alt="Review image ${imgIndex + 1}" class="review-thumbnail" onclick="openImageCarousel(${index}, ${imgIndex})" loading="lazy">
+        `).join('')}
+      </div>
+    ` : '';
+
+    return `
+      <div class="review-card" data-review-index="${index}">
+        <div class="review-header">
+          <img src="${avatarUrl}" alt="${review.author_name}" class="review-avatar">
+          <div class="review-author-info">
+            <div class="review-author">${review.author_name}</div>
+            <div class="review-rating">${review.rating}/5</div>
+          </div>
+        </div>
+        <p class="review-text" data-full-text="${review.text.replace(/"/g, '&quot;')}">
+          "${truncatedText}"
+          ${isLong ? `<button class="review-read-more" onclick="toggleReviewText(${index})">Leer más</button>` : ''}
+        </p>
+        ${imagesHTML}
+      </div>
+    `;
+  }).join("");
+
+  const showMoreButton = displayedReviewsCount < allReviews.length ? `
+    <button class="reviews-show-more" onclick="showMoreReviews()">
+      Ver más reseñas (${allReviews.length - displayedReviewsCount} más)
+    </button>
+  ` : '';
+
+  container.innerHTML = reviewsHTML + showMoreButton;
+}
+
+function toggleReviewText(index) {
+  const reviewCard = document.querySelector(`[data-review-index="${index}"]`);
+  const textElement = reviewCard.querySelector('.review-text');
+  const button = reviewCard.querySelector('.review-read-more');
+  const fullText = textElement.getAttribute('data-full-text');
+
+  if (button.textContent === 'Leer más') {
+    textElement.innerHTML = `"${fullText}" <button class="review-read-more" onclick="toggleReviewText(${index})">Leer menos</button>`;
+  } else {
+    const maxChars = 150;
+    const truncatedText = fullText.substring(0, maxChars) + '...';
+    textElement.innerHTML = `"${truncatedText}" <button class="review-read-more" onclick="toggleReviewText(${index})">Leer más</button>`;
+  }
+}
+
+function showMoreReviews() {
+  displayedReviewsCount += 3;
+  displayReviewsWithPagination();
+}
+
+function openImageCarousel(reviewIndex, imageIndex) {
+  const review = allReviews[reviewIndex];
+  const images = review.images || [];
+
+  if (images.length === 0) return;
+
+  // Create modal
+  const modal = document.createElement('div');
+  modal.className = 'image-carousel-modal';
+  modal.innerHTML = `
+    <div class="image-carousel-overlay" onclick="closeImageCarousel()"></div>
+    <div class="image-carousel-container">
+      <button class="carousel-close" onclick="closeImageCarousel()">✕</button>
+      ${images.length > 1 ? '<button class="carousel-prev" onclick="carouselPrev()">‹</button>' : ''}
+      <img src="${images[imageIndex]}" alt="Review image" class="carousel-image" id="carouselImage">
+      ${images.length > 1 ? '<button class="carousel-next" onclick="carouselNext()">›</button>' : ''}
+      ${images.length > 1 ? `<div class="carousel-dots">${images.map((_, i) => `<span class="carousel-dot ${i === imageIndex ? 'active' : ''}" onclick="carouselGoTo(${i})"></span>`).join('')}</div>` : ''}
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+  document.body.style.overflow = 'hidden';
+
+  // Store carousel state
+  window.carouselState = {
+    images: images,
+    currentIndex: imageIndex
+  };
+}
+
+function closeImageCarousel() {
+  const modal = document.querySelector('.image-carousel-modal');
+  if (modal) {
+    modal.remove();
+    document.body.style.overflow = '';
+    window.carouselState = null;
+  }
+}
+
+function carouselPrev() {
+  if (!window.carouselState) return;
+  const { images, currentIndex } = window.carouselState;
+  const newIndex = (currentIndex - 1 + images.length) % images.length;
+  carouselGoTo(newIndex);
+}
+
+function carouselNext() {
+  if (!window.carouselState) return;
+  const { images, currentIndex } = window.carouselState;
+  const newIndex = (currentIndex + 1) % images.length;
+  carouselGoTo(newIndex);
+}
+
+function carouselGoTo(index) {
+  if (!window.carouselState) return;
+  window.carouselState.currentIndex = index;
+  const img = document.getElementById('carouselImage');
+  if (img) img.src = window.carouselState.images[index];
+
+  // Update dots
+  document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+    dot.className = i === index ? 'carousel-dot active' : 'carousel-dot';
+  });
+}
+
+// Make functions global for onclick handlers
+window.toggleReviewText = toggleReviewText;
+window.showMoreReviews = showMoreReviews;
+window.openImageCarousel = openImageCarousel;
+window.closeImageCarousel = closeImageCarousel;
+window.carouselPrev = carouselPrev;
+window.carouselNext = carouselNext;
+window.carouselGoTo = carouselGoTo;
 
 function showPlaceholderReviews(container) {
   const reviews = [
