@@ -818,6 +818,7 @@ function renderEvents() {
     const bgStyle = event.image
       ? `<div class="event-card-bg" style="background-image:url('${event.image}')"></div>`
       : `<div class="event-card-bg" style="background-color:${colors.bg}"></div>`;
+    const textColor = colors ? colors.text : '#fff';
 
     return `
       <div class="event-card">
@@ -828,9 +829,9 @@ function renderEvents() {
         </div>
         <div class="event-content">
           <span class="event-category">${event.category}</span>
-          <h3 class="event-title">${event.title}</h3>
-          <p class="event-description">${event.description}</p>
-          <div class="event-meta">
+          <h3 class="event-title" style="color:${textColor}">${event.title}</h3>
+          <p class="event-description" style="color:${textColor}">${event.description}</p>
+          <div class="event-meta" style="color:${textColor}">
             <span class="event-meta-item">🕐 ${event.time}</span>
           </div>
           <a href="${event.bookingUrl || bookingLink(event.title)}" class="event-cta" target="_blank" rel="noopener">

@@ -706,7 +706,6 @@ body{
 }
 .event-card:hover{
   transform:translateY(-4px);
-  box-shadow:0 12px 32px rgba(0,0,0,0.4);
   border-color:rgba(255,255,255,0.15);
 }
 
@@ -724,7 +723,6 @@ body{
   background:#fff;color:#0b0b10;
   border-radius:12px;padding:12px 14px;
   text-align:center;line-height:1;
-  box-shadow:0 4px 16px rgba(0,0,0,0.3);
   border:3px solid rgba(11,11,16,0.8);
 }
 .event-date-day{
