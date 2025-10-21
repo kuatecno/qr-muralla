@@ -739,7 +739,15 @@ function wireSearch() {
 // Events rendering and carousel
 function renderEvents() {
   const track = document.getElementById('eventsTrack');
-  if (!track || !state.events || state.events.length === 0) return;
+  if (!track || !state.events) return;
+
+  // Ensure state.events is an array
+  if (!Array.isArray(state.events)) {
+    console.error('state.events is not an array:', state.events);
+    return;
+  }
+
+  if (state.events.length === 0) return;
 
   // Filter future events only
   const now = new Date();
