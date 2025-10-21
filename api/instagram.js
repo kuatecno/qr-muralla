@@ -15,10 +15,10 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Get the latest successful run from this user's actor runs
-    // This will always fetch the most recent data from Apify's scheduled scraper
+    // Get recent successful runs from this user's actor runs
+    // We'll check multiple runs to find the Instagram scraper specifically
     const runsResponse = await fetch(
-      `https://api.apify.com/v2/actor-runs?userId=${APIFY_USER_ID}&token=${APIFY_API_TOKEN}&limit=1&status=SUCCEEDED&desc=true`
+      `https://api.apify.com/v2/actor-runs?userId=${APIFY_USER_ID}&token=${APIFY_API_TOKEN}&limit=10&status=SUCCEEDED&desc=true`
     );
 
     if (!runsResponse.ok) {
@@ -32,7 +32,37 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: 'No Instagram data available yet' });
     }
 
-    const latestRun = runsData.data.items[0];
+    // Filter for Instagram runs specifically by checking multiple recent runs
+    // Instagram posts have 'shortCode', 'displayUrl', 'caption' fields
+    // TikTok has 'videoMeta', 'authorMeta', 'createTimeISO'
+    console.log('[Instagram API] Total runs found:', runsData.data.items.length);
+
+    let latestRun = null;
+    for (const run of runsData.data.items.slice(0, 10)) {
+      if (!run.defaultDatasetId) continue;
+
+      // Test this dataset to see if it's Instagram data
+      const testResponse = await fetch(
+        `https://api.apify.com/v2/datasets/${run.defaultDatasetId}/items?token=${APIFY_API_TOKEN}&limit=1`
+      );
+
+      if (testResponse.ok) {
+        const testData = await testResponse.json();
+        if (testData.length > 0) {
+          const item = testData[0];
+          // Check if this looks like Instagram data (has shortCode or displayUrl)
+          if (item.shortCode || item.displayUrl || item.displayUrl || (item.type && item.type !== 'video')) {
+            console.log('[Instagram API] Found Instagram dataset from actor:', run.actId);
+            latestRun = run;
+            break;
+          }
+        }
+      }
+    }
+
+    if (!latestRun) {
+      return res.status(404).json({ error: 'No Instagram dataset found in recent runs' });
+    }
     const datasetId = latestRun.defaultDatasetId;
 
     if (!datasetId) {
@@ -52,8 +82,17 @@ export default async function handler(req, res) {
     const results = await resultsResponse.json();
 
     // Log the raw data to help debug
+    console.log('[Instagram API] Run info:', {
+      actorId: latestRun.actId,
+      actorName: latestRun.actId,
+      buildId: latestRun.buildId,
+      startedAt: latestRun.startedAt
+    });
     console.log('[Instagram API] Dataset items count:', results.length);
-    console.log('[Instagram API] First item sample:', JSON.stringify(results[0], null, 2));
+    if (results.length > 0) {
+      console.log('[Instagram API] First item sample:', JSON.stringify(results[0], null, 2));
+      console.log('[Instagram API] First item keys:', Object.keys(results[0]));
+    }
 
     // Transform Apify data to our format
     // Handle carousel posts - expand them into individual posts
