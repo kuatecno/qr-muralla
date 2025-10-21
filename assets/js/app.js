@@ -1049,9 +1049,9 @@ async function renderReviews() {
 
 function displayReviewsWithPagination() {
   const container = document.getElementById("reviewsContainer");
-  const reviewsToShow = allReviews.slice(0, displayedReviewsCount);
 
-  const reviewsHTML = reviewsToShow.map((review, index) => {
+  // Show 3 reviews at a time in carousel
+  const reviewsHTML = allReviews.map((review, index) => {
     const avatarUrl = review.profile_photo_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(review.author_name) + '&background=c8b5d1&color=0b0b10&size=80';
     const maxChars = 150;
     const isLong = review.text.length > maxChars;
@@ -1090,26 +1090,41 @@ function displayReviewsWithPagination() {
     `;
   }).join("");
 
-  container.innerHTML = reviewsHTML;
+  container.innerHTML = `
+    <div class="reviews-carousel-track" id="reviewsTrack">
+      ${reviewsHTML}
+    </div>
+  `;
 
-  // Add show more button to the reviews head section
+  // Add navigation arrows
   const reviewsSection = document.querySelector('.reviews-section');
-  const reviewsHead = reviewsSection?.querySelector('.reviews-head');
-
-  if (reviewsHead) {
-    // Remove existing button if any
-    const existingButton = reviewsHead.querySelector('.reviews-show-more');
-    if (existingButton) existingButton.remove();
-
-    // Add new button if there are more reviews
-    if (displayedReviewsCount < allReviews.length) {
-      const showMoreButton = document.createElement('button');
-      showMoreButton.className = 'reviews-show-more';
-      showMoreButton.onclick = showMoreReviews;
-      showMoreButton.textContent = `Ver más reseñas (${allReviews.length - displayedReviewsCount} más)`;
-      reviewsHead.appendChild(showMoreButton);
+  if (reviewsSection && allReviews.length > 3) {
+    let existingNav = reviewsSection.querySelector('.reviews-carousel-nav');
+    if (!existingNav) {
+      const nav = document.createElement('div');
+      nav.className = 'reviews-carousel-nav';
+      nav.innerHTML = `
+        <button class="reviews-carousel-prev" onclick="scrollReviews(-1)" aria-label="Previous reviews">‹</button>
+        <button class="reviews-carousel-next" onclick="scrollReviews(1)" aria-label="Next reviews">›</button>
+      `;
+      reviewsSection.appendChild(nav);
     }
   }
+}
+
+function scrollReviews(direction) {
+  const track = document.getElementById('reviewsTrack');
+  if (!track) return;
+
+  const container = document.getElementById('reviewsContainer');
+  const cardWidth = container.querySelector('.review-card')?.offsetWidth || 300;
+  const gap = 12; // Gap between cards
+  const scrollAmount = (cardWidth + gap) * 3 * direction; // Scroll 3 cards at a time
+
+  track.scrollBy({
+    left: scrollAmount,
+    behavior: 'smooth'
+  });
 }
 
 function toggleReviewText(index) {
@@ -1127,10 +1142,6 @@ function toggleReviewText(index) {
   }
 }
 
-function showMoreReviews() {
-  displayedReviewsCount += 3;
-  displayReviewsWithPagination();
-}
 
 function openImageCarousel(reviewIndex, imageIndex) {
   const review = allReviews[reviewIndex];
@@ -1201,7 +1212,7 @@ function scrollReviewImages(reviewIndex, direction) {
   const track = document.getElementById(`reviewImages${reviewIndex}`);
   if (!track) return;
 
-  const thumbnailWidth = 50; // 50px width + gap
+  const thumbnailWidth = 39; // 35px width + 4px gap
   const scrollAmount = thumbnailWidth * direction;
 
   track.scrollBy({
@@ -1212,7 +1223,7 @@ function scrollReviewImages(reviewIndex, direction) {
 
 // Make functions global for onclick handlers
 window.toggleReviewText = toggleReviewText;
-window.showMoreReviews = showMoreReviews;
+window.scrollReviews = scrollReviews;
 window.openImageCarousel = openImageCarousel;
 window.closeImageCarousel = closeImageCarousel;
 window.carouselPrev = carouselPrev;
