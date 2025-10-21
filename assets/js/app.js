@@ -1174,6 +1174,37 @@ function updateOpenStatus() {
   const minutes = chileTime.getMinutes();
   const currentTime = hours * 60 + minutes;
 
+  // Check if today is a special location day
+  const todayDate = chileTime.toISOString().split('T')[0];
+  const specialLocation = state.config?.specialLocations?.find(loc => loc.date === todayDate);
+
+  if (specialLocation) {
+    // Special location mode
+    statusEl.className = "open-status special-location loaded";
+    statusText.textContent = "abierto de visita";
+
+    if (tooltip) {
+      const message = `${specialLocation.name}\n${specialLocation.address}\n${specialLocation.description}`;
+      tooltip.innerHTML = `
+        <div style="white-space: pre-line; text-align: left;">
+          <strong>${specialLocation.name}</strong><br>
+          ${specialLocation.address}<br>
+          <span style="font-size: 12px; opacity: 0.9;">${specialLocation.description}</span>
+          ${specialLocation.mapsUrl ? `<br><a href="${specialLocation.mapsUrl}" target="_blank" rel="noopener" style="color: #e67e5f; text-decoration: underline;">Ver en mapa ↗</a>` : ''}
+        </div>
+      `;
+
+      statusEl.onclick = () => {
+        tooltip.classList.add("show");
+        setTimeout(() => {
+          tooltip.classList.remove("show");
+        }, 5000);
+      };
+    }
+    return;
+  }
+
+  // Normal hours logic
   const todayHours = OPENING_HOURS[day];
   let isOpen = false;
   let nextChangeTime = null;

@@ -43,5 +43,14 @@
         "caption": "Hoy cocinamos"
       }
     ]
-  }
+  },
+  "specialLocations": [
+    {
+      "date": "2025-12-25",
+      "name": "Feria de Navidad",
+      "address": "Plaza de Armas, Santiago Centro",
+      "description": "Estaremos en la Feria de Navidad con nuestros mejores productos.",
+      "mapsUrl": "https://maps.google.com/?q=Plaza+de+Armas+Santiago"
+    }
+  ]
 }
