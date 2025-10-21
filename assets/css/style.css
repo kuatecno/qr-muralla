@@ -985,15 +985,15 @@ body{
 
 .instagram-grid{
   display:grid;
-  grid-template-columns:repeat(4, 1fr);
-  gap:8px;
+  grid-template-columns:repeat(10, 1fr);
+  gap:6px;
 }
 
 .instagram-post{
   position:relative;
   aspect-ratio:1;
   overflow:hidden;
-  border-radius:8px;
+  border-radius:6px;
   cursor:pointer;
   transition:all 0.2s ease;
 }
@@ -1020,7 +1020,7 @@ body{
   align-items:center;
   justify-content:center;
   color:#fff;
-  font-size:24px;
+  font-size:18px;
 }
 
 .instagram-post:hover .instagram-post-overlay{
@@ -1029,7 +1029,10 @@ body{
 
 @media (max-width: 768px){
   .instagram-grid{
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(4, 1fr);
+  }
+  .instagram-post-overlay{
+    font-size:14px;
   }
 }
 

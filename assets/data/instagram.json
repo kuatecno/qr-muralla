@@ -54,5 +54,19 @@
     "link": "https://www.instagram.com/p/example8/",
     "caption": "Post ejemplo 8",
     "date": "2025-12-08"
+  },
+  {
+    "id": "post-9",
+    "image": "/assets/img/instagram/post-9.jpg",
+    "link": "https://www.instagram.com/p/example9/",
+    "caption": "Post ejemplo 9",
+    "date": "2025-12-07"
+  },
+  {
+    "id": "post-10",
+    "image": "/assets/img/instagram/post-10.jpg",
+    "link": "https://www.instagram.com/p/example10/",
+    "caption": "Post ejemplo 10",
+    "date": "2025-12-06"
   }
 ]
