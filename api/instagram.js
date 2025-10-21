@@ -92,6 +92,7 @@ export default async function handler(req, res) {
     if (results.length > 0) {
       console.log('[Instagram API] First item sample:', JSON.stringify(results[0], null, 2));
       console.log('[Instagram API] First item keys:', Object.keys(results[0]));
+      console.log('[Instagram API] Has comments?', 'latestComments' in results[0] || 'comments' in results[0]);
     }
 
     // Transform Apify data to our format
