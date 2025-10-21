@@ -15,96 +15,38 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Get the latest dataset from this user's actor runs
+    // Get the latest successful run from this user's actor runs
+    // This will always fetch the most recent data from Apify's scheduled scraper
     const runsResponse = await fetch(
       `https://api.apify.com/v2/actor-runs?userId=${APIFY_USER_ID}&token=${APIFY_API_TOKEN}&limit=1&status=SUCCEEDED&desc=true`
     );
 
-    if (runsResponse.ok) {
-      const runsData = await runsResponse.json();
-
-      if (runsData.data?.items?.length > 0) {
-        const latestRun = runsData.data.items[0];
-        const datasetId = latestRun.defaultDatasetId;
-
-        if (datasetId) {
-          const resultsResponse = await fetch(
-            `https://api.apify.com/v2/datasets/${datasetId}/items?token=${APIFY_API_TOKEN}&limit=10`
-          );
-
-          if (resultsResponse.ok) {
-            const results = await resultsResponse.json();
-
-            // Transform Apify data to our format
-            const posts = results.map((post, index) => ({
-              id: post.shortCode || `post-${index}`,
-              image: post.displayUrl || post.thumbnailUrl,
-              link: `https://www.instagram.com/p/${post.shortCode}/`,
-              caption: post.caption || '',
-              date: post.timestamp ? new Date(post.timestamp * 1000).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-            }));
-
-            return res.status(200).json(posts.slice(0, 10));
-          }
-        }
-      }
+    if (!runsResponse.ok) {
+      console.error('Failed to fetch runs:', await runsResponse.text());
+      return res.status(500).json({ error: 'Failed to fetch Instagram data' });
     }
 
-    // Fallback: trigger a new run (slower but gets fresh data)
-    const actorId = 'apify/instagram-profile-scraper';
+    const runsData = await runsResponse.json();
 
-    const runResponse = await fetch(
-      `https://api.apify.com/v2/acts/${actorId}/runs?token=${APIFY_API_TOKEN}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          usernames: ['muralla.cafe'],
-          resultsLimit: 10,
-        }),
-      }
-    );
-
-    if (!runResponse.ok) {
-      console.error('Apify run failed:', await runResponse.text());
-      return res.status(500).json({ error: 'Failed to start Apify scraper' });
+    if (!runsData.data?.items?.length) {
+      return res.status(404).json({ error: 'No Instagram data available yet' });
     }
 
-    const runData = await runResponse.json();
-    const runId = runData.data.id;
+    const latestRun = runsData.data.items[0];
+    const datasetId = latestRun.defaultDatasetId;
 
-    // Wait for the run to complete (with timeout)
-    let status = 'RUNNING';
-    let attempts = 0;
-    const maxAttempts = 30; // 30 seconds max
-
-    while (status === 'RUNNING' && attempts < maxAttempts) {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      const statusResponse = await fetch(
-        `https://api.apify.com/v2/acts/${actorId}/runs/${runId}?token=${APIFY_API_TOKEN}`
-      );
-
-      const statusData = await statusResponse.json();
-      status = statusData.data.status;
-      attempts++;
+    if (!datasetId) {
+      return res.status(404).json({ error: 'No dataset found' });
     }
 
-    if (status !== 'SUCCEEDED') {
-      console.error('Apify run did not succeed:', status);
-      return res.status(500).json({ error: 'Scraper did not complete successfully' });
-    }
-
-    // Fetch the results
+    // Fetch posts from the latest dataset
     const resultsResponse = await fetch(
-      `https://api.apify.com/v2/acts/${actorId}/runs/${runId}/dataset/items?token=${APIFY_API_TOKEN}`
+      `https://api.apify.com/v2/datasets/${datasetId}/items?token=${APIFY_API_TOKEN}&limit=10`
     );
 
     if (!resultsResponse.ok) {
-      console.error('Failed to fetch results:', await resultsResponse.text());
-      return res.status(500).json({ error: 'Failed to fetch results' });
+      console.error('Failed to fetch dataset:', await resultsResponse.text());
+      return res.status(500).json({ error: 'Failed to fetch Instagram posts' });
     }
 
     const results = await resultsResponse.json();
@@ -118,7 +60,10 @@ export default async function handler(req, res) {
       date: post.timestamp ? new Date(post.timestamp * 1000).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
     }));
 
-    res.status(200).json(posts.slice(0, 10)); // Return max 10 posts
+    // Set cache headers - cache for 1 hour
+    res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate');
+
+    return res.status(200).json(posts.slice(0, 10));
 
   } catch (error) {
     console.error('Error fetching Instagram posts:', error);
