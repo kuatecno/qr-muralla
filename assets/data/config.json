@@ -46,6 +46,13 @@
   },
   "specialLocations": [
     {
+      "date": "2025-10-20",
+      "name": "Pop-up en Barrio Lastarria",
+      "address": "Parque Forestal, frente al MNBA",
+      "description": "Estaremos hasta las 23:00 con nuestros especiales del día y café.",
+      "mapsUrl": "https://maps.google.com/?q=Parque+Forestal+MNBA+Santiago"
+    },
+    {
       "date": "2025-12-25",
       "name": "Feria de Navidad",
       "address": "Plaza de Armas, Santiago Centro",
