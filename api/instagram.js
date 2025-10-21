@@ -15,12 +15,46 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Use Apify's Instagram Profile Scraper
+    // Get the latest dataset from this user's actor runs
+    const runsResponse = await fetch(
+      `https://api.apify.com/v2/actor-runs?userId=${APIFY_USER_ID}&token=${APIFY_API_TOKEN}&limit=1&status=SUCCEEDED&desc=true`
+    );
+
+    if (runsResponse.ok) {
+      const runsData = await runsResponse.json();
+
+      if (runsData.data?.items?.length > 0) {
+        const latestRun = runsData.data.items[0];
+        const datasetId = latestRun.defaultDatasetId;
+
+        if (datasetId) {
+          const resultsResponse = await fetch(
+            `https://api.apify.com/v2/datasets/${datasetId}/items?token=${APIFY_API_TOKEN}&limit=10`
+          );
+
+          if (resultsResponse.ok) {
+            const results = await resultsResponse.json();
+
+            // Transform Apify data to our format
+            const posts = results.map((post, index) => ({
+              id: post.shortCode || `post-${index}`,
+              image: post.displayUrl || post.thumbnailUrl,
+              link: `https://www.instagram.com/p/${post.shortCode}/`,
+              caption: post.caption || '',
+              date: post.timestamp ? new Date(post.timestamp * 1000).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+            }));
+
+            return res.status(200).json(posts.slice(0, 10));
+          }
+        }
+      }
+    }
+
+    // Fallback: trigger a new run (slower but gets fresh data)
     const actorId = 'apify/instagram-profile-scraper';
 
-    // Start the actor run
     const runResponse = await fetch(
-      `https://api.apify.com/v2/acts/${actorId}/runs?token=${APIFY_API_TOKEN}&userId=${APIFY_USER_ID}`,
+      `https://api.apify.com/v2/acts/${actorId}/runs?token=${APIFY_API_TOKEN}`,
       {
         method: 'POST',
         headers: {
