@@ -590,6 +590,45 @@ body{
   gap:12px;
 }
 
+/* Product skeleton loading */
+.product-skeleton{
+  pointer-events:none;
+}
+
+.skeleton-text{
+  background:currentColor;
+  opacity:0.15;
+  border-radius:4px;
+  animation:skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-title{
+  height:28px;
+  width:80%;
+  margin-bottom:12px;
+}
+
+.skeleton-subtitle{
+  height:18px;
+  width:60%;
+  margin-bottom:10px;
+}
+
+.skeleton-desc{
+  height:14px;
+  width:90%;
+  margin-bottom:6px;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity:0.15;
+  }
+  50% {
+    opacity:0.3;
+  }
+}
+
 .card-main-title{
   margin:0;
   font-size:42px;

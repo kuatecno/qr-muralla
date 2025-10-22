@@ -600,6 +600,26 @@ function matchSearch(p) {
          tags.includes(query);
 }
 
+function renderProductSkeletons() {
+  // Render 20 skeleton cards immediately with correct colors
+  const skeletons = Array.from({ length: 20 }, (_, i) => {
+    const colors = getColorPalette(i);
+    return `<article class="card-flip-container product-skeleton" style="background-color:${colors.bg}">
+      <div class="card-flip">
+        <div class="card-front" style="color:${colors.text}">
+          <div class="card-content">
+            <div class="skeleton-text skeleton-title"></div>
+            <div class="skeleton-text skeleton-subtitle"></div>
+            <div class="skeleton-text skeleton-desc"></div>
+          </div>
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+
+  el.products.innerHTML = skeletons;
+}
+
 function renderProducts() {
   let items = state.products.filter(p => matchTags(p) && matchCategories(p) && matchSearch(p));
 
@@ -1065,6 +1085,9 @@ function initSocialComments() {
 }
 
 async function main() {
+  // Render skeleton cards immediately before data loads
+  renderProductSkeletons();
+
   await loadData();
   setQuickLinks();
   renderTicker();
