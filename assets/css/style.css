@@ -629,6 +629,23 @@ body{
   }
 }
 
+/* Global skeleton styles */
+.skeleton-element{
+  opacity:0.5;
+  animation:skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-chip{
+  pointer-events:none;
+  opacity:0.3;
+  animation:skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+.ticker-skeleton{
+  opacity:0.5;
+  font-style:italic;
+}
+
 .card-main-title{
   margin:0;
   font-size:42px;

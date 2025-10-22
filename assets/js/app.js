@@ -451,6 +451,10 @@ function renderMetro(map) {
 function renderTicker() {
   const items = (state.today?.items || []).slice();
   if (!items.length) return;
+
+  // Remove skeleton class from ticker
+  document.getElementById('ticker')?.classList.remove('skeleton-element');
+
   // Duplicate to create continuous feel
   const dup = items.concat(items).concat(items);
   el.tickerTrack.innerHTML = dup
@@ -516,6 +520,7 @@ function initCarousel() {
 }
 
 function renderCategoryChips() {
+  // Remove skeleton chips and render real categories
   el.categoryChips.innerHTML = CATEGORIES.map(cat =>
     `<button class="category-chip" data-category="${cat}">${cat}</button>`
   ).join("");
@@ -548,6 +553,7 @@ function updateCategoryStyles() {
 }
 
 function renderChips() {
+  // Remove skeleton chips and render real filter tags
   const chips = TAGS.map((t) => `<button class="chip" data-tag="${t}">${t}</button>`).join("");
   el.chips.innerHTML = chips;
   el.chips.querySelectorAll(".chip").forEach((btn) => {
@@ -1508,6 +1514,9 @@ function updateOpenStatus() {
   const statusText = document.getElementById("statusText");
   const tooltip = document.getElementById("statusTooltip");
   if (!statusEl || !statusText) return;
+
+  // Remove skeleton class from status
+  statusEl.classList.remove('skeleton-element');
 
   // Use Chile timezone
   const now = new Date();

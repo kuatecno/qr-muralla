@@ -37,12 +37,14 @@
         <img id="brandLogo" class="brand-logo" alt="Muralla logo" hidden>
         <span class="logo" id="brandText">Muralla</span>
       </div>
-      <div class="open-status" id="openStatus">
-        <span class="status-text" id="statusText">abierto</span>
+      <div class="open-status skeleton-element" id="openStatus">
+        <span class="status-text" id="statusText">•••</span>
         <div class="status-tooltip" id="statusTooltip"></div>
       </div>
-      <div class="ticker" id="ticker" aria-label="Especiales de hoy">
-        <div class="ticker-track" id="tickerTrack"></div>
+      <div class="ticker skeleton-element" id="ticker" aria-label="Especiales de hoy">
+        <div class="ticker-track" id="tickerTrack">
+          <span class="ticker-skeleton">Cargando especiales...</span>
+        </div>
       </div>
       <div class="verb-display" id="verbDisplay">
         <span class="verb-spinner" id="verbSpinner">·</span>
@@ -64,7 +66,11 @@
         <div class="category-section" id="categorySection">
           <button class="search-trigger-chip" id="searchTrigger" aria-label="Buscar">🔍</button>
           <div class="category-chips" id="categoryChips">
-            <!-- Category chips injected by JS -->
+            <button class="chip skeleton-chip">•••</button>
+            <button class="chip skeleton-chip">•••</button>
+            <button class="chip skeleton-chip">•••</button>
+            <button class="chip skeleton-chip">•••</button>
+            <button class="chip skeleton-chip">•••</button>
           </div>
         </div>
         <div class="search-bar-container" id="searchBarContainer" style="display:none;">
@@ -75,7 +81,9 @@
           <!-- Subcategory chips injected by JS -->
         </div>
         <div class="chips" id="chips">
-          <!-- Filter chips injected by JS -->
+          <button class="chip skeleton-chip">•••</button>
+          <button class="chip skeleton-chip">•••</button>
+          <button class="chip skeleton-chip">•••</button>
         </div>
         <div class="products" id="products">
           <!-- Product cards injected by JS -->
