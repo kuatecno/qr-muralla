@@ -1038,8 +1038,14 @@ function initSocialComments() {
     allCommentsForColumn.forEach(comment => {
       const commentEl = document.createElement('div');
       commentEl.className = 'social-comment';
+
+      // Fallback avatar if image fails to load
+      const avatarHTML = comment.avatar
+        ? `<img src="${comment.avatar}" alt="${comment.author}" class="social-comment-avatar" loading="lazy" onerror="this.style.display='none'">`
+        : `<div class="social-comment-avatar" style="background:var(--violet);display:flex;align-items:center;justify-content:center;color:#0b0b10;font-weight:700;font-size:18px;">${comment.author.charAt(1).toUpperCase()}</div>`;
+
       commentEl.innerHTML = `
-        <img src="${comment.avatar}" alt="${comment.author}" class="social-comment-avatar" loading="lazy" crossorigin="anonymous" referrerpolicy="no-referrer">
+        ${avatarHTML}
         <div class="social-comment-content">
           <div class="social-comment-author">${comment.author}</div>
           <div class="social-comment-text">${comment.text}</div>
