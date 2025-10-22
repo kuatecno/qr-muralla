@@ -1014,37 +1014,35 @@ function initSocialComments() {
   const shuffled = [...SOCIAL_COMMENTS].sort(() => Math.random() - 0.5);
 
   columns.forEach((column, colIndex) => {
-    // Each column gets 3 comments
-    const startIndex = colIndex * 3;
-    let commentIndex = startIndex;
+    let commentIndex = colIndex * 3;
+    const maxVisibleComments = 3;
 
     function addComment() {
+      // Remove oldest comment if we have too many
+      const currentComments = column.querySelectorAll('.social-comment');
+      if (currentComments.length >= maxVisibleComments) {
+        currentComments[0].remove();
+      }
+
       const comment = shuffled[commentIndex % shuffled.length];
       const commentEl = document.createElement('div');
       commentEl.className = 'social-comment';
-      commentEl.style.animationDelay = `${colIndex * 2}s`; // Stagger columns
       commentEl.innerHTML = `
         <div class="social-comment-author">${comment.author}</div>
         <div class="social-comment-text">${comment.text}</div>
       `;
       column.appendChild(commentEl);
 
-      // Remove comment after animation completes
-      setTimeout(() => {
-        if (commentEl.parentNode) {
-          commentEl.remove();
-        }
-      }, 15000);
-
       commentIndex++;
-      // Add next comment after delay
-      setTimeout(addComment, 5000); // New comment every 5 seconds
     }
 
-    // Start with initial 3 comments per column
+    // Add initial 3 comments immediately
     for (let i = 0; i < 3; i++) {
-      setTimeout(() => addComment(), i * 1000 + colIndex * 500);
+      addComment();
     }
+
+    // Add new comment every 5 seconds
+    setInterval(addComment, 5000);
   });
 }
 
