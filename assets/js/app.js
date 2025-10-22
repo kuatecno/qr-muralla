@@ -983,24 +983,6 @@ function renderInstagram() {
 }
 
 // Social comments scrolling animation
-const SOCIAL_COMMENTS = [
-  { author: "María G.", text: "El mejor café de Santiago! El ambiente es perfecto para trabajar ☕✨" },
-  { author: "Diego R.", text: "Increíble lugar, la comida vegana está deliciosa 🌱" },
-  { author: "Valentina M.", text: "Me encanta venir aquí a leer. Súper tranquilo y acogedor 📚" },
-  { author: "Pablo S.", text: "El matcha latte es mi favorito! Y los postres sin azúcar son geniales 🍰" },
-  { author: "Camila L.", text: "Ambiente único, arte local y música en vivo. 100% recomendado 🎨" },
-  { author: "Andrés P.", text: "El espacio de coworking es perfecto, wifi rápido y buen café ☕💻" },
-  { author: "Sofía T.", text: "Adoro este lugar! La gente es súper amable y la vibra inigualable ✨" },
-  { author: "Lucas V.", text: "Los eventos culturales son lo máximo. Siempre hay algo nuevo 🎭" },
-  { author: "Francisca K.", text: "Mi café favorito en Lastarria. Todo es delicioso! 😍" },
-  { author: "Martín H.", text: "Excelente para una primera cita o reunión casual. Muy buen ambiente 💕" },
-  { author: "Isabella C.", text: "El café de especialidad es top. Baristas muy profesionales ☕👌" },
-  { author: "Tomás B.", text: "Gran variedad de opciones veganas y sin gluten. Súper inclusivo! 🌱" },
-  { author: "Catalina F.", text: "Me encanta trabajar acá. El ambiente creativo es inspirador 💡" },
-  { author: "Joaquín M.", text: "La música en vivo es increíble! Artistas locales de primer nivel 🎵" },
-  { author: "Amanda R.", text: "Postres caseros buenísimos. Mi favorito es el brownie vegano 🍫" },
-];
-
 function initSocialComments() {
   const column1 = document.getElementById('commentsColumn1');
   const column2 = document.getElementById('commentsColumn2');
@@ -1010,8 +992,35 @@ function initSocialComments() {
 
   const columns = [column1, column2, column3];
 
+  // Collect all comments from Instagram posts
+  const instagramPosts = state.instagramPosts || [];
+  const allComments = [];
+
+  instagramPosts.forEach(post => {
+    if (post.comments && Array.isArray(post.comments)) {
+      post.comments.forEach(comment => {
+        // Filter out emoji-only comments and muralla.cafe replies
+        if (comment.text &&
+            comment.text.trim().length > 3 &&
+            comment.ownerUsername !== 'muralla.cafe' &&
+            !/^[\u{1F300}-\u{1F9FF}]+$/u.test(comment.text.trim())) {
+          allComments.push({
+            author: '@' + comment.ownerUsername,
+            text: comment.text
+          });
+        }
+      });
+    }
+  });
+
   // Shuffle comments for variety
-  const shuffled = [...SOCIAL_COMMENTS].sort(() => Math.random() - 0.5);
+  const shuffled = [...allComments].sort(() => Math.random() - 0.5);
+
+  // If no comments available, use placeholder
+  if (shuffled.length === 0) {
+    console.log('[Comments] No Instagram comments available');
+    return;
+  }
 
   columns.forEach((column, colIndex) => {
     // Create double set of comments for seamless loop
@@ -1023,9 +1032,9 @@ function initSocialComments() {
     }
 
     // Duplicate comments for infinite scroll effect
-    const allComments = [...commentsForColumn, ...commentsForColumn];
+    const allCommentsForColumn = [...commentsForColumn, ...commentsForColumn];
 
-    allComments.forEach(comment => {
+    allCommentsForColumn.forEach(comment => {
       const commentEl = document.createElement('div');
       commentEl.className = 'social-comment';
       commentEl.innerHTML = `
