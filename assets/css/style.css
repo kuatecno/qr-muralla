@@ -1352,10 +1352,10 @@ body{
   }
 
   .social-comments-container{
-    grid-template-columns:1fr;
+    grid-template-columns:repeat(2, 1fr);
+    gap:16px;
     height:300px;
   }
-  .social-comments-column:nth-child(2),
   .social-comments-column:nth-child(3){
     display:none;
   }
