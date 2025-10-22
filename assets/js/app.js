@@ -1,5 +1,5 @@
 // Import color palette
-import { COLOR_PALETTE } from './color-palette.js';
+import { COLOR_PALETTE, getColorPalette } from './color-palette.js';
 
 // API Configuration
 const MURALLA_API_URL = "https://muralla-kua.vercel.app";
@@ -617,7 +617,8 @@ function renderProducts() {
 
   el.products.innerHTML = items
     .map((p, i) => {
-      const colors = p.image ? null : gradientPlaceholder(p);
+      // Use sequential color assignment by index (no repeats until all palettes exhausted)
+      const colors = p.image ? null : getColorPalette(i);
       const bgStyle = p.image ? `background-image:url('${p.image}')` : `background-color:${colors.bg}`;
       const textColor = colors ? colors.text : '#fff';
       const badges = (p.tags || []).map(t => `<span class="badge">${t}</span>`).join(" ");

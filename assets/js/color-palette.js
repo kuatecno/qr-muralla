@@ -41,12 +41,41 @@ export const COLOR_PALETTE = [
 ];
 
 /**
- * Get a color palette by index
+ * Get a color palette by index without repeating
+ * Order: Primary → Primary Inverted → Archived → Archived Inverted → Repeat Primary
  * @param {number} index - The index of the color palette
  * @returns {Object} Color palette with bg and text properties
  */
 export function getColorPalette(index) {
-  return COLOR_PALETTE[index % COLOR_PALETTE.length];
+  const primaryCount = COLOR_PALETTE.length; // 30
+  const archivedCount = ARCHIVED_PALETTE.length; // 63
+  const totalUnique = primaryCount + primaryCount + archivedCount + archivedCount; // 186 unique combinations
+
+  // Ensure index is within bounds, repeat from primary if exceeded
+  const safeIndex = index % totalUnique;
+
+  // 1. Primary palette (0-29)
+  if (safeIndex < primaryCount) {
+    return COLOR_PALETTE[safeIndex];
+  }
+
+  // 2. Primary inverted (30-59)
+  if (safeIndex < primaryCount * 2) {
+    const invertedIndex = safeIndex - primaryCount;
+    const original = COLOR_PALETTE[invertedIndex];
+    return { bg: original.text, text: original.bg };
+  }
+
+  // 3. Archived palette (60-122)
+  if (safeIndex < primaryCount * 2 + archivedCount) {
+    const archivedIndex = safeIndex - (primaryCount * 2);
+    return ARCHIVED_PALETTE[archivedIndex];
+  }
+
+  // 4. Archived inverted (123-185)
+  const archivedInvertedIndex = safeIndex - (primaryCount * 2 + archivedCount);
+  const original = ARCHIVED_PALETTE[archivedInvertedIndex];
+  return { bg: original.text, text: original.bg };
 }
 
 /**
