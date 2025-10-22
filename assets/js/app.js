@@ -1007,7 +1007,8 @@ function initSocialComments() {
           allComments.push({
             author: '@' + comment.ownerUsername,
             text: comment.text,
-            avatar: comment.ownerProfilePicUrl || ''
+            avatar: comment.ownerProfilePicUrl || '',
+            link: post.link // Link to the Instagram post
           });
         }
       });
@@ -1036,8 +1037,11 @@ function initSocialComments() {
     const allCommentsForColumn = [...commentsForColumn, ...commentsForColumn];
 
     allCommentsForColumn.forEach(comment => {
-      const commentEl = document.createElement('div');
+      const commentEl = document.createElement('a');
       commentEl.className = 'social-comment';
+      commentEl.href = comment.link;
+      commentEl.target = '_blank';
+      commentEl.rel = 'noopener noreferrer';
 
       // Fallback avatar if image fails to load
       const avatarHTML = comment.avatar
