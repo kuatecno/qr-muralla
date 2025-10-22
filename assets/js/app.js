@@ -999,11 +999,10 @@ function initSocialComments() {
   instagramPosts.forEach(post => {
     if (post.comments && Array.isArray(post.comments)) {
       post.comments.forEach(comment => {
-        // Filter out emoji-only comments and muralla.cafe replies
+        // Filter out muralla.cafe replies only
         if (comment.text &&
-            comment.text.trim().length > 3 &&
-            comment.ownerUsername !== 'muralla.cafe' &&
-            !/^[\u{1F300}-\u{1F9FF}]+$/u.test(comment.text.trim())) {
+            comment.text.trim().length > 0 &&
+            comment.ownerUsername !== 'muralla.cafe') {
           allComments.push({
             author: '@' + comment.ownerUsername,
             text: comment.text,
