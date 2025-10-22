@@ -1015,15 +1015,8 @@ function initSocialComments() {
 
   columns.forEach((column, colIndex) => {
     let commentIndex = colIndex * 3;
-    const maxVisibleComments = 3;
 
     function addComment() {
-      // Remove oldest comment if we have too many
-      const currentComments = column.querySelectorAll('.social-comment');
-      if (currentComments.length >= maxVisibleComments) {
-        currentComments[0].remove();
-      }
-
       const comment = shuffled[commentIndex % shuffled.length];
       const commentEl = document.createElement('div');
       commentEl.className = 'social-comment';
@@ -1033,16 +1026,23 @@ function initSocialComments() {
       `;
       column.appendChild(commentEl);
 
+      // Remove comment after animation completes (15s)
+      setTimeout(() => {
+        if (commentEl.parentNode) {
+          commentEl.remove();
+        }
+      }, 15000);
+
       commentIndex++;
     }
 
-    // Add initial 3 comments immediately
+    // Add initial 3 comments with stagger
     for (let i = 0; i < 3; i++) {
-      addComment();
+      setTimeout(() => addComment(), i * 5000);
     }
 
-    // Add new comment every 5 seconds
-    setInterval(addComment, 5000);
+    // Add new comment every 15 seconds (matching animation duration)
+    setInterval(addComment, 15000);
   });
 }
 
