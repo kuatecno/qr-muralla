@@ -1173,7 +1173,7 @@ body{
 
 @media (min-width: 900px){
   .hero-caption h1{font-size:34px}
-  .products{grid-template-columns:repeat(4, 1fr)}
+  .products{grid-template-columns:repeat(5, 1fr)}
 }
 
 /* Map section */
