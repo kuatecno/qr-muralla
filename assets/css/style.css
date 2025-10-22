@@ -1283,7 +1283,7 @@ body{
   grid-template-columns:repeat(3, 1fr);
   gap:24px;
   margin-top:32px;
-  height:400px;
+  height:200px;
   overflow:hidden;
   position:relative;
 }
@@ -1359,7 +1359,7 @@ body{
   .social-comments-container{
     grid-template-columns:repeat(2, 1fr);
     gap:16px;
-    height:300px;
+    height:150px;
   }
   .social-comments-column:nth-child(3){
     display:none;
