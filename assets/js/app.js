@@ -1014,10 +1014,18 @@ function initSocialComments() {
   const shuffled = [...SOCIAL_COMMENTS].sort(() => Math.random() - 0.5);
 
   columns.forEach((column, colIndex) => {
-    let commentIndex = colIndex * 3;
+    // Create double set of comments for seamless loop
+    const startIndex = colIndex * 5;
+    const commentsForColumn = [];
 
-    function addComment() {
-      const comment = shuffled[commentIndex % shuffled.length];
+    for (let i = 0; i < 5; i++) {
+      commentsForColumn.push(shuffled[(startIndex + i) % shuffled.length]);
+    }
+
+    // Duplicate comments for infinite scroll effect
+    const allComments = [...commentsForColumn, ...commentsForColumn];
+
+    allComments.forEach(comment => {
       const commentEl = document.createElement('div');
       commentEl.className = 'social-comment';
       commentEl.innerHTML = `
@@ -1025,24 +1033,7 @@ function initSocialComments() {
         <div class="social-comment-text">${comment.text}</div>
       `;
       column.appendChild(commentEl);
-
-      // Remove comment after animation completes (15s)
-      setTimeout(() => {
-        if (commentEl.parentNode) {
-          commentEl.remove();
-        }
-      }, 15000);
-
-      commentIndex++;
-    }
-
-    // Add initial 3 comments with stagger
-    for (let i = 0; i < 3; i++) {
-      setTimeout(() => addComment(), i * 5000);
-    }
-
-    // Add new comment every 15 seconds (matching animation duration)
-    setInterval(addComment, 15000);
+    });
   });
 }
 
