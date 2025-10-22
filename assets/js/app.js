@@ -1003,11 +1003,15 @@ function initSocialComments() {
         if (comment.text &&
             comment.text.trim().length > 0 &&
             comment.ownerUsername !== 'muralla.cafe') {
+          // Generate color from username
+          const colors = gradientPlaceholder({ name: comment.ownerUsername });
+
           allComments.push({
             author: '@' + comment.ownerUsername,
             text: comment.text,
             avatar: comment.ownerProfilePicUrl || '',
-            link: post.link // Link to the Instagram post
+            link: post.link, // Link to the Instagram post
+            color: colors.text // Random color for username
           });
         }
       });
@@ -1050,7 +1054,7 @@ function initSocialComments() {
       commentEl.innerHTML = `
         ${avatarHTML}
         <div class="social-comment-content">
-          <div class="social-comment-author">${comment.author}</div>
+          <div class="social-comment-author" style="color:${comment.color}">${comment.author}</div>
           <div class="social-comment-text">${comment.text}</div>
         </div>
       `;

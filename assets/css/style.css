@@ -986,8 +986,7 @@ body{
 }
 
 .review-thumbnail:hover{
-  transform:scale(1.05);
-  opacity:0.9;
+  opacity:0.7;
   border-color:var(--violet);
 }
 
@@ -1308,9 +1307,6 @@ body{
 
 .social-comment:hover{
   background:rgba(255,255,255,0.03);
-  border-radius:8px;
-  padding-left:8px;
-  padding-right:8px;
 }
 
 .social-comment-avatar{
