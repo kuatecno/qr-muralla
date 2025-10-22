@@ -1006,7 +1006,8 @@ function initSocialComments() {
             !/^[\u{1F300}-\u{1F9FF}]+$/u.test(comment.text.trim())) {
           allComments.push({
             author: '@' + comment.ownerUsername,
-            text: comment.text
+            text: comment.text,
+            avatar: comment.ownerProfilePicUrl || ''
           });
         }
       });
@@ -1038,8 +1039,11 @@ function initSocialComments() {
       const commentEl = document.createElement('div');
       commentEl.className = 'social-comment';
       commentEl.innerHTML = `
-        <div class="social-comment-author">${comment.author}</div>
-        <div class="social-comment-text">${comment.text}</div>
+        <img src="${comment.avatar}" alt="${comment.author}" class="social-comment-avatar" loading="lazy" crossorigin="anonymous" referrerpolicy="no-referrer">
+        <div class="social-comment-content">
+          <div class="social-comment-author">${comment.author}</div>
+          <div class="social-comment-text">${comment.text}</div>
+        </div>
       `;
       column.appendChild(commentEl);
     });
