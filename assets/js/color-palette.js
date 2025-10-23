@@ -12,15 +12,15 @@ export const COLOR_PALETTE = [
   { bg: "#E5DCCF", text: "#0B077B" }, // Pearl Bush & Deep Blue - WCAG AAA
   { bg: "#313D3B", text: "#D19AF3" }, // Outer Space & Perfume - WCAG AA
   { bg: "#B6F0C0", text: "#0A0A85" }, // Madang & Ultramarine - WCAG AAA
-  { bg: "#C2E7CF", text: "#58265B" }, // Fringy Flower & Bossanova - WCAG AAA
+  { bg: "#E3EADE", text: "#21866A" }, // Green White & Eucalyptus - WCAG AA Large (was 12)
   { bg: "#243E64", text: "#B1FEBC" }, // Cello & Mint Green - WCAG AAA
   { bg: "#D09EF4", text: "#632A77" }, // Perfume & Eminence - WCAG AA
   { bg: "#E5CED7", text: "#5E4C59" }, // Twilight & Don Juan - WCAG AA
   { bg: "#DEECC0", text: "#A71F0A" }, // Fall Green & Totem Pole - WCAG AA
   { bg: "#10FD28", text: "#2A006E" }, // Green & Christalle - WCAG AAA
   { bg: "#A4ABC5", text: "#72161E" }, // Cadet Blue & Moccaccino - WCAG AA
+  { bg: "#C2E7CF", text: "#58265B" }, // Fringy Flower & Bossanova - WCAG AAA (was 5)
   { bg: "#DCC4D8", text: "#8B0A08" }, // Maverick & Totem Pole - WCAG AA
-  { bg: "#E3EADE", text: "#21866A" }, // Green White & Eucalyptus - WCAG AA Large
   { bg: "#F5ECCB", text: "#3107EC" }, // Albescent White & Blue - WCAG AAA
   { bg: "#DCEFC7", text: "#2E3E3B" }, // Tea Green & Outer Space - WCAG AAA
   { bg: "#EDF3D6", text: "#15486D" }, // Frost & Chathams Blue - WCAG AAA
