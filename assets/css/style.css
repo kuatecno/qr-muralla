@@ -1222,7 +1222,7 @@ body{
 .sheet-close{position:absolute;right:14px;top:10px;background:transparent;color:#fff;border:none;font-size:26px;cursor:pointer}
 .sheet-body{padding:18px}
 
-@media (min-width: 400px){
+@media (min-width: 500px){
   .products{grid-template-columns:repeat(3, 1fr);gap:16px}
 }
 
