@@ -1701,17 +1701,11 @@ body{
 }
 
 /* Responsive */
-@media (max-width: 768px){
+@media (max-width: 599px){
   .street-sign{
     padding:6px 12px;font-size:12px;
   }
   .sign-arrow{font-size:16px}
-
-  /* Product cards - must come AFTER base styles */
-  .card-flip-container{
-    min-height:160px !important;
-    max-height:240px !important;
-  }
 
   /* Adjust mobile card text sizes */
   .card-main-title{
