@@ -534,7 +534,6 @@ body{
 .card-flip-container{
   cursor:pointer;
   aspect-ratio:1/1;
-  min-height:280px;
   position:relative;
   border-radius:12px;
   overflow:hidden;
@@ -1227,7 +1226,15 @@ body{
 .sheet-close{position:absolute;right:14px;top:10px;background:transparent;color:#fff;border:none;font-size:26px;cursor:pointer}
 .sheet-body{padding:18px}
 
-@media (min-width: 900px){
+@media (min-width: 400px){
+  .products{grid-template-columns:repeat(3, 1fr);gap:16px}
+}
+
+@media (min-width: 600px){
+  .products{grid-template-columns:repeat(4, 1fr);gap:16px 20px}
+}
+
+@media (min-width: 1050px){
   .hero-caption h1{font-size:34px}
   .products{grid-template-columns:repeat(5, 1fr);gap:16px 20px}
 }
