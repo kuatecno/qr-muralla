@@ -185,7 +185,7 @@ async function loadData() {
     }
     return null;
   }
-  const [config, today, productsResponse, eventsResponse, instagramResponse, tiktokResponse, apiConfig] = await Promise.all([
+  const [config, today, productsResponse, eventsResponse, instagramResponse, tiktokResponse, apiConfig, verbs] = await Promise.all([
     firstAvailable(CONFIG_URLS),
     firstAvailable(TODAY_URLS),
     firstAvailable(PRODUCTS_URLS),
@@ -193,9 +193,11 @@ async function loadData() {
     firstAvailable(INSTAGRAM_URLS),
     firstAvailable(TIKTOK_URLS),
     safeFetch('/api/config'),
+    safeFetch('/assets/data/verbs.json'),
   ]);
   state.config = config || FALLBACK.config;
   state.today = today || FALLBACK.today;
+  state.verbs = verbs || [];
 
   // Inject API key from serverless function if available
   console.log('[Map Debug] API Config response:', apiConfig);
@@ -1361,113 +1363,91 @@ function showPlaceholderReviews(container) {
 }
 
 // Rotating verbs display
-const VERBS = [
-  "harmonizando",
-  "germinando",
-  "cultivando",
-  "sanando",
-  "destilando",
-  "langüeteando",
-  "desaprendiendo",
-  "sapeando",
-  "acicalándonos",
-  "perforando",
-  "ecualizando",
-  "auto-tuneando",
-  "desmalezando",
-  "exorcizando",
-  "resetiando",
-  "decantando",
-  "goteando",
-  "degustando",
-  "tanteando",
-  "desapegándonos",
-  "husmeando",
-  "exfoliando",
-  "distorsionando",
-  "procrastinando",
-  "energizando",
-  "provocando",
-  "condimentando",
-  "bailando",
-  "incomodando",
-  "ghosteando",
-  "fermentando",
-  "susurrando",
-  "desenredando",
-  "burbujeando",
-  "reposando",
-  "filtrando",
-  "aromatizando",
-  "espumando",
-  "tostando",
-  "revolviendo",
-  "reconciliando",
-  "abrazando",
-  "recalculando",
-  "divagando",
-  "mariconeando",
-  "carreteando",
-  "oxigenando",
-  "maquillándonos",
-  "fantaseando",
-  "melodizando",
-  "delirando",
-  "anidando",
-  "precipitando",
-  "arrasando",
-  "pontificando",
-  "mascando",
-  "comiendo",
-  "fumando",
-  "derritiendo",
-  "despilfarrando",
-  "limpiando",
-  "taladreando",
-  "perreando",
-  "estudiando",
-  "envenenando",
-  "demorando",
-  "tentando",
-  "mirando",
-  "olvidando",
-  "shazameando",
-  "mordisqueando",
-  "oversharing",
-  "licuando",
-  "devorando",
-  "crasheando",
-  "glowing up",
-  "glitching",
-  "cafeineando",
-  "ayunando",
-  "rallando",
-  "batiendo",
-  "sofriendo",
-  "amasando",
-  "caramelizando",
-  "ahumando",
-  "aliñando",
-  "sazonando",
-  "marinando",
-  "flambeando",
-  "triturando",
-  "cuchareando",
-  "caceroleando",
-  "derritiendo",
-  "cafeteando",
-  "vaporizando",
-  "bronceando"
-];
+function getContextualVerbs() {
+  const verbsData = state.verbs || {};
+  const now = new Date();
+  const hour = now.getHours();
+  const month = now.getMonth(); // 0-11
+
+  let pool = [...(verbsData.all || [])];
+
+  // Time of day
+  if (hour >= 6 && hour < 12) {
+    pool = [...pool, ...(verbsData.morning || [])];
+  } else if (hour >= 12 && hour < 17) {
+    pool = [...pool, ...(verbsData.afternoon || [])];
+  } else if (hour >= 17 && hour < 21) {
+    pool = [...pool, ...(verbsData.evening || [])];
+  } else {
+    pool = [...pool, ...(verbsData.night || [])];
+  }
+
+  // Season (Southern Hemisphere - Chile)
+  let season;
+  if (month >= 11 || month <= 1) { // Dec, Jan, Feb
+    season = 'summer';
+  } else if (month >= 2 && month <= 4) { // Mar, Apr, May
+    season = 'fall';
+  } else if (month >= 5 && month <= 7) { // Jun, Jul, Aug
+    season = 'winter';
+  } else { // Sep, Oct, Nov
+    season = 'spring';
+  }
+  pool = [...pool, ...(verbsData[season] || [])];
+
+  // Special dates and festivities
+  const day = now.getDate();
+
+  // Pride Month (June)
+  if (month === 5) {
+    pool = [...pool, ...(verbsData.pride || [])];
+  }
+
+  // Christmas season (Dec 1-31)
+  if (month === 11) {
+    pool = [...pool, ...(verbsData.christmas || [])];
+  }
+
+  // New Year (Dec 25 - Jan 7)
+  if ((month === 11 && day >= 25) || (month === 0 && day <= 7)) {
+    pool = [...pool, ...(verbsData.newyear || [])];
+  }
+
+  // Halloween (Oct 25-31)
+  if (month === 9 && day >= 25) {
+    pool = [...pool, ...(verbsData.halloween || [])];
+  }
+
+  // Valentine's Day (Feb 10-14)
+  if (month === 1 && day >= 10 && day <= 14) {
+    pool = [...pool, ...(verbsData.valentines || [])];
+  }
+
+  // Fiestas Patrias - Chile Independence (Sep 15-19)
+  if (month === 8 && day >= 15 && day <= 19) {
+    pool = [...pool, ...(verbsData.fiestas_patrias || [])];
+  }
+
+  return pool;
+}
 
 function startVerbRotation() {
   const verbText = document.getElementById("verbText");
   if (!verbText) return;
 
+  if (!state.verbs || Object.keys(state.verbs).length === 0) {
+    console.warn('No verbs loaded');
+    return;
+  }
+
   function updateVerb() {
-    // Pick a random verb
-    const randomIndex = Math.floor(Math.random() * VERBS.length);
-    verbText.textContent = VERBS[randomIndex];
+    // Get contextual verb pool based on time and season
+    const verbs = getContextualVerbs();
+    if (verbs.length === 0) return;
+
+    // Pick a random verb from the contextual pool
+    const randomIndex = Math.floor(Math.random() * verbs.length);
+    verbText.textContent = verbs[randomIndex];
   }
 
   // Wait 2 seconds before starting random verbs (show "cargando" first)
