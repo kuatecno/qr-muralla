@@ -1208,9 +1208,9 @@ function displayReviewsWithPagination() {
   `;
 
   // Add navigation arrows
-  const reviewsSection = document.querySelector('.reviews-section');
-  if (reviewsSection && allReviews.length > 3) {
-    let existingNav = reviewsSection.querySelector('.reviews-carousel-nav');
+  const reviewsContainer = document.getElementById('reviewsContainer');
+  if (reviewsContainer && allReviews.length > 3) {
+    let existingNav = reviewsContainer.querySelector('.reviews-carousel-nav');
     if (!existingNav) {
       const nav = document.createElement('div');
       nav.className = 'reviews-carousel-nav';
@@ -1218,7 +1218,7 @@ function displayReviewsWithPagination() {
         <button class="reviews-carousel-prev" onclick="scrollReviews(-1)" aria-label="Previous reviews">‹</button>
         <button class="reviews-carousel-next" onclick="scrollReviews(1)" aria-label="Next reviews">›</button>
       `;
-      reviewsSection.appendChild(nav);
+      reviewsContainer.appendChild(nav);
     }
   }
 }
