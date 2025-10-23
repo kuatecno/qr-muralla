@@ -1096,12 +1096,14 @@ async function main() {
   // Render skeleton cards immediately before data loads
   renderProductSkeletons();
 
+  // Render category and filter chips immediately (they're hardcoded, don't need data)
+  renderCategoryChips();
+  renderChips();
+
   await loadData();
   setQuickLinks();
   renderTicker();
   // initCarousel(); // Removed - carousel no longer in HTML
-  renderCategoryChips();
-  renderChips();
   renderProducts();
   renderEvents();
   renderInstagram();
