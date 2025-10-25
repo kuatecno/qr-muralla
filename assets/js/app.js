@@ -629,7 +629,15 @@ function renderProductSkeletons() {
 }
 
 function renderProducts() {
-  let items = state.products.filter(p => matchTags(p) && matchCategories(p) && matchSearch(p));
+  // Limit to specific product IDs for homepage display
+  const allowedIds = ['04', '05', '06', '07', '08', '09', '10', '11', '14', '15', '16', '18'];
+
+  let items = state.products.filter(p =>
+    allowedIds.includes(p.id) &&
+    matchTags(p) &&
+    matchCategories(p) &&
+    matchSearch(p)
+  );
 
   // Sort alphabetically if category or search is active, otherwise shuffle
   if (state.selectedCategory || state.searchQuery) {
@@ -639,7 +647,7 @@ function renderProducts() {
     if (!state.hasShuffled) {
       state.products = shuffleArray(state.products);
       state.hasShuffled = true;
-      items = state.products; // Use the shuffled array
+      items = state.products.filter(p => allowedIds.includes(p.id)); // Use shuffled but filtered
     }
   }
 
@@ -849,23 +857,50 @@ function renderEvents() {
     const bgStyle = `<div class="event-card-bg" style="background-color:${colors.bg}"></div>`;
     const textColor = colors.text;
 
+    // Build time display
+    let timeDisplay = '';
+    if (event.start_time && event.end_time) {
+      timeDisplay = `${event.start_time} - ${event.end_time}`;
+    } else if (event.start_time) {
+      timeDisplay = `desde ${event.start_time}`;
+    } else if (event.end_time) {
+      timeDisplay = `hasta ${event.end_time}`;
+    } else if (event.time) {
+      timeDisplay = event.time;
+    }
+
+    // Front: Image (if available) or color
+    const frontContent = event.image
+      ? `<img src="${event.image}" alt="${event.title}" class="event-card-front-image" />`
+      : bgStyle;
+
     return `
-      <div class="event-card">
-        ${bgStyle}
-        <div class="event-date-badge">
-          <span class="event-date-day">${day}</span>
-          <span class="event-date-month">${month}</span>
-        </div>
-        <div class="event-content">
-          <span class="event-category">${event.category}</span>
-          <h3 class="event-title" style="color:${textColor}">${event.title}</h3>
-          <p class="event-description" style="color:${textColor}">${event.description}</p>
-          <div class="event-meta" style="color:${textColor}">
-            <span class="event-meta-item">🕐 ${event.time}</span>
+      <div class="event-card" data-event-id="${event.id}" onclick="this.classList.toggle('flipped')">
+        <div class="event-card-inner">
+          <div class="event-card-front">
+            ${frontContent}
           </div>
-          <a href="${event.bookingUrl || bookingLink(event.title)}" class="event-cta" target="_blank" rel="noopener">
-            Más info →
-          </a>
+          <div class="event-card-back">
+            ${bgStyle}
+            <div class="event-date-badge">
+              <span class="event-date-day">${day}</span>
+              <span class="event-date-month">${month}</span>
+            </div>
+            <span class="event-category">${event.category}</span>
+            <div class="event-content">
+              <h3 class="event-title" style="color:${textColor}">${event.title}</h3>
+              <p class="event-description" style="color:${textColor}">${event.description}</p>
+              ${timeDisplay ? `<div class="event-meta" style="color:${textColor}">
+                <span class="event-meta-item">🕐 ${timeDisplay}</span>
+              </div>` : ''}
+              ${event.place ? `<div class="event-meta" style="color:${textColor}">
+                <span class="event-meta-item">📍 ${event.place}</span>
+              </div>` : ''}
+              <a href="${event.bookingUrl || bookingLink(event.title)}" class="event-cta" target="_blank" rel="noopener" onclick="event.stopPropagation()">
+                Más info →
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     `;
@@ -1508,12 +1543,18 @@ function updateOpenStatus() {
   const minutes = chileTime.getMinutes();
   const currentTime = hours * 60 + minutes;
 
-  // Check if today is a special location day
+  // Check if today is a special location day from config
   const todayDate = chileTime.toISOString().split('T')[0];
   const specialLocation = state.config?.specialLocations?.find(loc => loc.date === todayDate);
 
+  // Also check for events with a place field happening today
+  const todayEvent = state.events?.find(event => {
+    const eventDate = event.date;
+    return eventDate === todayDate && event.place;
+  });
+
   if (specialLocation) {
-    // Special location mode
+    // Special location mode from config
     statusEl.className = "open-status special-location loaded";
     statusText.textContent = "abierto de visita";
 
@@ -1525,6 +1566,41 @@ function updateOpenStatus() {
           ${specialLocation.address}<br>
           <span style="font-size: 12px; opacity: 0.9;">${specialLocation.description}</span>
           ${specialLocation.mapsUrl ? `<br><a href="${specialLocation.mapsUrl}" target="_blank" rel="noopener" style="color: #e67e5f; text-decoration: underline;">Ver en mapa ↗</a>` : ''}
+        </div>
+      `;
+
+      statusEl.onclick = () => {
+        tooltip.classList.add("show");
+        setTimeout(() => {
+          tooltip.classList.remove("show");
+        }, 5000);
+      };
+    }
+    return;
+  } else if (todayEvent) {
+    // Event with place happening today
+    statusEl.className = "open-status special-location loaded";
+    statusText.textContent = "abierto de visita";
+
+    if (tooltip) {
+      // Build time range display
+      let timeInfo = '';
+      if (todayEvent.start_time && todayEvent.end_time) {
+        timeInfo = `${todayEvent.start_time} - ${todayEvent.end_time}`;
+      } else if (todayEvent.start_time) {
+        timeInfo = `desde ${todayEvent.start_time}`;
+      } else if (todayEvent.end_time) {
+        timeInfo = `hasta ${todayEvent.end_time}`;
+      } else if (todayEvent.time) {
+        timeInfo = todayEvent.time;
+      }
+
+      tooltip.innerHTML = `
+        <div style="white-space: pre-line; text-align: left;">
+          <strong>${todayEvent.title}</strong><br>
+          ${todayEvent.place}<br>
+          ${timeInfo ? `<span style="font-size: 12px; opacity: 0.9;">🕐 ${timeInfo}</span><br>` : ''}
+          <span style="font-size: 12px; opacity: 0.9;">${todayEvent.description}</span>
         </div>
       `;
 

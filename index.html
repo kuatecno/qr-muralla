@@ -62,6 +62,47 @@
         </div>
       </section>
 
+      <section class="map-section" aria-label="Ubicación">
+        <div class="map-head">
+          <h2>Dónde estamos</h2>
+          <a class="inline-link" id="mapOpen" target="_blank" rel="noopener">Abrir en Google Maps ↗</a>
+        </div>
+        <div class="map-card">
+          <div id="map" class="map-embed" aria-label="Mapa"></div>
+        </div>
+      </section>
+
+      <section class="events-section" aria-label="Próximos eventos">
+        <div class="events-head">
+          <h2>Próximos Eventos</h2>
+          <div class="events-nav">
+            <button class="event-nav-btn prev" id="eventPrev" aria-label="Evento anterior">←</button>
+            <button class="event-nav-btn next" id="eventNext" aria-label="Siguiente evento">→</button>
+          </div>
+        </div>
+        <div class="events-carousel">
+          <div class="events-track" id="eventsTrack">
+            <!-- Event cards injected by JS -->
+          </div>
+        </div>
+      </section>
+
+      <section class="reviews-section" aria-label="Reseñas de Google">
+        <div class="reviews-head">
+          <h2>Lo que dicen</h2>
+          <a class="inline-link" id="googleReviewsLink" target="_blank" rel="noopener">Deja tu reseña ↗</a>
+        </div>
+        <div class="reviews-container" id="reviewsContainer">
+          <div class="review-card">
+            <p class="review-text">"Cargando reseñas..."</p>
+            <div class="review-footer">
+              <div class="review-author">Google Reviews</div>
+              <div class="review-rating">—</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="menu" aria-label="Menú y categorías">
         <div class="category-section" id="categorySection">
           <button class="search-trigger-chip" id="searchTrigger" aria-label="Buscar">🔍</button>
@@ -88,47 +129,9 @@
         <div class="products" id="products">
           <!-- Product cards injected by JS -->
         </div>
-      </section>
-
-      <section class="events-section" aria-label="Próximos eventos">
-        <div class="events-head">
-          <h2>Próximos Eventos</h2>
-          <div class="events-nav">
-            <button class="event-nav-btn prev" id="eventPrev" aria-label="Evento anterior">←</button>
-            <button class="event-nav-btn next" id="eventNext" aria-label="Siguiente evento">→</button>
-          </div>
-        </div>
-        <div class="events-carousel">
-          <div class="events-track" id="eventsTrack">
-            <!-- Event cards injected by JS -->
-          </div>
-        </div>
-      </section>
-
-      <section class="map-section" aria-label="Ubicación">
-        <div class="map-head">
-          <h2>Dónde estamos</h2>
-          <a class="inline-link" id="mapOpen" target="_blank" rel="noopener">Abrir en Google Maps ↗</a>
-        </div>
-        <div class="map-card">
-          <div id="map" class="map-embed" aria-label="Mapa"></div>
-        </div>
-      </section>
-
-      <section class="reviews-section" aria-label="Reseñas de Google">
-        <div class="reviews-head">
-          <h2>Lo que dicen</h2>
-          <a class="inline-link" id="googleReviewsLink" target="_blank" rel="noopener">Deja tu reseña ↗</a>
-        </div>
-        <div class="reviews-container" id="reviewsContainer">
-          <div class="review-card">
-            <p class="review-text">"Cargando reseñas..."</p>
-            <div class="review-footer">
-              <div class="review-author">Google Reviews</div>
-              <div class="review-rating">—</div>
-            </div>
-          </div>
-        </div>
+        <p class="menu-coming-soon" style="text-align:center;padding:24px 14px;color:var(--muted);font-size:15px;margin:0;">
+          Pronto el menú completo lo encontrarás aquí y podras reservar
+        </p>
       </section>
 
       <section class="instagram-section" aria-label="Sigámosnos en las redes">

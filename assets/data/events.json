@@ -1,42 +1,34 @@
 [
   {
-    "id": "jazz-night-dec",
-    "title": "Noche de Jazz en Vivo",
+    "id": "feria-negrx",
+    "title": "Feria Negrx",
     "description": "Música en vivo con artistas locales. Ambiente íntimo y acogedor.",
-    "date": "2025-12-15",
-    "time": "20:00",
-    "image": "",
-    "category": "música",
-    "bookingUrl": "https://ig.me/m/muralla.cafe?ref=evento-jazz"
+    "date": "2025-10-25",
+    "start_time": "12:00",
+    "end_time": "23:00",
+    "place": "Carmen 1235",
+    "image": "/assets/img/eventos/venta-garage.jpg",
+    "category": "fashion y música",
+    "bookingUrl": "https://ig.me/m/muralla.cafe?ref=feria-negrx"
   },
   {
-    "id": "art-exhibition",
-    "title": "Exposición de Arte Local",
-    "description": "Muestra de artistas emergentes de Santiago. Entrada libre.",
-    "date": "2025-12-20",
+    "id": "venta-garage",
+    "title": "Venta de Garage",
+    "description": "Remate de artículos de librería y ropa",
+    "date": "2025-11-02",
     "time": "18:00",
-    "image": "",
-    "category": "arte",
-    "bookingUrl": "https://ig.me/m/muralla.cafe?ref=evento-arte"
+    "image": "/assets/img/eventos/venta-garage.jpg",
+    "category": "mercado",
+    "bookingUrl": "https://ig.me/m/muralla.cafe?ref=venta-garage"
   },
   {
-    "id": "wine-tasting",
-    "title": "Cata de Vinos Chilenos",
-    "description": "Degustación de vinos del valle con sommelier profesional.",
-    "date": "2025-12-28",
+    "id": "inaeg",
+    "title": "Inaeguración Muralla Café",
+    "description": "musiquita y celebración de este gran comienzo",
+    "date": "2025-11-09",
     "time": "19:30",
-    "image": "",
-    "category": "gastronomía",
-    "bookingUrl": "https://ig.me/m/muralla.cafe?ref=evento-vino"
-  },
-  {
-    "id": "poetry-reading",
-    "title": "Lectura de Poesía Abierta",
-    "description": "Micrófono abierto para poetas y escritores. Comparte tu obra.",
-    "date": "2026-01-05",
-    "time": "19:00",
-    "image": "",
-    "category": "literatura",
-    "bookingUrl": "https://ig.me/m/muralla.cafe?ref=evento-poesia"
+    "image": "/assets/img/eventos/dino.jpg",
+    "category": "evento",
+    "bookingUrl": "https://ig.me/m/muralla.cafe?ref=inaeguración"
   }
 ]

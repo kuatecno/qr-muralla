@@ -37,27 +37,27 @@
   },
   {
     "id": "05",
-    "name": "Helado de Vainilla",
+    "name": "Helado Cookies and Cream",
     "category": "Helados",
-    "price": 2800,
+    "price": 3000,
     "tags": ["sin gluten"],
     "description": "Cremoso artesanal.",
     "image": ""
   },
   {
     "id": "06",
-    "name": "Pasta Carbonara",
-    "category": "Pasta",
-    "price": 6500,
+    "name": "Pastel de Choclo",
+    "category": "Hoy",
+    "price": 6000,
     "tags": ["sin procesar"],
     "description": "Cremosa y tradicional.",
     "image": ""
   },
   {
     "id": "07",
-    "name": "Empanadas de Pino",
+    "name": "Empanadas de Pino de Soya",
     "category": "Empanadas",
-    "price": 2200,
+    "price": 3000,
     "tags": ["sin procesar"],
     "description": "Relleno jugoso.",
     "image": ""
@@ -66,7 +66,7 @@
     "id": "08",
     "name": "Pizza Margarita",
     "category": "Pizza",
-    "price": 5800,
+    "price": 2500,
     "tags": ["vegano"],
     "description": "Clásica napolitana.",
     "image": ""
@@ -75,25 +75,25 @@
     "id": "09",
     "name": "Ceviche Mixto",
     "category": "Ceviche",
-    "price": 7200,
+    "price": 6000,
     "tags": ["low carb / sin azúcar", "sin gluten"],
     "description": "Fresco del día.",
     "image": ""
   },
   {
     "id": "10",
-    "name": "Ensalada César",
-    "category": "Ensaladas",
-    "price": 5200,
+    "name": "Snicker vegano",
+    "category": "Dulces",
+    "price": 2000,
     "tags": ["low carb / sin azúcar"],
     "description": "Con pollo grillé.",
     "image": ""
   },
   {
     "id": "11",
-    "name": "Café Americano",
+    "name": "Americunt",
     "category": "Café",
-    "price": 2000,
+    "price": 2700,
     "tags": [],
     "description": "Intenso y aromático.",
     "image": ""
@@ -118,45 +118,36 @@
   },
   {
     "id": "14",
-    "name": "Ice Coffee Vainilla",
+    "name": "Ice Expresso Limón Tónico",
     "category": "Ice Coffee",
-    "price": 3200,
+    "price": 4000,
     "tags": [],
-    "description": "Frío y dulce.",
+    "description": "Frío y refrescante.",
     "image": ""
   },
   {
     "id": "15",
-    "name": "Frapé de Chocolate",
-    "category": "Frapés",
-    "price": 3800,
+    "name": "Ice Expresso Naranja",
+    "category": "Ice Coffee",
+    "price": 4000,
     "tags": [],
     "description": "Cremoso y helado.",
     "image": ""
   },
   {
     "id": "16",
-    "name": "Mocktail de Fresa",
+    "name": "Murachino",
     "category": "Mocktails",
-    "price": 3500,
+    "price": 4000,
     "tags": ["vegano"],
-    "description": "Sin alcohol, pura fruta.",
-    "image": ""
-  },
-  {
-    "id": "17",
-    "name": "Jugo de Naranja",
-    "category": "Jugos",
-    "price": 2800,
-    "tags": ["vegano", "sin procesar"],
-    "description": "Recién exprimido.",
+    "description": "Frapé de café con leche.",
     "image": ""
   },
   {
     "id": "18",
     "name": "Limonada Menta",
     "category": "Limonadas",
-    "price": 2500,
+    "price": 3000,
     "tags": ["vegano", "low carb / sin azúcar"],
     "description": "Refrescante natural.",
     "image": ""
@@ -165,34 +156,25 @@
     "id": "19",
     "name": "Kombucha de Jengibre",
     "category": "Kombucha",
-    "price": 3200,
+    "price": 3000,
     "tags": ["vegano", "sin procesar"],
     "description": "Probiótico artesanal.",
-    "image": ""
-  },
-  {
-    "id": "20",
-    "name": "Agua de Chía Limón",
-    "category": "Agua de Chía",
-    "price": 2500,
-    "tags": ["vegano", "sin gluten"],
-    "description": "Hidratante y nutritiva.",
     "image": ""
   },
   {
     "id": "21",
     "name": "Agua Mineral",
     "category": "Agua",
-    "price": 1500,
+    "price": 1000,
     "tags": [],
     "description": "Pura y fresca.",
     "image": ""
   },
   {
     "id": "22",
-    "name": "Bless Té Verde",
+    "name": "Bless Naranja",
     "category": "Bless",
-    "price": 1800,
+    "price": 2200,
     "tags": [],
     "description": "Refrescante y ligero.",
     "image": ""
