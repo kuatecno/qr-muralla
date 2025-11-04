@@ -1301,7 +1301,7 @@ body{
   .products{grid-template-columns:repeat(4, 1fr);gap:16px 20px}
   .card-front{padding:16px}
   .card-content{gap:10px}
-  .card-main-title{font-size:26px;-webkit-line-clamp:4;line-clamp:4}
+  .card-main-title{font-size:26px;-webkit-line-clamp:unset;line-clamp:unset;max-height:none}
   .card-subtitle{font-size:14px}
   .card-description{font-size:12px}
   /* Hide subtitle/description for cards with long titles */
