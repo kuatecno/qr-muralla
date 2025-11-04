@@ -1272,18 +1272,18 @@ body{
   /* 2 columns - largest cards */
   .card-front{padding:12px}
   .card-content{gap:8px}
-  .card-main-title{font-size:26px}
-  .card-subtitle{font-size:14px}
-  .card-description{font-size:12px}
+  .card-main-title{font-size:29px}
+  .card-subtitle{font-size:15px}
+  .card-description{font-size:13px}
 }
 
 @media (min-width: 450px) and (max-width: 767px){
   /* 3 columns - medium cards */
   .products{grid-template-columns:repeat(3, 1fr);gap:16px}
   .card-front{padding:11px}
-  .card-main-title{font-size:22px}
-  .card-subtitle{font-size:13px}
-  .card-description{font-size:11px}
+  .card-main-title{font-size:25px}
+  .card-subtitle{font-size:14px}
+  .card-description{font-size:12px}
 }
 
 @media (min-width: 768px) and (max-width: 999px){
@@ -1291,19 +1291,19 @@ body{
   .products{grid-template-columns:repeat(4, 1fr);gap:16px 20px}
   .card-front{padding:14px}
   .card-content{gap:8px}
-  .card-main-title{font-size:24px}
-  .card-subtitle{font-size:13px}
-  .card-description{font-size:11px}
+  .card-main-title{font-size:28px}
+  .card-subtitle{font-size:15px}
+  .card-description{font-size:13px}
 }
 
 @media (min-width: 1000px){
   /* 5 columns - smallest cards */
   .hero-caption h1{font-size:34px}
   .products{grid-template-columns:repeat(5, 1fr);gap:16px 20px}
-  .card-front{padding:13px}
-  .card-main-title{font-size:22px}
-  .card-subtitle{font-size:12px}
-  .card-description{font-size:11px}
+  .card-front{padding:14px}
+  .card-main-title{font-size:30px}
+  .card-subtitle{font-size:15px}
+  .card-description{font-size:13px}
 }
 
 /* Map section */
