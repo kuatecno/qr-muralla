@@ -4,13 +4,42 @@ import { COLOR_PALETTE, getColorPalette } from './color-palette.js';
 // API Configuration
 const MURALLA_API_URL = "https://muralla-kua.vercel.app";
 
-// Prefer local JSON files for fast loading; fall back to Muralla 5.0 API if needed
-const CONFIG_URLS = ["/assets/data/config.json", "/api/config"];
-const TODAY_URLS = ["/assets/data/today.json", "/api/today"];
-const PRODUCTS_URLS = ["/assets/data/products.json"]; // Use local file for fast loading
-const EVENTS_URLS = ["/assets/data/events.json", "/api/events"];
-const INSTAGRAM_URLS = ["/api/instagram", "/assets/data/instagram.json"];
-const TIKTOK_URLS = ["/api/tiktok"];
+// Cache configuration
+const CACHE_PREFIX = 'muralla_cache_';
+const CACHE_DURATION_MS = 5 * 60 * 1000; // 5 minutes - cache freshness threshold
+
+// Data source URLs - local files load first, API updates in background
+const DATA_SOURCES = {
+  config: {
+    local: '/assets/data/config.json',
+    api: '/api/config',
+    cache: 'config'
+  },
+  today: {
+    local: '/assets/data/today.json',
+    api: '/api/today',
+    cache: 'today'
+  },
+  products: {
+    local: '/assets/data/products.json',
+    api: `${MURALLA_API_URL}/api/products`, // Add your API endpoint here
+    cache: 'products'
+  },
+  events: {
+    local: '/assets/data/events.json',
+    api: '/api/events',
+    cache: 'events'
+  },
+  instagram: {
+    api: '/api/instagram',
+    local: '/assets/data/instagram.json',
+    cache: 'instagram'
+  },
+  tiktok: {
+    api: '/api/tiktok',
+    cache: 'tiktok'
+  }
+};
 
 const el = {
   tickerTrack: document.getElementById("tickerTrack"),
@@ -167,6 +196,54 @@ const FALLBACK = {
   ],
 };
 
+// Cache management
+function getCacheKey(name) {
+  return `${CACHE_PREFIX}${name}`;
+}
+
+function getFromCache(name) {
+  try {
+    const key = getCacheKey(name);
+    const cached = localStorage.getItem(key);
+    if (!cached) return null;
+    
+    const { data, timestamp } = JSON.parse(cached);
+    console.log(`[Cache] Found ${name} from ${new Date(timestamp).toLocaleTimeString()}`);
+    return data;
+  } catch (e) {
+    console.warn(`[Cache] Error reading ${name}:`, e);
+    return null;
+  }
+}
+
+function saveToCache(name, data) {
+  try {
+    const key = getCacheKey(name);
+    const cached = {
+      data,
+      timestamp: Date.now()
+    };
+    localStorage.setItem(key, JSON.stringify(cached));
+    console.log(`[Cache] Saved ${name} at ${new Date().toLocaleTimeString()}`);
+  } catch (e) {
+    console.warn(`[Cache] Error saving ${name}:`, e);
+  }
+}
+
+function isCacheFresh(name) {
+  try {
+    const key = getCacheKey(name);
+    const cached = localStorage.getItem(key);
+    if (!cached) return false;
+    
+    const { timestamp } = JSON.parse(cached);
+    const age = Date.now() - timestamp;
+    return age < CACHE_DURATION_MS;
+  } catch (e) {
+    return false;
+  }
+}
+
 async function safeFetch(url) {
   try {
     const res = await fetch(url, { cache: "no-store" });
@@ -177,24 +254,83 @@ async function safeFetch(url) {
   }
 }
 
-async function loadData() {
-  async function firstAvailable(urls) {
-    for (const u of urls) {
-      const data = await safeFetch(u);
-      if (data) return data;
-    }
-    return null;
+// Load with cache-first strategy: cache → local → API
+async function loadWithCache(source) {
+  const { local, api, cache } = source;
+  
+  // 1. Try cache first (instant)
+  const cached = getFromCache(cache);
+  if (cached) {
+    return cached;
   }
+  
+  // 2. Try local file (fast)
+  if (local) {
+    const localData = await safeFetch(local);
+    if (localData) {
+      // Save to cache for next time
+      saveToCache(cache, localData);
+      return localData;
+    }
+  }
+  
+  // 3. Try API (slower, but fresh)
+  if (api) {
+    const apiData = await safeFetch(api);
+    if (apiData) {
+      saveToCache(cache, apiData);
+      return apiData;
+    }
+  }
+  
+  return null;
+}
+
+// Background update: fetch from API and update cache
+async function updateCacheInBackground(source) {
+  const { api, cache } = source;
+  if (!api) return;
+  
+  try {
+    console.log(`[Background Update] Fetching fresh ${cache} data...`);
+    const freshData = await safeFetch(api);
+    if (freshData) {
+      saveToCache(cache, freshData);
+      console.log(`[Background Update] Updated ${cache} cache`);
+      return freshData;
+    }
+  } catch (e) {
+    console.warn(`[Background Update] Failed to update ${cache}:`, e);
+  }
+}
+
+async function loadData() {
+  // Load data with cache-first strategy
   const [config, today, productsResponse, eventsResponse, instagramResponse, tiktokResponse, apiConfig, verbs] = await Promise.all([
-    firstAvailable(CONFIG_URLS),
-    firstAvailable(TODAY_URLS),
-    firstAvailable(PRODUCTS_URLS),
-    firstAvailable(EVENTS_URLS),
-    firstAvailable(INSTAGRAM_URLS),
-    firstAvailable(TIKTOK_URLS),
+    loadWithCache(DATA_SOURCES.config),
+    loadWithCache(DATA_SOURCES.today),
+    loadWithCache(DATA_SOURCES.products),
+    loadWithCache(DATA_SOURCES.events),
+    loadWithCache(DATA_SOURCES.instagram),
+    loadWithCache(DATA_SOURCES.tiktok),
     safeFetch('/api/config'),
     safeFetch('/assets/data/verbs.json'),
   ]);
+  
+  // Start background updates (non-blocking)
+  setTimeout(() => {
+    console.log('[Background Update] Starting cache refresh...');
+    Promise.all([
+      updateCacheInBackground(DATA_SOURCES.config),
+      updateCacheInBackground(DATA_SOURCES.today),
+      updateCacheInBackground(DATA_SOURCES.products),
+      updateCacheInBackground(DATA_SOURCES.events),
+      updateCacheInBackground(DATA_SOURCES.instagram),
+      updateCacheInBackground(DATA_SOURCES.tiktok),
+    ]).then(() => {
+      console.log('[Background Update] Cache refresh complete');
+    });
+  }, 1000); // Wait 1 second after initial load
   state.config = config || FALLBACK.config;
   state.today = today || FALLBACK.today;
   state.verbs = verbs || [];
