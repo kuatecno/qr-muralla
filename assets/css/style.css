@@ -135,40 +135,23 @@ body{
 
 .site-header{
   position:fixed;top:0;left:0;right:0;z-index:20;
-  display:grid;grid-template-columns:auto auto 1fr auto;gap:12px;align-items:center;
+  display:grid;grid-template-columns:auto auto 1fr;gap:12px;align-items:center;
   padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.06);
   backdrop-filter:saturate(130%) blur(8px);background:linear-gradient(180deg, rgba(12,12,18,0.7), rgba(12,12,18,0.35));
 }
 
-/* Bottom navigation bar */
+/* Bottom navigation bar with ticker */
 .site-bottom-nav{
   position:fixed;bottom:0;left:0;right:0;z-index:20;
-  padding:12px 14px 16px;
+  padding:10px 0;
   border-top:1px solid rgba(255,255,255,0.06);
   backdrop-filter:saturate(130%) blur(8px);
   background:linear-gradient(0deg, rgba(12,12,18,0.85), rgba(12,12,18,0.4));
-  max-height:45vh;
-  overflow-y:auto;
-  overflow-x:hidden;
-  scrollbar-width:thin;
-  scrollbar-color:rgba(200,181,209,0.3) transparent;
 }
 
-.site-bottom-nav::-webkit-scrollbar{
-  width:6px;
-}
-
-.site-bottom-nav::-webkit-scrollbar-track{
-  background:transparent;
-}
-
-.site-bottom-nav::-webkit-scrollbar-thumb{
-  background:rgba(200,181,209,0.3);
-  border-radius:3px;
-}
-
-.site-bottom-nav::-webkit-scrollbar-thumb:hover{
-  background:rgba(200,181,209,0.5);
+.site-bottom-nav .ticker{
+  width:100%;
+  overflow:hidden;
 }
 
 /* Open/Closed status */
@@ -459,7 +442,7 @@ body{
 .qa{display:grid;place-items:center;padding:12px;border-radius:14px;text-decoration:none;color:var(--text);background:var(--panel);border:1px solid rgba(255,255,255,0.08)}
 .qa:hover{background:var(--panel-2)}
 
-.menu{padding:10px 14px 180px}
+.menu{padding:10px 14px 90px}
 
 /* Category chips - Main categories (bigger, bolder) */
 .category-chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px}
@@ -1286,7 +1269,7 @@ body{
 }
 
 
-.site-footer{padding:20px 14px 24px;margin-bottom:0;border-top:1px solid rgba(255,255,255,0.06);background:var(--bg);display:none}
+.site-footer{padding:20px 14px 24px;margin-bottom:60px;border-top:1px solid rgba(255,255,255,0.06);background:linear-gradient(180deg, rgba(12,12,18,0.35), rgba(12,12,18,0.8))}
 .love{color:var(--muted);margin-bottom:8px}
 .footer-links{display:flex;flex-wrap:wrap;gap:12px}
 .footer-links a{color:var(--text);opacity:.8;text-decoration:none}
