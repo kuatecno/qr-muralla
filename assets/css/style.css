@@ -645,7 +645,7 @@ body{
 
 .card-main-title{
   margin:0;
-  font-size:clamp(18px, 5.5vw, 34px);
+  font-size:24px;
   font-weight:450;
   line-height:1.1;
   word-break:break-word;
@@ -654,7 +654,7 @@ body{
 
 .card-subtitle{
   margin:0;
-  font-size:clamp(11px, 2.2vw, 16px);
+  font-size:13px;
   font-weight:600;
   opacity:0.95;
   line-height:1.2;
@@ -673,7 +673,7 @@ body{
 
 .card-description{
   margin:0;
-  font-size:clamp(10px, 1.8vw, 14px);
+  font-size:11px;
   line-height:1.3;
   opacity:0.9;
   word-wrap:break-word;
@@ -1267,26 +1267,43 @@ body{
 .sheet-close{position:absolute;right:14px;top:10px;background:transparent;color:#fff;border:none;font-size:26px;cursor:pointer}
 .sheet-body{padding:18px}
 
-/* Responsive grid layout - text scales fluidly via clamp() */
+/* Responsive grid with proportional text sizing based on column count */
 @media (max-width: 449px){
-  .card-front{padding:clamp(10px, 2.5vw, 12px)}
-  .card-content{gap:6px}
+  /* 2 columns - largest cards */
+  .card-front{padding:12px}
+  .card-content{gap:8px}
+  .card-main-title{font-size:26px}
+  .card-subtitle{font-size:14px}
+  .card-description{font-size:12px}
 }
 
-@media (min-width: 450px){
+@media (min-width: 450px) and (max-width: 767px){
+  /* 3 columns - medium cards */
   .products{grid-template-columns:repeat(3, 1fr);gap:16px}
-  .card-front{padding:clamp(12px, 2.8vw, 16px)}
+  .card-front{padding:11px}
+  .card-main-title{font-size:22px}
+  .card-subtitle{font-size:13px}
+  .card-description{font-size:11px}
 }
 
-@media (min-width: 768px){
+@media (min-width: 768px) and (max-width: 999px){
+  /* 4 columns - smaller cards */
   .products{grid-template-columns:repeat(4, 1fr);gap:16px 20px}
-  .card-content{gap:clamp(8px, 1.5vw, 12px)}
+  .card-front{padding:14px}
+  .card-content{gap:8px}
+  .card-main-title{font-size:24px}
+  .card-subtitle{font-size:13px}
+  .card-description{font-size:11px}
 }
 
 @media (min-width: 1000px){
+  /* 5 columns - smallest cards */
   .hero-caption h1{font-size:34px}
   .products{grid-template-columns:repeat(5, 1fr);gap:16px 20px}
-  .card-front{padding:clamp(18px, 3vw, 24px)}
+  .card-front{padding:13px}
+  .card-main-title{font-size:22px}
+  .card-subtitle{font-size:12px}
+  .card-description{font-size:11px}
 }
 
 /* Map section */
