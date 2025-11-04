@@ -583,7 +583,7 @@ body{
   flex:1;
   display:flex;
   flex-direction:column;
-  gap:6px;
+  gap:8px;
   overflow:hidden;
 }
 
@@ -1275,6 +1275,7 @@ body{
 /* Mobile-first responsive product grid for square cards */
 @media (max-width: 449px){
   .card-front{padding:10px}
+  .card-content{gap:6px}
   .card-main-title{font-size:18px;-webkit-line-clamp:2;line-clamp:2}
   .card-subtitle{font-size:11px}
   .card-description{font-size:10px}
@@ -1289,19 +1290,32 @@ body{
   .card-subtitle{font-size:12px}
 }
 
+@media (min-width: 650px){
+  .card-front{padding:14px}
+  .card-main-title{font-size:22px}
+  .card-subtitle{font-size:13px}
+  .card-description{font-size:11px}
+}
+
 @media (min-width: 768px){
   .products{grid-template-columns:repeat(4, 1fr);gap:16px 20px}
   .card-front{padding:16px}
+  .card-content{gap:10px}
   .card-main-title{font-size:26px}
   .card-subtitle{font-size:14px}
   .card-description{font-size:12px}
 }
 
-@media (min-width: 1050px){
+@media (min-width: 950px){
+  .card-main-title{font-size:24px}
+  .card-subtitle{font-size:13px}
+}
+
+@media (min-width: 1000px){
   .hero-caption h1{font-size:34px}
   .products{grid-template-columns:repeat(5, 1fr);gap:16px 20px}
   .card-front{padding:20px}
-  .card-main-title{font-size:32px;-webkit-line-clamp:3;line-clamp:3}
+  .card-main-title{font-size:29px;-webkit-line-clamp:3;line-clamp:3}
   .card-subtitle{font-size:15px}
   .card-description{font-size:13px}
 }
