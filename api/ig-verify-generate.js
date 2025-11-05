@@ -35,7 +35,18 @@ export default async function handler(req, res) {
     console.log('[IG Verify Proxy] Response status:', response.status);
     console.log('[IG Verify Proxy] Response headers:', Object.fromEntries(response.headers));
 
-    const data = await response.json();
+    // Get the raw response text first to handle HTML responses
+    const responseText = await response.text();
+    console.log('[IG Verify Proxy] Response body preview:', responseText.substring(0, 500));
+
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error('[IG Verify Proxy] Failed to parse JSON:', parseError.message);
+      console.error('[IG Verify Proxy] Raw response:', responseText.substring(0, 1000));
+      throw new Error(`Flowkick API returned non-JSON response: ${responseText.substring(0, 200)}`);
+    }
 
     if (!response.ok) {
       console.error('[IG Verify Proxy] API error:', data);
