@@ -716,7 +716,19 @@ function renderTicker() {
 // Split-flap display for today's specials
 function initSplitFlap() {
   const items = state.today?.items || [];
-  if (!items.length || !el.flapDisplay) return;
+  console.log('[Split-Flap] Initializing with items:', items);
+  
+  if (!items.length) {
+    console.warn('[Split-Flap] No items found in state.today.items');
+    return;
+  }
+  
+  if (!el.flapDisplay) {
+    console.warn('[Split-Flap] flapDisplay element not found');
+    return;
+  }
+  
+  console.log(`[Split-Flap] Starting with ${items.length} items`);
   
   // Start with first item
   updateFlapText(items[0]);
