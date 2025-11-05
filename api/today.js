@@ -1,4 +1,5 @@
 // Serverless function to serve today's specials
+// Vercel serverless function for /api/today endpoint
 export default function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
