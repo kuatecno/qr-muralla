@@ -105,6 +105,7 @@ const state = {
   slideIndex: 0,
   hasShuffled: false,
   eventSlideIndex: 0,
+  isInitialLoad: true,
 };
 
 // Fallback data if JSON not available
@@ -287,7 +288,7 @@ async function loadWithCache(source) {
 }
 
 // Background update: fetch from API and update cache
-async function updateCacheInBackground(source) {
+async function updateCacheInBackground(source, onUpdate) {
   const { api, cache } = source;
   if (!api) return;
   
@@ -297,6 +298,12 @@ async function updateCacheInBackground(source) {
     if (freshData) {
       saveToCache(cache, freshData);
       console.log(`[Background Update] Updated ${cache} cache`);
+      
+      // Call update callback if provided
+      if (onUpdate && typeof onUpdate === 'function') {
+        onUpdate(freshData);
+      }
+      
       return freshData;
     }
   } catch (e) {
@@ -320,10 +327,38 @@ async function loadData() {
   // Start background updates (non-blocking)
   setTimeout(() => {
     console.log('[Background Update] Starting cache refresh...');
+    
+    // Update products with callback to smoothly re-render
+    updateCacheInBackground(DATA_SOURCES.products, (freshProducts) => {
+      // Check if products actually changed
+      const oldProducts = state.products;
+      let productsData;
+      
+      if (freshProducts && freshProducts.data && Array.isArray(freshProducts.data)) {
+        productsData = freshProducts.data;
+      } else if (Array.isArray(freshProducts)) {
+        productsData = freshProducts;
+      }
+      
+      if (productsData && productsData.length > 0) {
+        const newProducts = productsData.map(normalizeProduct);
+        
+        // Only update if products changed
+        if (JSON.stringify(oldProducts) !== JSON.stringify(newProducts)) {
+          console.log('[Products Update] New products detected, fading in updates...');
+          state.products = newProducts;
+          state.isInitialLoad = false;
+          renderProductsWithFade();
+        } else {
+          console.log('[Products Update] No changes detected');
+        }
+      }
+    });
+    
+    // Update other data sources
     Promise.all([
       updateCacheInBackground(DATA_SOURCES.config),
       updateCacheInBackground(DATA_SOURCES.today),
-      updateCacheInBackground(DATA_SOURCES.products),
       updateCacheInBackground(DATA_SOURCES.events),
       updateCacheInBackground(DATA_SOURCES.instagram),
       updateCacheInBackground(DATA_SOURCES.tiktok),
@@ -764,7 +799,7 @@ function renderProductSkeletons() {
   el.products.innerHTML = skeletons;
 }
 
-function renderProducts() {
+function renderProducts(skipAnimation = false) {
   // Limit to specific product IDs for homepage display
   const allowedIds = ['04', '05', '06', '07', '08', '09', '10', '11', '14', '15', '16', '18'];
 
@@ -787,6 +822,8 @@ function renderProducts() {
     }
   }
 
+  const animationClass = skipAnimation ? '' : 'fade-in';
+  
   el.products.innerHTML = items
     .map((p, i) => {
       // Use sequential color assignment by index (no repeats until all palettes exhausted)
@@ -796,7 +833,7 @@ function renderProducts() {
       const badges = (p.tags || []).map(t => `<span class="badge">${t}</span>`).join(" ");
       const price = p.price ? `$${Number(p.price).toLocaleString("es-CL")}` : "";
       const desc = p.description || "The quick, brown fox jumped over the lazy dog.";
-      return `<article class="card-flip-container" data-id="${p.id}" style="${bgStyle}">
+      return `<article class="card-flip-container ${animationClass}" data-id="${p.id}" style="${bgStyle}">
         <div class="card-flip">
           <div class="card-front" style="color:${textColor}">
             <div class="card-content">
@@ -824,6 +861,20 @@ function renderProducts() {
       node.classList.toggle("flipped");
     });
   });
+}
+
+// Render products with smooth fade transition
+function renderProductsWithFade() {
+  // Add fade-out class
+  el.products.classList.add('products-fade-out');
+  
+  setTimeout(() => {
+    // Render new products
+    renderProducts();
+    
+    // Remove fade-out, products will fade in
+    el.products.classList.remove('products-fade-out');
+  }, 300); // Match CSS transition duration
 }
 
 function openSheet(p, i = 0) {
