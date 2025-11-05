@@ -10,6 +10,7 @@ Added CORS (Cross-Origin Resource Sharing) support to the Muralla Admin API to a
 ```typescript
 const ALLOWED_ORIGINS = [
   'https://qr.murallacafe.cl',
+  'https://murallacafe.cl',
   'http://localhost:3000',
   'http://localhost:8000',
 ];
@@ -106,7 +107,7 @@ The Admin API will automatically redeploy on Vercel when the changes are pushed 
 
 ## Security Notes
 
-- ✅ Only `qr.murallacafe.cl` is allowed (plus localhost for development)
+- ✅ Only `qr.murallacafe.cl` and `murallacafe.cl` are allowed (plus localhost for development)
 - ✅ API key authentication still required
 - ✅ CORS headers only added when origin is in allowed list
 - ✅ Credentials (cookies/auth) are allowed
