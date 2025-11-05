@@ -45,6 +45,10 @@ const DATA_SOURCES = {
     local: '/assets/data/categories.json',
     api: `${MURALLA_ADMIN_API}/api/categories`,
     cache: 'categories'
+  },
+  recentArrivals: {
+    api: `${MURALLA_ADMIN_API}/api/products?limit=10&sortBy=createdAt&sortOrder=desc&includeInactive=false`,
+    cache: 'recentArrivals'
   }
 };
 
@@ -111,12 +115,14 @@ const state = {
   instagramPosts: [],
   tiktokPosts: [],
   categories: [],
+  recentArrivals: [],
   selectedTags: new Set(),
   selectedCategory: null,
   searchQuery: "",
   slideIndex: 0,
   hasShuffled: false,
   eventSlideIndex: 0,
+  recentSlideIndex: 0,
   isInitialLoad: true,
   flapIndex: 0,
   flapInterval: null,
@@ -340,7 +346,7 @@ async function updateCacheInBackground(source, onUpdate) {
 
 async function loadData() {
   // Load data with cache-first strategy
-  const [config, today, productsResponse, eventsResponse, instagramResponse, tiktokResponse, categoriesResponse, apiConfig, verbs] = await Promise.all([
+  const [config, today, productsResponse, eventsResponse, instagramResponse, tiktokResponse, categoriesResponse, recentArrivalsResponse, apiConfig, verbs] = await Promise.all([
     loadWithCache(DATA_SOURCES.config),
     loadWithCache(DATA_SOURCES.today),
     loadWithCache(DATA_SOURCES.products),
@@ -348,6 +354,7 @@ async function loadData() {
     loadWithCache(DATA_SOURCES.instagram),
     loadWithCache(DATA_SOURCES.tiktok),
     loadWithCache(DATA_SOURCES.categories),
+    loadWithCache(DATA_SOURCES.recentArrivals),
     safeFetch('/api/config'),
     safeFetch('/assets/data/verbs.json'),
   ]);
@@ -397,6 +404,18 @@ async function loadData() {
           renderProductsWithFade();
         } else {
           console.log('[Products Update] No changes detected');
+        }
+      }
+    });
+    
+    // Update recent arrivals in background
+    updateCacheInBackground(DATA_SOURCES.recentArrivals, (freshRecentArrivals) => {
+      if (freshRecentArrivals && freshRecentArrivals.data && Array.isArray(freshRecentArrivals.data)) {
+        const newRecentArrivals = freshRecentArrivals.data.map(normalizeProduct).filter(p => p.isActive);
+        if (JSON.stringify(state.recentArrivals) !== JSON.stringify(newRecentArrivals)) {
+          console.log('[Recent Arrivals Update] New products detected, updating...');
+          state.recentArrivals = newRecentArrivals;
+          renderRecentArrivals();
         }
       }
     });
@@ -477,6 +496,22 @@ async function loadData() {
     }
   } else {
     state.categories = FALLBACK_CATEGORIES;
+  }
+  
+  // Load recent arrivals from API response
+  if (recentArrivalsResponse) {
+    if (recentArrivalsResponse.data && Array.isArray(recentArrivalsResponse.data)) {
+      // Admin API format: { data: [...], pagination: {...} }
+      state.recentArrivals = recentArrivalsResponse.data.map(normalizeProduct).filter(p => p.isActive);
+      console.log(`[Recent Arrivals] Loaded ${state.recentArrivals.length} recent products from API`);
+    } else if (Array.isArray(recentArrivalsResponse)) {
+      // Local JSON format
+      state.recentArrivals = recentArrivalsResponse.map(normalizeProduct).filter(p => p.isActive);
+      console.log(`[Recent Arrivals] Loaded ${state.recentArrivals.length} recent products`);
+    }
+  } else {
+    state.recentArrivals = [];
+    console.log('[Recent Arrivals] No recent arrivals data available');
   }
 }
 
@@ -1272,6 +1307,102 @@ function wireEventCarousel() {
   });
 }
 
+// Recent Arrivals rendering and carousel
+function renderRecentArrivals() {
+  const track = document.getElementById('recentArrivalsTrack');
+  if (!track || !state.recentArrivals || state.recentArrivals.length === 0) {
+    if (track) {
+      track.innerHTML = '<p style="color:var(--muted);padding:40px;text-align:center;">No hay productos recién llegados por ahora.</p>';
+    }
+    return;
+  }
+
+  const recentProducts = state.recentArrivals.slice(0, 10); // Limit to 10 products
+
+  const productCards = recentProducts.map((product, index) => {
+    // Use color palette for products without images
+    const colors = product.image ? null : getColorPalette(index);
+    const bgStyle = product.image 
+      ? `background-image: url('${product.image}'); background-size: cover; background-position: center;` 
+      : `background-color: ${colors.bg}`;
+    const textColor = colors ? colors.text : '#fff';
+
+    // Format price
+    const price = product.price ? `$${Number(product.price).toLocaleString("es-CL")}` : "";
+    
+    // Format tags/badges
+    const badges = (product.tags || []).map(t => `<span class="badge">${t}</span>`).join(" ");
+
+    return `
+      <div class="recent-arrival-card" data-product-id="${product.id}" onclick="this.classList.toggle('flipped')">
+        <div class="recent-arrival-card-inner">
+          <div class="recent-arrival-card-front" style="${bgStyle}">
+            <div class="recent-arrival-overlay">
+              <span class="recent-arrival-badge">NUEVO</span>
+            </div>
+          </div>
+          <div class="recent-arrival-card-back" style="${bgStyle}">
+            <div class="recent-arrival-content">
+              <h3 class="recent-arrival-title" style="color:${textColor}">${product.name}</h3>
+              <p class="recent-arrival-category" style="color:${textColor}">${product.category || ''}</p>
+              ${badges ? `<div class="recent-arrival-badges">${badges}</div>` : ''}
+              <div class="recent-arrival-footer">
+                <span class="recent-arrival-price" style="color:${textColor}">${price}</span>
+                <a href="${bookingLink(product.name)}" class="recent-arrival-cta" target="_blank" rel="noopener" onclick="event.stopPropagation()">
+                  Reservar →
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  track.innerHTML = productCards;
+  wireRecentArrivalsCarousel();
+}
+
+function wireRecentArrivalsCarousel() {
+  const track = document.getElementById('recentArrivalsTrack');
+  const prevBtn = document.getElementById('recentPrev');
+  const nextBtn = document.getElementById('recentNext');
+
+  if (!track || !prevBtn || !nextBtn) return;
+
+  const cards = track.querySelectorAll('.recent-arrival-card');
+  const cardWidth = 280 + 16; // card width + gap
+  const maxSlide = Math.max(0, cards.length - Math.floor(track.parentElement.offsetWidth / cardWidth));
+
+  function updateButtons() {
+    prevBtn.disabled = state.recentSlideIndex <= 0;
+    nextBtn.disabled = state.recentSlideIndex >= maxSlide;
+  }
+
+  function slide(direction) {
+    state.recentSlideIndex = Math.max(0, Math.min(maxSlide, state.recentSlideIndex + direction));
+    track.style.transform = `translateX(-${state.recentSlideIndex * cardWidth}px)`;
+    updateButtons();
+  }
+
+  prevBtn.addEventListener('click', () => slide(-1));
+  nextBtn.addEventListener('click', () => slide(1));
+  updateButtons();
+
+  // Touch/swipe support
+  let startX = 0;
+  track.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+  });
+  track.addEventListener('touchend', (e) => {
+    const endX = e.changedTouches[0].clientX;
+    const diff = startX - endX;
+    if (Math.abs(diff) > 50) {
+      slide(diff > 0 ? 1 : -1);
+    }
+  });
+}
+
 // Social Media Grid - Mix Instagram and TikTok
 function renderInstagram() {
   const grid = document.getElementById('instagramGrid');
@@ -1462,6 +1593,7 @@ async function main() {
   initSplitFlap();
   // initCarousel(); // Removed - carousel no longer in HTML
   renderProducts();
+  renderRecentArrivals();
   renderEvents();
   renderInstagram();
   renderMap();
