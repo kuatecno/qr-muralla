@@ -45,6 +45,19 @@ export default async function handler(req, res) {
       data = JSON.parse(responseText);
     } catch (parseError) {
       console.error('[IG Verify Proxy] JSON parse error:', parseError);
+      console.error('[IG Verify Proxy] Full response:', responseText);
+      
+      // Check if it's an HTML error page
+      if (responseText.includes('<!DOCTYPE') || responseText.includes('<html')) {
+        return res.status(502).json({
+          error: 'Flowkick API returned HTML instead of JSON',
+          details: `This usually means the API endpoint doesn't exist or requires different authentication`,
+          apiUrl: FLOWKICK_API_URL,
+          status: response.status,
+          htmlPreview: responseText.substring(0, 500)
+        });
+      }
+      
       return res.status(502).json({
         error: 'Invalid response from Flowkick API',
         details: responseText.substring(0, 200),
