@@ -24,7 +24,7 @@ const DATA_SOURCES = {
   },
   products: {
     local: '/assets/data/products.json',
-    api: `${MURALLA_API_URL}/api/products`, // Add your API endpoint here
+    api: `${MURALLA_ADMIN_API}/api/products?limit=100&includeInactive=false`, // Fetch from admin API
     cache: 'products'
   },
   events: {
@@ -373,13 +373,16 @@ async function loadData() {
       let productsData;
       
       if (freshProducts && freshProducts.data && Array.isArray(freshProducts.data)) {
+        // Admin API format: { data: [...], pagination: {...} }
         productsData = freshProducts.data;
+        console.log(`[Products Update] Fetched ${productsData.length} products from API`);
       } else if (Array.isArray(freshProducts)) {
+        // Local JSON format
         productsData = freshProducts;
       }
       
       if (productsData && productsData.length > 0) {
-        const newProducts = productsData.map(normalizeProduct);
+        const newProducts = productsData.map(normalizeProduct).filter(p => p.isActive);
         
         // Only update if products changed
         if (JSON.stringify(oldProducts) !== JSON.stringify(newProducts)) {
@@ -423,14 +426,24 @@ async function loadData() {
   }
   console.log('[Map Debug] Final map config:', state.config.map);
 
-  // Handle Muralla 5.0 API response format (with pagination) or local JSON array
+  // Handle multiple API response formats
   let productsData;
-  if (productsResponse && productsResponse.data && Array.isArray(productsResponse.data)) {
-    // Muralla 5.0 API format: { data: [...], pagination: {...} }
-    productsData = productsResponse.data;
-  } else if (Array.isArray(productsResponse)) {
-    // Local JSON format: [...]
-    productsData = productsResponse;
+  if (productsResponse) {
+    if (productsResponse.data && Array.isArray(productsResponse.data)) {
+      // Admin API format: { data: [...], pagination: {...} }
+      productsData = productsResponse.data;
+      console.log(`[Products] Loaded ${productsData.length} products from API`);
+      if (productsResponse.pagination) {
+        console.log(`[Products] Pagination: page ${productsResponse.pagination.page}/${productsResponse.pagination.totalPages}, total: ${productsResponse.pagination.totalCount}`);
+      }
+    } else if (Array.isArray(productsResponse)) {
+      // Local JSON format: [...]
+      productsData = productsResponse;
+      console.log(`[Products] Loaded ${productsData.length} products from local file`);
+    } else {
+      // Fallback
+      productsData = FALLBACK.products;
+    }
   } else {
     // Fallback
     productsData = FALLBACK.products;
@@ -467,17 +480,19 @@ function normalizeTag(t) {
 }
 
 function normalizeProduct(p) {
-  // Handle both Muralla 5.0 API format and local JSON format
+  // Handle Admin API, Muralla 5.0 API, and local JSON formats
   return {
     id: p.id || p.sku || "",
+    sku: p.sku || p.id || "",
     name: p.name || "",
     description: p.description || "",
-    category: p.category || "",
+    category: p.category || p.menuSection || "",
     price: p.unitPrice || p.price || 0,
     tags: (p.tags || []).map(normalizeTag),
     image: p.image || "",
     type: p.type || "",
-    sku: p.sku || p.id || "",
+    brand: p.brand || "",
+    isActive: p.isActive !== undefined ? p.isActive : true,
   };
 }
 
