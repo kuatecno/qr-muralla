@@ -1,4 +1,4 @@
-// Serverless function to proxy Instagram verification requests
+// Serverless function to proxy Instagram verification requests to Flowkick
 // This avoids CORS issues by making the API call from the server
 
 export default async function handler(req, res) {
