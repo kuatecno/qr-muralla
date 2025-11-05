@@ -4,7 +4,7 @@ import { COLOR_PALETTE, getColorPalette } from './color-palette.js';
 // API Configuration
 const MURALLA_API_URL = "https://muralla-kua.vercel.app";
 const MURALLA_ADMIN_API = "https://admin.murallacafe.cl";
-const TENANT_ID = "muralla_cafe_main"; // Replace with your actual tenant ID
+const MURALLA_API_KEY = "muralla_live_5e63df1db66e8c739d3a87de5501472a45693af831c67328";
 
 // Cache configuration
 const CACHE_PREFIX = 'muralla_cache_';
@@ -266,11 +266,11 @@ async function safeFetch(url, options = {}) {
       ...options
     };
     
-    // Add tenant ID header if URL is from admin API
+    // Add Bearer token authentication if URL is from admin API
     if (url.includes(MURALLA_ADMIN_API)) {
       fetchOptions.headers = {
         ...fetchOptions.headers,
-        'x-tenant-id': TENANT_ID
+        'Authorization': `Bearer ${MURALLA_API_KEY}`
       };
     }
     
