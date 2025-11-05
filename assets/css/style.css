@@ -135,7 +135,7 @@ body{
 
 .site-header{
   position:fixed;top:0;left:0;right:0;z-index:20;
-  display:grid;grid-template-columns:auto auto 1fr;gap:12px;align-items:center;
+  display:grid;grid-template-columns:auto auto 1fr auto;gap:12px;align-items:center;
   padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.06);
   backdrop-filter:saturate(130%) blur(8px);background:linear-gradient(180deg, rgba(12,12,18,0.7), rgba(12,12,18,0.35));
 }
@@ -152,6 +152,161 @@ body{
 .site-bottom-nav .ticker{
   width:100%;
   overflow:hidden;
+}
+
+/* Split-flap display - Airport sign style */
+.split-flap-board{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  justify-self:center;
+  flex:1;
+  max-width:500px;
+  overflow:hidden;
+}
+
+.flap-label{
+  font-size:12px;
+  font-weight:700;
+  color:var(--primary);
+  letter-spacing:1px;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+.flap-display{
+  flex:1;
+  height:36px;
+  background:linear-gradient(180deg, #1a1622 0%, #0f0f15 50%, #0a0a0f 100%);
+  border-radius:6px;
+  border:2px solid rgba(200,181,209,0.3);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,0.5), 0 0 12px rgba(200,181,209,0.15);
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.flap-card{
+  position:relative;
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  perspective:1000px;
+}
+
+.flap-top,
+.flap-bottom{
+  position:absolute;
+  width:100%;
+  height:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  background:#0f0f15;
+  padding:0 12px;
+}
+
+.flap-top{
+  top:0;
+  align-items:flex-end;
+  border-bottom:1px solid rgba(0,0,0,0.5);
+  background:linear-gradient(180deg, #1a1622 0%, #0f0f15 100%);
+}
+
+.flap-bottom{
+  bottom:0;
+  align-items:flex-start;
+  background:linear-gradient(180deg, #0f0f15 0%, #0a0a0f 100%);
+}
+
+.flap-top span,
+.flap-bottom span{
+  font-family:'Courier New', 'Courier', monospace;
+  font-size:15px;
+  font-weight:700;
+  color:#e5dccf;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  text-shadow:0 1px 2px rgba(0,0,0,0.8);
+}
+
+/* Flipping animation */
+.flap-display.flipping .flap-top{
+  animation:flipTop 0.6s ease-in-out;
+}
+
+.flap-display.flipping .flap-bottom{
+  animation:flipBottom 0.6s ease-in-out;
+}
+
+@keyframes flipTop{
+  0%{
+    transform:rotateX(0deg);
+    z-index:2;
+  }
+  50%{
+    transform:rotateX(-90deg);
+    z-index:2;
+  }
+  50.1%{
+    transform:rotateX(-90deg);
+    z-index:0;
+  }
+  100%{
+    transform:rotateX(0deg);
+    z-index:0;
+  }
+}
+
+@keyframes flipBottom{
+  0%{
+    transform:rotateX(90deg);
+    z-index:0;
+  }
+  49.9%{
+    transform:rotateX(90deg);
+    z-index:0;
+  }
+  50%{
+    transform:rotateX(0deg);
+    z-index:1;
+  }
+  100%{
+    transform:rotateX(0deg);
+    z-index:1;
+  }
+}
+
+/* Split line effect in middle */
+.flap-display::after{
+  content:'';
+  position:absolute;
+  top:50%;
+  left:0;
+  right:0;
+  height:1px;
+  background:rgba(0,0,0,0.8);
+  box-shadow:0 0 4px rgba(0,0,0,0.5);
+  pointer-events:none;
+  z-index:10;
+}
+
+/* Responsive: hide on very small screens */
+@media (max-width: 450px){
+  .split-flap-board{
+    display:none;
+  }
+  .site-header{
+    grid-template-columns:auto auto 1fr;
+  }
 }
 
 /* Open/Closed status */

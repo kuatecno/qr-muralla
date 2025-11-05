@@ -50,6 +50,9 @@ const DATA_SOURCES = {
 
 const el = {
   tickerTrack: document.getElementById("tickerTrack"),
+  splitFlapBoard: document.getElementById("splitFlapBoard"),
+  flapDisplay: document.getElementById("flapDisplay"),
+  flapCard: document.getElementById("flapCard"),
   ctaTop: document.getElementById("ctaTop"),
   carouselTrack: document.getElementById("carouselTrack"),
   prevSlide: document.getElementById("prevSlide"),
@@ -115,6 +118,8 @@ const state = {
   hasShuffled: false,
   eventSlideIndex: 0,
   isInitialLoad: true,
+  flapIndex: 0,
+  flapInterval: null,
 };
 
 // Fallback data if JSON not available
@@ -706,6 +711,53 @@ function renderTicker() {
       </a>`;
     })
     .join("");
+}
+
+// Split-flap display for today's specials
+function initSplitFlap() {
+  const items = state.today?.items || [];
+  if (!items.length || !el.flapDisplay) return;
+  
+  // Start with first item
+  updateFlapText(items[0]);
+  
+  // Rotate through items every 4 seconds
+  state.flapInterval = setInterval(() => {
+    state.flapIndex = (state.flapIndex + 1) % items.length;
+    flipToNextItem(items[state.flapIndex]);
+  }, 4000);
+}
+
+function updateFlapText(item) {
+  if (!el.flapCard) return;
+  
+  const price = item.price ? ` - $${Number(item.price).toLocaleString("es-CL")}` : "";
+  const text = `${item.name}${price}`;
+  
+  const topHalf = el.flapCard.querySelector('.flap-top');
+  const bottomHalf = el.flapCard.querySelector('.flap-bottom');
+  
+  if (topHalf && bottomHalf) {
+    topHalf.innerHTML = `<span>${text}</span>`;
+    bottomHalf.innerHTML = `<span>${text}</span>`;
+  }
+}
+
+function flipToNextItem(item) {
+  if (!el.flapDisplay) return;
+  
+  // Add flipping class
+  el.flapDisplay.classList.add('flipping');
+  
+  // Update text mid-flip (at 300ms, halfway through 600ms animation)
+  setTimeout(() => {
+    updateFlapText(item);
+  }, 300);
+  
+  // Remove flipping class after animation
+  setTimeout(() => {
+    el.flapDisplay.classList.remove('flipping');
+  }, 600);
 }
 
 // renderToday function removed - "Hoy" section has been removed from the site
@@ -1395,6 +1447,7 @@ async function main() {
   await loadData();
   setQuickLinks();
   renderTicker();
+  initSplitFlap();
   // initCarousel(); // Removed - carousel no longer in HTML
   renderProducts();
   renderEvents();
