@@ -2,8 +2,8 @@
 // API Documentation: https://flowkick.com/api/verification
 
 const IG_VERIFICATION_CONFIG = {
-  apiUrl: 'https://api.flowkick.com', // Replace with actual API URL
-  apiKey: 'YOUR_API_KEY', // Replace with your API key
+  apiUrl: 'https://api.flowkick.com',
+  apiKey: 'fk_4d28b904c9d90c9583d90a4f4bfd3de52144c8be83924757a45e756473e42c2d',
   webhookUrl: 'https://qr.murallacafe.cl/api/ig-webhook',
   expiresInMinutes: 10
 };
