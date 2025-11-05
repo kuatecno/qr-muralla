@@ -18,8 +18,8 @@ Edit `assets/js/instagram-verification.js`:
 
 ```javascript
 const IG_VERIFICATION_CONFIG = {
-  apiUrl: 'https://api.flowkick.com', // Your API URL
-  apiKey: 'YOUR_API_KEY',             // Your API key
+  apiUrl: 'https://flowkick.kua.cl', // Your API URL
+  apiKey: 'YOUR_API_KEY',            // Your API key
   webhookUrl: 'https://qr.murallacafe.cl/api/ig-webhook',
   expiresInMinutes: 10
 };
@@ -228,8 +228,8 @@ function verifyWebhookSignature(payload, signature, secret) {
 
 ## Production Checklist
 
-- [ ] Replace `YOUR_API_KEY` with real API key
-- [ ] Update `apiUrl` with production endpoint
+- [ ] Replace `YOUR_API_KEY` with real API key (use `https://flowkick.kua.cl` as apiUrl)
+- [ ] Verify apiUrl points to `https://flowkick.kua.cl`
 - [ ] Configure webhook URL (optional)
 - [ ] Set up webhook signature verification
 - [ ] Test with real Instagram account
