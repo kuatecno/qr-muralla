@@ -14,6 +14,8 @@ export default async function handler(req, res) {
     const { external_user_id, webhook_url, expires_in_minutes } = req.body;
 
     console.log('[IG Verify Proxy] Generating code for user:', external_user_id);
+    console.log('[IG Verify Proxy] API URL:', FLOWKICK_API_URL);
+    console.log('[IG Verify Proxy] API Key:', FLOWKICK_API_KEY.substring(0, 10) + '...');
 
     // Make request to Flowkick API
     const response = await fetch(FLOWKICK_API_URL, {
@@ -30,7 +32,25 @@ export default async function handler(req, res) {
       })
     });
 
-    const data = await response.json();
+    console.log('[IG Verify Proxy] Response status:', response.status);
+    console.log('[IG Verify Proxy] Response headers:', Object.fromEntries(response.headers));
+
+    // Get response text first to see what we're getting
+    const responseText = await response.text();
+    console.log('[IG Verify Proxy] Response text:', responseText.substring(0, 200));
+
+    // Try to parse as JSON
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error('[IG Verify Proxy] JSON parse error:', parseError);
+      return res.status(502).json({
+        error: 'Invalid response from Flowkick API',
+        details: responseText.substring(0, 200),
+        status: response.status
+      });
+    }
 
     if (!response.ok) {
       console.error('[IG Verify Proxy] API error:', data);
