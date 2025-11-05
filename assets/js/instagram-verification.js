@@ -2,7 +2,7 @@
 // API Documentation: https://flowkick.com/api/verification
 
 const IG_VERIFICATION_CONFIG = {
-  apiUrl: 'https://api.flowkick.com',
+  apiUrl: 'https://flowkick.com', // Try without 'api.' subdomain
   apiKey: 'fk_4d28b904c9d90c9583d90a4f4bfd3de52144c8be83924757a45e756473e42c2d',
   webhookUrl: 'https://qr.murallacafe.cl/api/ig-webhook',
   expiresInMinutes: 10
@@ -17,8 +17,11 @@ class InstagramVerification {
 
   // Generate verification code
   async generateCode(externalUserId) {
+    const url = `${this.config.apiUrl}/api/verification/generate`;
+    console.log('[IG Verification] Requesting:', url);
+    
     try {
-      const response = await fetch(`${this.config.apiUrl}/api/verification/generate`, {
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${this.config.apiKey}`,
@@ -32,8 +35,12 @@ class InstagramVerification {
         })
       });
 
+      console.log('[IG Verification] Response status:', response.status);
+
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const errorText = await response.text();
+        console.error('[IG Verification] Error response:', errorText);
+        throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
       }
 
       const data = await response.json();
@@ -43,6 +50,8 @@ class InstagramVerification {
       return data;
     } catch (error) {
       console.error('[IG Verification] Generate failed:', error);
+      console.error('[IG Verification] URL was:', url);
+      console.error('[IG Verification] API Key:', this.config.apiKey.substring(0, 10) + '...');
       throw error;
     }
   }
