@@ -1,5 +1,5 @@
 // Instagram Verification Integration
-// API Documentation: https://flowkick.com/api/verification
+// API Documentation: https://flowkick.kua.cl/api/verification
 
 const IG_VERIFICATION_CONFIG = {
   apiUrl: '/api', // Use our own proxy endpoints to avoid CORS
