@@ -65,7 +65,10 @@ export default async function handler(req, res) {
     console.error('[IG Verify Proxy] Error:', error);
     return res.status(500).json({
       error: 'Internal server error',
-      message: error.message
+      message: error.message,
+      stack: error.stack,
+      apiUrl: FLOWKICK_API_URL,
+      apiKeySet: !!FLOWKICK_API_KEY
     });
   }
 }
