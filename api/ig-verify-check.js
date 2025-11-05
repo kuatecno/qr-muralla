@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   }
 
   const FLOWKICK_API_KEY = process.env.FLOWKICK_API_KEY || 'fk_4d28b904c9d90c9583d90a4f4bfd3de52144c8be83924757a45e756473e42c2d';
-  const FLOWKICK_API_URL = 'https://flowkick.com/api/verification/check';
+  const FLOWKICK_API_URL = 'https://flowkick.kua.cl/api/verification/check';
 
   try {
     const { session } = req.query;

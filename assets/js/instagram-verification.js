@@ -44,6 +44,12 @@ class InstagramVerification {
       this.sessionId = data.session_id;
       
       console.log('[IG Verification] Code generated:', data);
+      
+      // Normalize response format (API returns 'code' instead of 'verification_code')
+      if (data.code && !data.verification_code) {
+        data.verification_code = data.code;
+      }
+      
       return data;
     } catch (error) {
       console.error('[IG Verification] Generate failed:', error);

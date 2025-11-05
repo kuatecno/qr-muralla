@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   }
 
   const FLOWKICK_API_KEY = process.env.FLOWKICK_API_KEY || 'fk_4d28b904c9d90c9583d90a4f4bfd3de52144c8be83924757a45e756473e42c2d';
-  const FLOWKICK_API_URL = 'https://flowkick.com/api/verification/generate';
+  const FLOWKICK_API_URL = 'https://flowkick.kua.cl/api/verification/generate';
 
   try {
     const { external_user_id, webhook_url, expires_in_minutes } = req.body;
@@ -35,35 +35,7 @@ export default async function handler(req, res) {
     console.log('[IG Verify Proxy] Response status:', response.status);
     console.log('[IG Verify Proxy] Response headers:', Object.fromEntries(response.headers));
 
-    // Get response text first to see what we're getting
-    const responseText = await response.text();
-    console.log('[IG Verify Proxy] Response text:', responseText.substring(0, 200));
-
-    // Try to parse as JSON
-    let data;
-    try {
-      data = JSON.parse(responseText);
-    } catch (parseError) {
-      console.error('[IG Verify Proxy] JSON parse error:', parseError);
-      console.error('[IG Verify Proxy] Full response:', responseText);
-      
-      // Check if it's an HTML error page
-      if (responseText.includes('<!DOCTYPE') || responseText.includes('<html')) {
-        return res.status(502).json({
-          error: 'Flowkick API returned HTML instead of JSON',
-          details: `This usually means the API endpoint doesn't exist or requires different authentication`,
-          apiUrl: FLOWKICK_API_URL,
-          status: response.status,
-          htmlPreview: responseText.substring(0, 500)
-        });
-      }
-      
-      return res.status(502).json({
-        error: 'Invalid response from Flowkick API',
-        details: responseText.substring(0, 200),
-        status: response.status
-      });
-    }
+    const data = await response.json();
 
     if (!response.ok) {
       console.error('[IG Verify Proxy] API error:', data);
