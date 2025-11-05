@@ -1,0 +1,58 @@
+[
+  {
+    "id": "cat_comidas",
+    "name": "Comidas",
+    "emoji": "🍽️",
+    "color": "#92400E",
+    "description": "Platos principales y comidas",
+    "isActive": true
+  },
+  {
+    "id": "cat_dulces",
+    "name": "Dulces",
+    "emoji": "🧁",
+    "color": "#BE185D",
+    "description": "Postres y dulces",
+    "isActive": true
+  },
+  {
+    "id": "cat_cafe_caliente",
+    "name": "Bebidas Calientes",
+    "emoji": "☕🔥",
+    "color": "#92400E",
+    "description": "Bebidas calientes",
+    "isActive": true
+  },
+  {
+    "id": "cat_ice_coffee",
+    "name": "Ice Coffee",
+    "emoji": "🧊☕",
+    "color": "#1E40AF",
+    "description": "Café frío",
+    "isActive": true
+  },
+  {
+    "id": "cat_frapes",
+    "name": "Frapés",
+    "emoji": "🥤",
+    "color": "#7C3AED",
+    "description": "Bebidas heladas batidas",
+    "isActive": true
+  },
+  {
+    "id": "cat_mocktails",
+    "name": "Mocktails",
+    "emoji": "🍹",
+    "color": "#DB2777",
+    "description": "Cócteles sin alcohol",
+    "isActive": true
+  },
+  {
+    "id": "cat_jugos",
+    "name": "Jugos y Limonadas",
+    "emoji": "🍋",
+    "color": "#059669",
+    "description": "Jugos naturales y limonadas",
+    "isActive": true
+  }
+]

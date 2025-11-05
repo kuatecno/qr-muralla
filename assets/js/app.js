@@ -3,6 +3,8 @@ import { COLOR_PALETTE, getColorPalette } from './color-palette.js';
 
 // API Configuration
 const MURALLA_API_URL = "https://muralla-kua.vercel.app";
+const MURALLA_ADMIN_API = "https://admin.murallacafe.cl";
+const TENANT_ID = "muralla_cafe_main"; // Replace with your actual tenant ID
 
 // Cache configuration
 const CACHE_PREFIX = 'muralla_cache_';
@@ -38,6 +40,11 @@ const DATA_SOURCES = {
   tiktok: {
     api: '/api/tiktok',
     cache: 'tiktok'
+  },
+  categories: {
+    local: '/assets/data/categories.json',
+    api: `${MURALLA_ADMIN_API}/api/categories`,
+    cache: 'categories'
   }
 };
 
@@ -82,14 +89,15 @@ const TAGS = [
   "sin procesar",
 ];
 
-const CATEGORIES = [
-  "Comidas",
-  "Dulces",
-  "Bebidas Calientes",
-  "Ice Coffee",
-  "Frapés",
-  "Mocktails",
-  "Jugos y Limonadas"
+// Fallback categories if API fails
+const FALLBACK_CATEGORIES = [
+  { name: "Comidas", emoji: "🍽️", color: "#92400E", isActive: true },
+  { name: "Dulces", emoji: "🧁", color: "#BE185D", isActive: true },
+  { name: "Bebidas Calientes", emoji: "☕🔥", color: "#92400E", isActive: true },
+  { name: "Ice Coffee", emoji: "🧊☕", color: "#1E40AF", isActive: true },
+  { name: "Frapés", emoji: "🥤", color: "#7C3AED", isActive: true },
+  { name: "Mocktails", emoji: "🍹", color: "#DB2777", isActive: true },
+  { name: "Jugos y Limonadas", emoji: "🍋", color: "#059669", isActive: true }
 ];
 
 const state = {
@@ -99,6 +107,7 @@ const state = {
   events: [],
   instagramPosts: [],
   tiktokPosts: [],
+  categories: [],
   selectedTags: new Set(),
   selectedCategory: null,
   searchQuery: "",
@@ -245,9 +254,22 @@ function isCacheFresh(name) {
   }
 }
 
-async function safeFetch(url) {
+async function safeFetch(url, options = {}) {
   try {
-    const res = await fetch(url, { cache: "no-store" });
+    const fetchOptions = {
+      cache: "no-store",
+      ...options
+    };
+    
+    // Add tenant ID header if URL is from admin API
+    if (url.includes(MURALLA_ADMIN_API)) {
+      fetchOptions.headers = {
+        ...fetchOptions.headers,
+        'x-tenant-id': TENANT_ID
+      };
+    }
+    
+    const res = await fetch(url, fetchOptions);
     if (!res.ok) throw new Error("HTTP " + res.status);
     return await res.json();
   } catch (e) {
@@ -313,13 +335,14 @@ async function updateCacheInBackground(source, onUpdate) {
 
 async function loadData() {
   // Load data with cache-first strategy
-  const [config, today, productsResponse, eventsResponse, instagramResponse, tiktokResponse, apiConfig, verbs] = await Promise.all([
+  const [config, today, productsResponse, eventsResponse, instagramResponse, tiktokResponse, categoriesResponse, apiConfig, verbs] = await Promise.all([
     loadWithCache(DATA_SOURCES.config),
     loadWithCache(DATA_SOURCES.today),
     loadWithCache(DATA_SOURCES.products),
     loadWithCache(DATA_SOURCES.events),
     loadWithCache(DATA_SOURCES.instagram),
     loadWithCache(DATA_SOURCES.tiktok),
+    loadWithCache(DATA_SOURCES.categories),
     safeFetch('/api/config'),
     safeFetch('/assets/data/verbs.json'),
   ]);
@@ -327,6 +350,21 @@ async function loadData() {
   // Start background updates (non-blocking)
   setTimeout(() => {
     console.log('[Background Update] Starting cache refresh...');
+    
+    // Update categories in background
+    updateCacheInBackground(DATA_SOURCES.categories, (freshCategories) => {
+      if (freshCategories) {
+        const categoriesData = freshCategories.success ? freshCategories.data : freshCategories;
+        if (Array.isArray(categoriesData) && categoriesData.length > 0) {
+          const newCategories = categoriesData.filter(c => c.isActive);
+          if (JSON.stringify(state.categories) !== JSON.stringify(newCategories)) {
+            console.log('[Categories Update] New categories detected, updating...');
+            state.categories = newCategories;
+            renderCategoryChips();
+          }
+        }
+      }
+    });
     
     // Update products with callback to smoothly re-render
     updateCacheInBackground(DATA_SOURCES.products, (freshProducts) => {
@@ -408,6 +446,20 @@ async function loadData() {
 
   // Load TikTok posts
   state.tiktokPosts = Array.isArray(tiktokResponse) ? tiktokResponse : [];
+  
+  // Load categories from API response
+  if (categoriesResponse) {
+    // Handle admin API response format { success: true, data: [...] }
+    const categoriesData = categoriesResponse.success ? categoriesResponse.data : categoriesResponse;
+    if (Array.isArray(categoriesData)) {
+      state.categories = categoriesData.filter(c => c.isActive);
+      console.log(`[Categories] Loaded ${state.categories.length} active categories`);
+    } else {
+      state.categories = FALLBACK_CATEGORIES;
+    }
+  } else {
+    state.categories = FALLBACK_CATEGORIES;
+  }
 }
 
 function normalizeTag(t) {
@@ -694,9 +746,12 @@ function initCarousel() {
 
 function renderCategoryChips() {
   // Remove skeleton chips and render real categories
-  el.categoryChips.innerHTML = CATEGORIES.map(cat =>
-    `<button class="category-chip" data-category="${cat}">${cat}</button>`
-  ).join("");
+  el.categoryChips.innerHTML = state.categories.map(cat => {
+    const emoji = cat.emoji || '';
+    const name = cat.name || '';
+    const displayName = emoji ? `${emoji} ${name}` : name;
+    return `<button class="category-chip" data-category="${name}" style="${cat.color ? `border-color: ${cat.color}` : ''}">${displayName}</button>`;
+  }).join("");
 
   el.categoryChips.querySelectorAll(".category-chip").forEach(btn => {
     btn.addEventListener("click", () => {
