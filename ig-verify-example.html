@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Instagram Verification - Muralla Café</title>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <link rel="stylesheet" href="/assets/css/instagram-verification.css" />
+</head>
+<body>
+  <div style="max-width: 600px; margin: 100px auto; padding: 20px;">
+    <h1 style="text-align: center; color: #fff;">Instagram Verification Demo</h1>
+    <p style="text-align: center; color: var(--muted); margin-bottom: 40px;">
+      Click the button below to start the Instagram verification process
+    </p>
+    
+    <button id="startVerification" style="
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
+      color: #fff;
+      border: none;
+      padding: 20px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 20px;
+    ">
+      🔐 Verificar con Instagram
+    </button>
+    
+    <div id="result" style="
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 20px;
+      color: var(--text);
+      display: none;
+    "></div>
+  </div>
+
+  <script type="module">
+    import { 
+      InstagramVerification, 
+      IG_VERIFICATION_CONFIG, 
+      showVerificationModal, 
+      updateVerificationStatus 
+    } from '/assets/js/instagram-verification.js';
+
+    const verifier = new InstagramVerification(IG_VERIFICATION_CONFIG);
+    let modal = null;
+
+    document.getElementById('startVerification').addEventListener('click', async () => {
+      try {
+        // Generate unique user ID (in production, use actual user ID)
+        const userId = 'user_' + Date.now();
+        
+        console.log('Starting verification for user:', userId);
+        
+        // Generate verification code
+        const result = await verifier.generateCode(userId);
+        
+        // Show modal with code
+        modal = showVerificationModal(
+          result.verification_code,
+          `${IG_VERIFICATION_CONFIG.expiresInMinutes} minutos`
+        );
+        
+        // Start polling for verification
+        verifier.startPolling(
+          // On verified
+          (status) => {
+            console.log('Verification successful!', status);
+            updateVerificationStatus(modal, 'verified');
+            
+            // Show result
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+              <h3 style="margin-top:0; color: #10b981;">✓ Verificación Exitosa</h3>
+              <p><strong>Instagram:</strong> ${status.ig_username}</p>
+              <p><strong>Verificado:</strong> ${new Date(status.verified_at).toLocaleString('es-CL')}</p>
+            `;
+          },
+          // On error
+          (error) => {
+            console.error('Verification error:', error);
+            updateVerificationStatus(modal, 'error');
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+              <h3 style="margin-top:0; color: #ef4444;">✕ Error</h3>
+              <p>${error.message}</p>
+            `;
+          }
+        );
+        
+      } catch (error) {
+        console.error('Failed to start verification:', error);
+        alert('Error al iniciar verificación: ' + error.message);
+      }
+    });
+  </script>
+</body>
+</html>

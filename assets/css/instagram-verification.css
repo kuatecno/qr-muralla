@@ -1,0 +1,275 @@
+/* Instagram Verification Modal */
+.ig-verification-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.ig-verification-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+}
+
+.ig-verification-content {
+  position: relative;
+  width: 90%;
+  max-width: 480px;
+  background: linear-gradient(180deg, #1a1622 0%, #0f0f15 100%);
+  border-radius: 20px;
+  border: 2px solid rgba(200, 181, 209, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(200, 181, 209, 0.1);
+  padding: 32px 24px;
+  animation: slideUp 0.4s ease;
+}
+
+.ig-verification-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.ig-verification-close:hover {
+  color: #fff;
+}
+
+.ig-verification-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.ig-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.ig-verification-header h2 {
+  margin: 0 0 8px;
+  font-size: 24px;
+  color: #fff;
+}
+
+.ig-verification-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.ig-verification-code {
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(200, 181, 209, 0.2);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.code-display {
+  font-family: 'Courier New', monospace;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 4px;
+  margin-bottom: 16px;
+  text-shadow: 0 0 20px rgba(200, 181, 209, 0.3);
+}
+
+.code-copy {
+  background: var(--violet);
+  color: #0b0b10;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.code-copy:hover {
+  background: #d4c0dd;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(200, 181, 209, 0.3);
+}
+
+.code-copy:active {
+  transform: translateY(0);
+}
+
+.copy-icon {
+  font-size: 16px;
+}
+
+.ig-verification-steps {
+  margin-bottom: 32px;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.step:last-child {
+  border-bottom: none;
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  background: var(--violet);
+  color: #0b0b10;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.step-text {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.ig-verification-status {
+  text-align: center;
+  margin-bottom: 24px;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+}
+
+.status-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(200, 181, 209, 0.2);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  animation: spin 1s linear infinite;
+}
+
+.status-text {
+  margin: 0 0 8px;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.status-text.success {
+  color: #10b981;
+}
+
+.status-text.error {
+  color: #ef4444;
+}
+
+.status-expires {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.status-success,
+.status-error {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin: 0 auto 16px;
+}
+
+.status-success {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.status-error {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.ig-open-app {
+  display: block;
+  width: 100%;
+  background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
+  color: #fff;
+  text-align: center;
+  padding: 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.ig-open-app:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(131, 58, 180, 0.4);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .ig-verification-content {
+    width: 95%;
+    padding: 24px 16px;
+  }
+  
+  .code-display {
+    font-size: 24px;
+    letter-spacing: 2px;
+  }
+  
+  .ig-verification-header h2 {
+    font-size: 20px;
+  }
+}
