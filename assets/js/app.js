@@ -1468,6 +1468,9 @@ function renderBlog() {
       <article class="blog-card${manifestoClass}" data-category="${post.category}">
         <div class="blog-card-window">
           <div class="blog-card-titlebar">
+            <span class="blog-titlebar-lines"></span>
+            <span class="blog-titlebar-text">${post.category}</span>
+            <span class="blog-titlebar-lines"></span>
             <div class="blog-card-dots">
               <span class="blog-dot"></span>
               <span class="blog-dot"></span>
@@ -1475,7 +1478,6 @@ function renderBlog() {
           </div>
           <div class="blog-card-content" style="background: linear-gradient(135deg, ${colors.bg} 0%, ${colors.accent} 100%);">
             <div class="blog-card-inner">
-              <span class="blog-category" style="color: ${categoryColor}">${post.category}</span>
               <h3 class="blog-title">${post.title}</h3>
               <p class="blog-excerpt">${post.excerpt}</p>
               <div class="blog-meta">
@@ -1483,9 +1485,9 @@ function renderBlog() {
                 <span class="blog-divider">•</span>
                 <span class="blog-read-time">${post.readTime}</span>
               </div>
-              <a href="/blog/${post.slug}" class="blog-read-link">
-                ${isManifesto ? 'Leer manifiesto →' : 'Leer historia →'}
-              </a>
+              <button class="blog-read-button" onclick="window.location.href='/blog/${post.slug}'">
+                ${isManifesto ? 'Leer manifiesto' : 'Leer historia'}
+              </button>
             </div>
           </div>
         </div>
