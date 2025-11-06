@@ -1434,6 +1434,7 @@ body{
   right:16px;
   top:50%;
   transform:translateY(-50%);
+  cursor:pointer;
 }
 .blog-card-dots::after{
   content:'×';
@@ -1445,12 +1446,13 @@ body{
   color:rgba(255,255,255,0.5);
   font-size:18px;
   font-weight:300;
-  cursor:pointer;
   transition:all 0.2s ease;
   margin-left:8px;
 }
 .blog-card-dots:hover::after{
-  color:rgba(255,255,255,0.8);
+  color:rgba(255,255,255,0.9);
+  background:rgba(255,255,255,0.1);
+  border-radius:2px;
 }
 .blog-dot{
   width:8px;

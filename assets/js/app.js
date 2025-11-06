@@ -1465,13 +1465,13 @@ function renderBlog() {
     const manifestoClass = isManifesto ? ' blog-card-manifesto' : '';
     
     return `
-      <article class="blog-card${manifestoClass}" data-category="${post.category}">
+      <article class="blog-card${manifestoClass}" data-category="${post.category}" id="blog-card-${post.id}">
         <div class="blog-card-window">
           <div class="blog-card-titlebar">
             <span class="blog-titlebar-lines"></span>
             <span class="blog-titlebar-text">${post.category}</span>
             <span class="blog-titlebar-lines"></span>
-            <div class="blog-card-dots">
+            <div class="blog-card-dots" data-card-id="${post.id}">
               <span class="blog-dot"></span>
               <span class="blog-dot"></span>
             </div>
@@ -1549,6 +1549,43 @@ function initBlogParallax() {
   
   // Initial position
   requestTick();
+}
+
+// Wire blog close buttons functionality
+function wireBlogCloseButtons() {
+  const closeButtons = document.querySelectorAll('.blog-card-dots');
+  
+  closeButtons.forEach(button => {
+    button.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const cardId = button.getAttribute('data-card-id');
+      const card = document.getElementById(`blog-card-${cardId}`);
+      
+      if (card) {
+        // Add closing animation
+        card.style.transition = 'all 0.4s ease';
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.9) translateY(-20px)';
+        
+        // After animation, hide the card and adjust layout
+        setTimeout(() => {
+          card.style.display = 'none';
+          
+          // Reorganize remaining cards
+          const grid = document.getElementById('blogGrid');
+          const remainingCards = grid.querySelectorAll('.blog-card:not([style*="display: none"])');
+          
+          // If only one or no cards left, show message
+          if (remainingCards.length === 0) {
+            grid.innerHTML = '<p style="color:var(--muted);padding:40px;text-align:center;">Has cerrado todas las historias. <a href="javascript:location.reload()" style="color:#e67e5f;text-decoration:underline;">Recargar página</a></p>';
+          }
+          
+          // Re-init parallax for remaining cards
+          initBlogParallax();
+        }, 400);
+      }
+    });
+  });
 }
 
 // Social Media Grid - Mix Instagram and TikTok
@@ -1745,6 +1782,7 @@ async function main() {
   renderEvents();
   renderBlog();
   initBlogParallax();
+  wireBlogCloseButtons();
   renderInstagram();
   renderMap();
   wireSheet();
