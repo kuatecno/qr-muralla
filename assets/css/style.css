@@ -1331,18 +1331,36 @@ body{
 .blog-head h2{margin:0 0 8px 0;font-size:32px;color:#e67e5f;font-weight:700}
 .blog-subtitle{margin:0;font-size:16px;color:var(--muted);font-weight:400}
 .blog-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));
+  display:flex;
+  flex-wrap:wrap;
   gap:24px;
   max-width:1200px;
   margin:0 auto;
+  position:relative;
+  padding-top:60px;
 }
 .blog-card{
   position:relative;
   transition:transform 0.3s ease;
+  flex:1 1 320px;
+  max-width:400px;
 }
 .blog-card:hover{
   transform:translateY(-4px);
+}
+.blog-card[data-category="Manifiesto"]{
+  flex:1 1 100%;
+  max-width:100%;
+  margin-top:0;
+  transform:translateY(0);
+}
+.blog-card[data-category="Recetas"]{
+  margin-top:80px;
+  transform:translateY(0);
+}
+.blog-card[data-category="Café"]{
+  margin-top:40px;
+  transform:translateY(0);
 }
 .blog-card-manifesto{
   grid-column:1/-1;
@@ -1354,14 +1372,14 @@ body{
 .blog-card-manifesto:hover .blog-card-window{
   border-color:rgba(255,107,107,0.7);
 }
-.blog-card-manifesto .blog-card-content{
+.blog-card[data-category="Manifiesto"] .blog-card-content{
   min-height:220px;
 }
-.blog-card:nth-child(2) .blog-card-content{
-  min-height:320px;
+.blog-card[data-category="Recetas"] .blog-card-content{
+  min-height:340px;
 }
-.blog-card:nth-child(3) .blog-card-content{
-  min-height:260px;
+.blog-card[data-category="Café"] .blog-card-content{
+  min-height:280px;
 }
 .blog-card-manifesto .blog-title{
   font-size:28px;
@@ -1499,13 +1517,23 @@ body{
 
 @media (max-width: 768px){
   .blog-grid{
-    grid-template-columns:1fr;
+    flex-direction:column;
     gap:20px;
+    padding-top:20px;
+  }
+  .blog-card[data-category="Recetas"],
+  .blog-card[data-category="Café"]{
+    margin-top:0;
+    max-width:100%;
   }
   .blog-head h2{font-size:26px}
   .blog-title{font-size:20px}
   .blog-excerpt{font-size:14px}
   .blog-card-content{padding:20px;min-height:240px}
+  .blog-card[data-category="Recetas"] .blog-card-content,
+  .blog-card[data-category="Café"] .blog-card-content{
+    min-height:260px;
+  }
 }
 
 /* Reviews section */

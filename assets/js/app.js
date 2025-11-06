@@ -1495,6 +1495,61 @@ function renderBlog() {
   }).join('');
 }
 
+// Blog parallax scrolling effect
+function initBlogParallax() {
+  const blogSection = document.querySelector('.blog-section');
+  if (!blogSection) return;
+  
+  const cards = blogSection.querySelectorAll('.blog-card');
+  if (cards.length === 0) return;
+  
+  // Define different scroll speeds for each card
+  const scrollSpeeds = {
+    'Manifiesto': 0.3,
+    'Recetas': 0.5,
+    'Café': 0.4,
+    'default': 0.35
+  };
+  
+  let ticking = false;
+  
+  function updateParallax() {
+    const rect = blogSection.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    
+    // Check if section is in viewport
+    if (rect.bottom >= 0 && rect.top <= windowHeight) {
+      const scrollPercent = (windowHeight - rect.top) / (windowHeight + rect.height);
+      
+      cards.forEach((card, index) => {
+        const category = card.getAttribute('data-category');
+        const speed = scrollSpeeds[category] || scrollSpeeds.default;
+        
+        // Calculate offset based on scroll position and speed
+        const offset = scrollPercent * 100 * speed;
+        
+        // Apply transform with different speeds
+        card.style.transform = `translateY(${-offset}px)`;
+      });
+    }
+    
+    ticking = false;
+  }
+  
+  function requestTick() {
+    if (!ticking) {
+      window.requestAnimationFrame(updateParallax);
+      ticking = true;
+    }
+  }
+  
+  // Add scroll listener with throttling
+  window.addEventListener('scroll', requestTick);
+  
+  // Initial position
+  requestTick();
+}
+
 // Social Media Grid - Mix Instagram and TikTok
 function renderInstagram() {
   const grid = document.getElementById('instagramGrid');
@@ -1688,6 +1743,7 @@ async function main() {
   renderRecentArrivals();
   renderEvents();
   renderBlog();
+  initBlogParallax();
   renderInstagram();
   renderMap();
   wireSheet();
