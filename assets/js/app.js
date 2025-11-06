@@ -50,6 +50,11 @@ const DATA_SOURCES = {
     local: '/assets/data/recent-arrivals.json',
     api: `${MURALLA_ADMIN_API}/api/products?limit=10&sortBy=createdAt&sortOrder=desc&includeInactive=false`,
     cache: 'recentArrivals'
+  },
+  blog: {
+    local: '/assets/data/blog.json',
+    api: '/api/blog',
+    cache: 'blog'
   }
 };
 
@@ -117,6 +122,7 @@ const state = {
   tiktokPosts: [],
   categories: [],
   recentArrivals: [],
+  blog: [],
   selectedTags: new Set(),
   selectedCategory: null,
   searchQuery: "",
@@ -347,7 +353,7 @@ async function updateCacheInBackground(source, onUpdate) {
 
 async function loadData() {
   // Load data with cache-first strategy
-  const [config, today, productsResponse, eventsResponse, instagramResponse, tiktokResponse, categoriesResponse, recentArrivalsResponse, apiConfig, verbs] = await Promise.all([
+  const [config, today, productsResponse, eventsResponse, instagramResponse, tiktokResponse, categoriesResponse, recentArrivalsResponse, blogResponse, apiConfig, verbs] = await Promise.all([
     loadWithCache(DATA_SOURCES.config),
     loadWithCache(DATA_SOURCES.today),
     loadWithCache(DATA_SOURCES.products),
@@ -356,6 +362,7 @@ async function loadData() {
     loadWithCache(DATA_SOURCES.tiktok),
     loadWithCache(DATA_SOURCES.categories),
     loadWithCache(DATA_SOURCES.recentArrivals),
+    loadWithCache(DATA_SOURCES.blog),
     safeFetch('/api/config'),
     safeFetch('/assets/data/verbs.json'),
   ]);
@@ -513,6 +520,15 @@ async function loadData() {
   } else {
     state.recentArrivals = [];
     console.log('[Recent Arrivals] No recent arrivals data available');
+  }
+
+  // Load blog posts
+  if (blogResponse && Array.isArray(blogResponse)) {
+    state.blog = blogResponse;
+    console.log(`[Blog] Loaded ${state.blog.length} blog posts`);
+  } else {
+    state.blog = [];
+    console.log('[Blog] No blog posts available');
   }
 }
 
@@ -1404,6 +1420,76 @@ function wireRecentArrivalsCarousel() {
   });
 }
 
+// Blog rendering with browser-window cards
+function renderBlog() {
+  const grid = document.getElementById('blogGrid');
+  if (!grid || !state.blog || state.blog.length === 0) {
+    if (grid) {
+      grid.innerHTML = '<p style="color:var(--muted);padding:40px;text-align:center;grid-column:1/-1;">No hay historias disponibles por ahora.</p>';
+    }
+    return;
+  }
+
+  // Show only featured posts (max 3)
+  const featuredPosts = state.blog.filter(post => post.featured).slice(0, 3);
+  
+  if (featuredPosts.length === 0) {
+    grid.innerHTML = '<p style="color:var(--muted);padding:40px;text-align:center;grid-column:1/-1;">No hay historias destacadas.</p>';
+    return;
+  }
+
+  const categoryColors = {
+    'Café': '#e67e5f',
+    'Eventos': '#9b87f5',
+    'Comida': '#7ed957',
+    'Comunidad': '#f59e0b',
+    'Sostenibilidad': '#10b981',
+    'Arte': '#ec4899'
+  };
+
+  grid.innerHTML = featuredPosts.map((post, index) => {
+    const categoryColor = categoryColors[post.category] || '#e67e5f';
+    const colors = getColorPalette(index);
+    
+    // Format date
+    const postDate = new Date(post.date);
+    const formattedDate = postDate.toLocaleDateString('es-CL', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+
+    return `
+      <article class="blog-card" data-category="${post.category}">
+        <div class="blog-card-window">
+          <div class="blog-card-titlebar">
+            <div class="blog-card-dots">
+              <span class="blog-dot"></span>
+              <span class="blog-dot"></span>
+              <span class="blog-dot"></span>
+            </div>
+          </div>
+          <div class="blog-card-content" style="background: linear-gradient(135deg, ${colors.bg} 0%, ${colors.accent} 100%);">
+            <div class="blog-card-inner">
+              <span class="blog-category" style="color: ${categoryColor}">${post.category}</span>
+              <h3 class="blog-title">${post.title}</h3>
+              <p class="blog-excerpt">${post.excerpt}</p>
+              <div class="blog-meta">
+                <span class="blog-author">${post.author}</span>
+                <span class="blog-divider">•</span>
+                <span class="blog-read-time">${post.readTime}</span>
+              </div>
+              <a href="/blog/${post.slug}" class="blog-read-link">
+                Leer historia →
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
 // Social Media Grid - Mix Instagram and TikTok
 function renderInstagram() {
   const grid = document.getElementById('instagramGrid');
@@ -1596,6 +1682,7 @@ async function main() {
   renderProducts();
   renderRecentArrivals();
   renderEvents();
+  renderBlog();
   renderInstagram();
   renderMap();
   wireSheet();

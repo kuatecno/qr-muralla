@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Muralla Cache</title>
+    <style>
+        body { font-family: system-ui; padding: 40px; background: #0b0b10; color: #fff; }
+        button { background: #e67e5f; border: none; padding: 12px 24px; color: white; 
+                 border-radius: 8px; cursor: pointer; font-size: 16px; margin: 10px; }
+        button:hover { background: #d46d4e; }
+        .status { margin-top: 20px; padding: 20px; background: rgba(255,255,255,0.1); 
+                  border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <h1>Muralla Cache Manager</h1>
+    <button onclick="clearCache()">Clear All Cache</button>
+    <button onclick="showCache()">Show Cache Info</button>
+    <div class="status" id="status"></div>
+    
+    <script>
+        const CACHE_PREFIX = 'muralla_cache_';
+        
+        function clearCache() {
+            let cleared = [];
+            for (let key in localStorage) {
+                if (key.startsWith(CACHE_PREFIX)) {
+                    cleared.push(key.replace(CACHE_PREFIX, ''));
+                    localStorage.removeItem(key);
+                }
+            }
+            document.getElementById('status').innerHTML = 
+                '<h3>✅ Cache Cleared!</h3>' +
+                '<p>Cleared: ' + (cleared.length ? cleared.join(', ') : 'No cache found') + '</p>' +
+                '<p>Refresh the main site to load fresh data.</p>';
+        }
+        
+        function showCache() {
+            let cacheInfo = '<h3>Cache Status:</h3>';
+            let found = false;
+            for (let key in localStorage) {
+                if (key.startsWith(CACHE_PREFIX)) {
+                    found = true;
+                    const data = JSON.parse(localStorage.getItem(key));
+                    const age = Date.now() - data.timestamp;
+                    const ageMin = Math.floor(age / 60000);
+                    const time = new Date(data.timestamp).toLocaleTimeString();
+                    cacheInfo += '<p><b>' + key.replace(CACHE_PREFIX, '') + '</b>: ' +
+                                'Cached at ' + time + ' (' + ageMin + ' min ago)</p>';
+                }
+            }
+            if (!found) cacheInfo += '<p>No cache found</p>';
+            document.getElementById('status').innerHTML = cacheInfo;
+        }
+        
+        // Show cache info on load
+        showCache();
+    </script>
+</body>
+</html>

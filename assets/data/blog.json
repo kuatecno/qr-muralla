@@ -1,0 +1,74 @@
+[
+  {
+    "id": "blog-001",
+    "title": "El arte de preparar café de especialidad",
+    "slug": "arte-cafe-especialidad",
+    "excerpt": "Descubre los secretos detrás de cada taza perfecta. Desde la selección del grano hasta el método de extracción.",
+    "category": "Café",
+    "author": "Equipo Muralla",
+    "date": "2025-10-28",
+    "readTime": "5 min",
+    "image": "",
+    "featured": true
+  },
+  {
+    "id": "blog-002",
+    "title": "Música en vivo: Creando comunidad",
+    "slug": "musica-vivo-comunidad",
+    "excerpt": "Cómo los eventos de música en vivo transforman nuestro espacio en un punto de encuentro para artistas locales.",
+    "category": "Eventos",
+    "author": "María González",
+    "date": "2025-10-25",
+    "readTime": "4 min",
+    "image": "",
+    "featured": true
+  },
+  {
+    "id": "blog-003",
+    "title": "Recetas veganas que enamoran",
+    "slug": "recetas-veganas",
+    "excerpt": "Nuestras recetas plant-based favoritas que demuestran que la comida consciente puede ser deliciosa y nutritiva.",
+    "category": "Comida",
+    "author": "Chef Andrea",
+    "date": "2025-10-20",
+    "readTime": "6 min",
+    "image": "",
+    "featured": true
+  },
+  {
+    "id": "blog-004",
+    "title": "Coworking con propósito",
+    "slug": "coworking-proposito",
+    "excerpt": "Por qué trabajar en un espacio comunitario puede impulsar tu creatividad y productividad.",
+    "category": "Comunidad",
+    "author": "Equipo Muralla",
+    "date": "2025-10-15",
+    "readTime": "4 min",
+    "image": "",
+    "featured": false
+  },
+  {
+    "id": "blog-005",
+    "title": "Sostenibilidad en cada taza",
+    "slug": "sostenibilidad-cafe",
+    "excerpt": "Nuestro compromiso con el medio ambiente: desde vasos compostables hasta granos de comercio justo.",
+    "category": "Sostenibilidad",
+    "author": "Vicente Tirado",
+    "date": "2025-10-10",
+    "readTime": "5 min",
+    "image": "",
+    "featured": false
+  },
+  {
+    "id": "blog-006",
+    "title": "Galería de arte local en tus paredes",
+    "slug": "galeria-arte-local",
+    "excerpt": "Conoce a los artistas locales que exhiben sus obras en nuestro espacio y cómo puedes apoyarlos.",
+    "category": "Arte",
+    "author": "Catalina Rojas",
+    "date": "2025-10-05",
+    "readTime": "3 min",
+    "image": "",
+    "featured": false
+  }
+]
