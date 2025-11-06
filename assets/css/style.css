@@ -1400,23 +1400,36 @@ body{
 .blog-card-titlebar{
   background:transparent;
   padding:12px 16px;
+  padding-right:70px;
   display:flex;
   align-items:center;
   justify-content:flex-start;
-  gap:12px;
+  gap:10px;
   border-bottom:1px solid rgba(255,255,255,0.1);
   position:relative;
 }
 .blog-titlebar-lines{
-  height:1px;
   flex:1;
-  background:repeating-linear-gradient(
-    90deg,
-    rgba(255,255,255,0.3) 0,
-    rgba(255,255,255,0.3) 4px,
-    transparent 4px,
-    transparent 8px
-  );
+  height:10px;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.blog-titlebar-lines::before,
+.blog-titlebar-lines::after,
+.blog-titlebar-lines span{
+  content:'';
+  display:block;
+  height:1px;
+  background:rgba(255,255,255,0.25);
+  width:100%;
+}
+.blog-titlebar-lines::before{
+  content:'';
+}
+.blog-titlebar-lines::after{
+  content:'';
 }
 .blog-titlebar-text{
   color:rgba(255,255,255,0.8);
@@ -1572,6 +1585,12 @@ body{
   .blog-card[data-category="Recetas"] .blog-card-content,
   .blog-card[data-category="Café"] .blog-card-content{
     min-height:260px;
+  }
+  .blog-titlebar-lines{
+    max-width:30px;
+  }
+  .blog-titlebar-text{
+    font-size:10px;
   }
 }
 

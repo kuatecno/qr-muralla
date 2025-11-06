@@ -1468,9 +1468,9 @@ function renderBlog() {
       <article class="blog-card${manifestoClass}" data-category="${post.category}" id="blog-card-${post.id}">
         <div class="blog-card-window">
           <div class="blog-card-titlebar">
-            <span class="blog-titlebar-lines"></span>
+            <span class="blog-titlebar-lines"><span></span></span>
             <span class="blog-titlebar-text">${post.category}</span>
-            <span class="blog-titlebar-lines"></span>
+            <span class="blog-titlebar-lines"><span></span></span>
             <div class="blog-card-dots" data-card-id="${post.id}">
               <span class="blog-dot"></span>
               <span class="blog-dot"></span>
