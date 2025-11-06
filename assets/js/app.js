@@ -1439,6 +1439,7 @@ function renderBlog() {
   }
 
   const categoryColors = {
+    'Manifiesto': '#ff6b6b',
     'Café': '#e67e5f',
     'Eventos': '#9b87f5',
     'Comida': '#7ed957',
@@ -1459,8 +1460,11 @@ function renderBlog() {
       day: 'numeric' 
     });
 
+    const isManifesto = post.isManifesto || false;
+    const manifestoClass = isManifesto ? ' blog-card-manifesto' : '';
+    
     return `
-      <article class="blog-card" data-category="${post.category}">
+      <article class="blog-card${manifestoClass}" data-category="${post.category}">
         <div class="blog-card-window">
           <div class="blog-card-titlebar">
             <div class="blog-card-dots">
@@ -1480,7 +1484,7 @@ function renderBlog() {
                 <span class="blog-read-time">${post.readTime}</span>
               </div>
               <a href="/blog/${post.slug}" class="blog-read-link">
-                Leer historia →
+                ${isManifesto ? 'Leer manifiesto →' : 'Leer historia →'}
               </a>
             </div>
           </div>

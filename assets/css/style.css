@@ -1344,6 +1344,24 @@ body{
 .blog-card:hover{
   transform:translateY(-4px);
 }
+.blog-card-manifesto{
+  grid-column:1/-1;
+}
+.blog-card-manifesto .blog-card-window{
+  border-width:3px;
+  border-color:rgba(255,107,107,0.3);
+}
+.blog-card-manifesto:hover .blog-card-window{
+  border-color:rgba(255,107,107,0.5);
+  box-shadow:0 8px 32px rgba(255,107,107,0.2);
+}
+.blog-card-manifesto .blog-card-content{
+  min-height:200px;
+}
+.blog-card-manifesto .blog-title{
+  font-size:28px;
+  letter-spacing:-0.5px;
+}
 .blog-card-window{
   background:rgba(255,255,255,0.05);
   border:2px solid rgba(255,255,255,0.1);

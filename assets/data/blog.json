@@ -1,5 +1,19 @@
 [
   {
+    "id": "blog-manifesto",
+    "title": "Manifiesto",
+    "slug": "manifiesto",
+    "excerpt": "Muralla Café nació del deseo de construir un espacio vivo, humano, cambiante e imperfecto. Creemos en el arte como una necesidad básica olvidada.",
+    "category": "Manifiesto",
+    "author": "Muralla Café",
+    "date": "2025-11-06",
+    "readTime": "3 min",
+    "image": "",
+    "featured": true,
+    "isManifesto": true,
+    "fullContent": "Muralla Café nació del deseo de construir un espacio vivo, humano, cambiante e imperfecto.\n\nCreemos en el arte como una necesidad básica olvidada. No como consumidores, sino como creadores. No es la rutina la que nos mata, sino la falta de creatividad.\nUn artista puede ser también panaderx, contador, activista, madre o bailarín de fin de semana.\nEl arte no vive solo en los museos: puede encontrarse en un bazar de barrio, en un dibujo en la pared o en una conversación entre desconocidos y puede mezclarse con algo tan cotidiano como cocinar o limpiar.\n\nEn la interconectividad urbana, hoy todas las cafeterías pueden tener las mismas tortas de película y esos croissants \"perfectos\".\nPero no es posible que un negocio de dos personas tenga lo mejor en cada categoría, porque eso no es a escala humana.\nAbrazamos el kuchen torcido, el café con carácter propio y la receta que cambia según el día.\n\nMuralla es también una trinchera.\nVivimos en un mundo que ya se mueve en direcciones económicas, políticas y sociales tan fuertes que \"ser apolítico\" dejó de ser un espacio neutral.\nPor eso queremos que este lugar sea refugio y altavoz: para las disidencias sexogenéricas, las personas racializadas e indígenas, las migrantes y desplazadxs, las personas neurodivergentes o con movilidad reducida.\nPorque el lugar físico que ocupamos en la ciudad refleja el espacio que tenemos en el imaginario social, en las ideas y en los afectos.\nQueremos empujar esas murallas hacia afuera, hasta que quepamos todxs.\n\nOfrecemos una muralla abierta para el barrio.\nUn espacio para el arte local y la exhibición de cosas ricas para comer.\nUn lugar donde lo doméstico y lo creativo se mezclan sin pedir permiso.\nUn cowork que a veces se convierte en escenario musical.\nAlgunas cosas sin azúcar, otras veganas.\nTodo hecho con intención.\nCon alimentación consciente en la raíz."
+  },
+  {
     "id": "blog-001",
     "title": "El arte de preparar café de especialidad",
     "slug": "arte-cafe-especialidad",
