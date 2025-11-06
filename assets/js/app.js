@@ -1471,7 +1471,6 @@ function renderBlog() {
             <div class="blog-card-dots">
               <span class="blog-dot"></span>
               <span class="blog-dot"></span>
-              <span class="blog-dot"></span>
             </div>
           </div>
           <div class="blog-card-content" style="background: linear-gradient(135deg, ${colors.bg} 0%, ${colors.accent} 100%);">
