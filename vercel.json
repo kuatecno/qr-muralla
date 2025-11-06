@@ -7,8 +7,5 @@
     "api/**/*.js": {
       "runtime": "nodejs20.x"
     }
-  },
-  "env": {
-    "FLOWKICK_API_KEY": "@flowkick-api-key"
   }
 }
