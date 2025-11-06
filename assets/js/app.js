@@ -1440,6 +1440,7 @@ function renderBlog() {
 
   const categoryColors = {
     'Manifiesto': '#ff6b6b',
+    'Recetas': '#fbbf24',
     'Café': '#e67e5f',
     'Eventos': '#9b87f5',
     'Comida': '#7ed957',
