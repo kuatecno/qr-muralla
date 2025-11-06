@@ -47,6 +47,7 @@ const DATA_SOURCES = {
     cache: 'categories'
   },
   recentArrivals: {
+    local: '/assets/data/recent-arrivals.json',
     api: `${MURALLA_ADMIN_API}/api/products?limit=10&sortBy=createdAt&sortOrder=desc&includeInactive=false`,
     cache: 'recentArrivals'
   }

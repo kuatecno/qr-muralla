@@ -1046,17 +1046,27 @@ body{
   letter-spacing:0.5px;
 }
 .event-title{
-  font-size:44px;font-weight:700;margin:0 0 16px;
+  font-size:28px;font-weight:700;margin:0 0 12px;
   line-height:1.2;
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
 }
 .event-description{
-  font-size:28px;line-height:1.5;margin:0 0 24px;
+  font-size:16px;line-height:1.4;margin:0 0 16px;
   color:rgba(255,255,255,0.9);
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
 }
 .event-meta{
-  display:flex;align-items:center;gap:12px;
-  font-size:26px;color:rgba(255,255,255,0.8);
-  margin-bottom:24px;
+  display:flex;align-items:center;gap:8px;
+  font-size:14px;color:rgba(255,255,255,0.8);
+  margin-bottom:16px;
 }
 .event-meta-item{
   display:flex;align-items:center;gap:6px;
@@ -1146,9 +1156,9 @@ body{
 
 @media (max-width: 768px){
   .event-card{flex:0 0 280px;height:340px}
-  .event-title{font-size:32px}
-  .event-description{font-size:20px}
-  .event-meta{font-size:18px}
+  .event-title{font-size:24px}
+  .event-description{font-size:14px}
+  .event-meta{font-size:12px}
   .event-date-day{font-size:28px}
   .events-track{gap:12px}
   .calendar-grid-day{font-size:11px}
