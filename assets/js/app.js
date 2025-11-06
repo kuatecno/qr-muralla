@@ -1468,13 +1468,11 @@ function renderBlog() {
       <article class="blog-card${manifestoClass}" data-category="${post.category}" id="blog-card-${post.id}">
         <div class="blog-card-window">
           <div class="blog-card-titlebar">
+            <span class="blog-close-btn" data-card-id="${post.id}">×</span>
             <span class="blog-titlebar-lines"><span></span></span>
             <span class="blog-titlebar-text">${post.category}</span>
             <span class="blog-titlebar-lines"><span></span></span>
-            <div class="blog-card-dots" data-card-id="${post.id}">
-              <span class="blog-dot"></span>
-              <span class="blog-dot"></span>
-            </div>
+            <span class="blog-open-btn" data-url="/blog/${post.slug}" title="Abrir en nueva pestaña">•</span>
           </div>
           <div class="blog-card-content" style="background: linear-gradient(135deg, ${colors.bg} 0%, ${colors.accent} 100%);">
             <div class="blog-card-inner">
@@ -1551,38 +1549,52 @@ function initBlogParallax() {
   requestTick();
 }
 
-// Wire blog close buttons functionality
+// Wire blog close and open buttons functionality
 function wireBlogCloseButtons() {
-  const closeButtons = document.querySelectorAll('.blog-card-dots');
-  
+  // Handle close buttons (X)
+  const closeButtons = document.querySelectorAll('.blog-close-btn');
+
   closeButtons.forEach(button => {
     button.addEventListener('click', (e) => {
       e.stopPropagation();
       const cardId = button.getAttribute('data-card-id');
       const card = document.getElementById(`blog-card-${cardId}`);
-      
+
       if (card) {
         // Add closing animation
         card.style.transition = 'all 0.4s ease';
         card.style.opacity = '0';
         card.style.transform = 'scale(0.9) translateY(-20px)';
-        
+
         // After animation, hide the card and adjust layout
         setTimeout(() => {
           card.style.display = 'none';
-          
+
           // Reorganize remaining cards
           const grid = document.getElementById('blogGrid');
           const remainingCards = grid.querySelectorAll('.blog-card:not([style*="display: none"])');
-          
+
           // If only one or no cards left, show message
           if (remainingCards.length === 0) {
             grid.innerHTML = '<p style="color:var(--muted);padding:40px;text-align:center;">Has cerrado todas las historias. <a href="javascript:location.reload()" style="color:#e67e5f;text-decoration:underline;">Recargar página</a></p>';
           }
-          
+
           // Re-init parallax for remaining cards
           initBlogParallax();
         }, 400);
+      }
+    });
+  });
+
+  // Handle open buttons (dot) - opens blog entry page
+  const openButtons = document.querySelectorAll('.blog-open-btn');
+
+  openButtons.forEach(button => {
+    button.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const url = button.getAttribute('data-url');
+      if (url) {
+        window.location.href = url;
       }
     });
   });
