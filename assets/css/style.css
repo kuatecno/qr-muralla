@@ -1331,40 +1331,44 @@ body{
 .blog-head h2{margin:0 0 8px 0;font-size:32px;color:#e67e5f;font-weight:700}
 .blog-subtitle{margin:0;font-size:16px;color:var(--muted);font-weight:400}
 .blog-grid{
-  display:flex;
-  flex-wrap:wrap;
-  gap:24px;
-  max-width:1200px;
+  display:grid;
+  grid-template-columns:repeat(2, minmax(280px, 1fr));
+  gap:36px 32px;
+  max-width:1100px;
   margin:0 auto;
   position:relative;
-  padding-top:60px;
+  padding-top:32px;
+  align-items:start;
 }
 .blog-card{
   position:relative;
   transition:transform 0.3s ease;
-  flex:1 1 320px;
-  max-width:400px;
+  width:100%;
 }
 .blog-card:hover{
   transform:translateY(-4px);
 }
-.blog-card[data-category="Manifiesto"]{
-  flex:1 1 100%;
-  max-width:100%;
-  margin-top:0;
-  transform:translateY(0);
+.blog-card--hero{
+  grid-column:1;
+  grid-row:1;
+  min-height:260px;
 }
-.blog-card[data-category="Recetas"]{
-  margin-top:80px;
-  transform:translateY(0);
+.blog-card--top-right{
+  grid-column:2;
+  grid-row:1;
+  min-height:220px;
+  margin-top:32px;
 }
-.blog-card[data-category="Café"]{
-  margin-top:40px;
-  transform:translateY(0);
+.blog-card--wide{
+  grid-column:1 / span 2;
+  grid-row:2;
+  align-self:start;
+  max-width:760px;
+  justify-self:center;
+  min-height:240px;
+  margin-top:8px;
 }
-.blog-card-manifesto{
-  grid-column:1/-1;
-}
+.blog-card-manifesto{grid-column:auto}
 .blog-card-manifesto .blog-card-window{
   border-width:2px;
   border-color:rgba(255,107,107,0.5);
@@ -1372,15 +1376,9 @@ body{
 .blog-card-manifesto:hover .blog-card-window{
   border-color:rgba(255,107,107,0.7);
 }
-.blog-card[data-category="Manifiesto"] .blog-card-content{
-  min-height:220px;
-}
-.blog-card[data-category="Recetas"] .blog-card-content{
-  min-height:340px;
-}
-.blog-card[data-category="Café"] .blog-card-content{
-  min-height:280px;
-}
+.blog-card--hero .blog-card-content{min-height:240px}
+.blog-card--top-right .blog-card-content{min-height:220px}
+.blog-card--wide .blog-card-content{min-height:230px}
 .blog-card-manifesto .blog-title{
   font-size:28px;
   letter-spacing:-0.5px;
@@ -1403,12 +1401,13 @@ body{
   display:flex;
   align-items:center;
   justify-content:flex-start;
-  gap:10px;
+  gap:12px;
   border-bottom:1px solid rgba(255,255,255,0.1);
   position:relative;
 }
 .blog-titlebar-lines{
   flex:1;
+  min-width:36px;
   height:10px;
   position:relative;
   display:flex;
@@ -1442,75 +1441,45 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  width:20px;
-  height:20px;
-  color:rgba(255,255,255,0.6);
-  font-size:20px;
-  font-weight:300;
-  line-height:1;
+  width:22px;
+  height:22px;
+  color:rgba(255,255,255,0.7);
+  font-size:16px;
+  border:1px solid rgba(255,255,255,0.25);
+  border-radius:3px;
   cursor:pointer;
   transition:all 0.2s ease;
-  flex-shrink:0;
+  flex:0 0 22px;
+  background:rgba(0,0,0,0.1);
 }
 .blog-close-btn:hover{
-  color:rgba(255,107,107,0.9);
-  background:rgba(255,107,107,0.1);
-  border-radius:4px;
+  background:rgba(255,107,107,0.25);
+  color:#fff;
+  border-color:rgba(255,255,255,0.45);
 }
 .blog-open-btn{
   display:flex;
   align-items:center;
   justify-content:center;
-  width:20px;
-  height:20px;
-  color:rgba(255,255,255,0.6);
-  font-size:24px;
-  line-height:1;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,0.25);
+  margin-left:auto;
   cursor:pointer;
   transition:all 0.2s ease;
-  margin-left:auto;
-  flex-shrink:0;
+  position:relative;
+}
+.blog-open-btn::before{
+  content:'';
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.85);
 }
 .blog-open-btn:hover{
-  color:rgba(230,126,95,1);
-  background:rgba(230,126,95,0.1);
-  border-radius:50%;
-  transform:scale(1.2);
-}
-.blog-card-dots{
-  display:flex;
-  gap:6px;
-  align-items:center;
-  position:absolute;
-  right:16px;
-  top:50%;
-  transform:translateY(-50%);
-  cursor:pointer;
-}
-.blog-card-dots::after{
-  content:'×';
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:18px;
-  height:18px;
-  color:rgba(255,255,255,0.5);
-  font-size:18px;
-  font-weight:300;
-  transition:all 0.2s ease;
-  margin-left:8px;
-}
-.blog-card-dots:hover::after{
-  color:rgba(255,255,255,0.9);
-  background:rgba(255,255,255,0.1);
-  border-radius:2px;
-}
-.blog-dot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:rgba(255,255,255,0.4);
-  border:none;
+  background:rgba(255,255,255,0.2);
+  border-color:rgba(255,255,255,0.45);
 }
 .blog-card-content{
   padding:28px 24px;
@@ -1557,6 +1526,14 @@ body{
 }
 .blog-divider{
   opacity:0.5;
+}
+.blog-published{
+  display:block;
+  font-size:12px;
+  letter-spacing:0.4px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.6);
+  margin-bottom:18px;
 }
 .blog-read-button{
   display:inline-block;
@@ -1607,12 +1584,12 @@ body{
 
 @media (max-width: 768px){
   .blog-grid{
-    flex-direction:column;
-    gap:20px;
+    grid-template-columns:1fr;
+    gap:24px;
     padding-top:20px;
   }
-  .blog-card[data-category="Recetas"],
-  .blog-card[data-category="Café"]{
+  .blog-card--top-right,
+  .blog-card--wide{
     margin-top:0;
     max-width:100%;
   }
@@ -1620,10 +1597,8 @@ body{
   .blog-title{font-size:20px}
   .blog-excerpt{font-size:14px}
   .blog-card-content{padding:20px;min-height:240px}
-  .blog-card[data-category="Recetas"] .blog-card-content,
-  .blog-card[data-category="Café"] .blog-card-content{
-    min-height:260px;
-  }
+  .blog-card--top-right .blog-card-content,
+  .blog-card--wide .blog-card-content{min-height:230px}
   .blog-titlebar-lines{
     max-width:30px;
   }

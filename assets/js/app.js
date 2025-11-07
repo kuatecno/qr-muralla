@@ -1420,6 +1420,12 @@ function wireRecentArrivalsCarousel() {
   });
 }
 
+// Blog interactions state
+let blogControlsBound = false;
+let blogParallaxHandler = null;
+const BLOG_LAYOUT_CLASSES = ['blog-card--hero', 'blog-card--top-right', 'blog-card--wide'];
+const BLOG_PARALLAX_SPEEDS = [0.28, 0.45, 0.35];
+
 // Blog rendering with browser-window cards
 function renderBlog() {
   const grid = document.getElementById('blogGrid');
@@ -1438,19 +1444,7 @@ function renderBlog() {
     return;
   }
 
-  const categoryColors = {
-    'Manifiesto': '#ff6b6b',
-    'Recetas': '#fbbf24',
-    'Café': '#e67e5f',
-    'Eventos': '#9b87f5',
-    'Comida': '#7ed957',
-    'Comunidad': '#f59e0b',
-    'Sostenibilidad': '#10b981',
-    'Arte': '#ec4899'
-  };
-
   grid.innerHTML = featuredPosts.map((post, index) => {
-    const categoryColor = categoryColors[post.category] || '#e67e5f';
     const colors = getColorPalette(index);
     
     // Format date
@@ -1463,16 +1457,18 @@ function renderBlog() {
 
     const isManifesto = post.isManifesto || false;
     const manifestoClass = isManifesto ? ' blog-card-manifesto' : '';
+    const layoutClass = BLOG_LAYOUT_CLASSES[index] || BLOG_LAYOUT_CLASSES[BLOG_LAYOUT_CLASSES.length - 1];
+    const parallaxSpeed = BLOG_PARALLAX_SPEEDS[index] || BLOG_PARALLAX_SPEEDS[BLOG_PARALLAX_SPEEDS.length - 1];
     
     return `
-      <article class="blog-card${manifestoClass}" data-category="${post.category}" id="blog-card-${post.id}">
+      <article class="blog-card ${layoutClass}${manifestoClass}" data-category="${post.category}" data-parallax-speed="${parallaxSpeed}" id="blog-card-${post.id}">
         <div class="blog-card-window">
           <div class="blog-card-titlebar">
-            <span class="blog-close-btn" data-card-id="${post.id}">×</span>
+            <span class="blog-close-btn" data-card-id="${post.id}" role="button" aria-label="Cerrar historia">×</span>
             <span class="blog-titlebar-lines"><span></span></span>
             <span class="blog-titlebar-text">${post.category}</span>
             <span class="blog-titlebar-lines"><span></span></span>
-            <span class="blog-open-btn" data-url="/blog/${post.slug}" title="Abrir en nueva pestaña">•</span>
+            <span class="blog-open-btn" data-url="/blog/${post.slug}" role="button" aria-label="Abrir historia en nueva pestaña" title="Abrir en nueva pestaña">•</span>
           </div>
           <div class="blog-card-content" style="background: linear-gradient(135deg, ${colors.bg} 0%, ${colors.accent} 100%);">
             <div class="blog-card-inner">
@@ -1483,6 +1479,7 @@ function renderBlog() {
                 <span class="blog-divider">•</span>
                 <span class="blog-read-time">${post.readTime}</span>
               </div>
+              <span class="blog-published" aria-hidden="true">${formattedDate}</span>
               <button class="blog-read-button" onclick="window.location.href='/blog/${post.slug}'">
                 ${isManifesto ? 'Leer manifiesto' : 'Leer historia'}
               </button>
@@ -1497,107 +1494,111 @@ function renderBlog() {
 // Blog parallax scrolling effect
 function initBlogParallax() {
   const blogSection = document.querySelector('.blog-section');
+
+  if (blogParallaxHandler) {
+    window.removeEventListener('scroll', blogParallaxHandler);
+    blogParallaxHandler = null;
+  }
+
   if (!blogSection) return;
-  
+
   const cards = blogSection.querySelectorAll('.blog-card');
   if (cards.length === 0) return;
-  
-  // Define different scroll speeds for each card
-  const scrollSpeeds = {
-    'Manifiesto': 0.3,
-    'Recetas': 0.5,
-    'Café': 0.4,
-    'default': 0.35
-  };
-  
+
   let ticking = false;
-  
+
   function updateParallax() {
     const rect = blogSection.getBoundingClientRect();
     const windowHeight = window.innerHeight;
-    
-    // Check if section is in viewport
+
     if (rect.bottom >= 0 && rect.top <= windowHeight) {
       const scrollPercent = (windowHeight - rect.top) / (windowHeight + rect.height);
-      
-      cards.forEach((card, index) => {
-        const category = card.getAttribute('data-category');
-        const speed = scrollSpeeds[category] || scrollSpeeds.default;
-        
-        // Calculate offset based on scroll position and speed
+
+      cards.forEach(card => {
+        if (card.dataset.closing === 'true') return;
+        const speed = parseFloat(card.dataset.parallaxSpeed || '0.35');
         const offset = scrollPercent * 100 * speed;
-        
-        // Apply transform with different speeds
         card.style.transform = `translateY(${-offset}px)`;
       });
     }
-    
+
     ticking = false;
   }
-  
-  function requestTick() {
+
+  blogParallaxHandler = () => {
     if (!ticking) {
       window.requestAnimationFrame(updateParallax);
       ticking = true;
     }
+  };
+
+  window.addEventListener('scroll', blogParallaxHandler);
+  blogParallaxHandler();
+}
+
+function reassignBlogLayout() {
+  const grid = document.getElementById('blogGrid');
+  if (!grid) return;
+
+  const cards = Array.from(grid.querySelectorAll('.blog-card'));
+
+  if (cards.length === 0) {
+    grid.innerHTML = '<p style="color:var(--muted);padding:40px;text-align:center;">Has cerrado todas las historias. <a href="javascript:location.reload()" style="color:#e67e5f;text-decoration:underline;">Recargar página</a></p>';
+    return;
   }
-  
-  // Add scroll listener with throttling
-  window.addEventListener('scroll', requestTick);
-  
-  // Initial position
-  requestTick();
+
+  cards.forEach((card, index) => {
+    BLOG_LAYOUT_CLASSES.forEach(cls => card.classList.remove(cls));
+    const layoutClass = BLOG_LAYOUT_CLASSES[index] || BLOG_LAYOUT_CLASSES[BLOG_LAYOUT_CLASSES.length - 1];
+    const parallaxSpeed = BLOG_PARALLAX_SPEEDS[index] || BLOG_PARALLAX_SPEEDS[BLOG_PARALLAX_SPEEDS.length - 1];
+    card.classList.add(layoutClass);
+    card.dataset.parallaxSpeed = parallaxSpeed;
+    card.dataset.closing = 'false';
+    card.style.opacity = '1';
+    card.style.transform = '';
+  });
+
+  initBlogParallax();
 }
 
 // Wire blog close and open buttons functionality
-function wireBlogCloseButtons() {
-  // Handle close buttons (X)
-  const closeButtons = document.querySelectorAll('.blog-close-btn');
+function wireBlogWindowControls() {
+  if (blogControlsBound) return;
 
-  closeButtons.forEach(button => {
-    button.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const cardId = button.getAttribute('data-card-id');
-      const card = document.getElementById(`blog-card-${cardId}`);
+  const grid = document.getElementById('blogGrid');
+  if (!grid) return;
 
-      if (card) {
-        // Add closing animation
-        card.style.transition = 'all 0.4s ease';
-        card.style.opacity = '0';
-        card.style.transform = 'scale(0.9) translateY(-20px)';
+  grid.addEventListener('click', (event) => {
+    const closeBtn = event.target.closest('.blog-close-btn');
+    if (closeBtn) {
+      event.stopPropagation();
+      const card = closeBtn.closest('.blog-card');
+      if (!card) return;
 
-        // After animation, hide the card and adjust layout
-        setTimeout(() => {
-          card.style.display = 'none';
+      card.dataset.closing = 'true';
+      card.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+      card.style.opacity = '0';
+      card.style.transform = 'scale(0.94) translateY(-16px)';
 
-          // Reorganize remaining cards
-          const grid = document.getElementById('blogGrid');
-          const remainingCards = grid.querySelectorAll('.blog-card:not([style*="display: none"])');
+      setTimeout(() => {
+        card.remove();
+        reassignBlogLayout();
+      }, 350);
 
-          // If only one or no cards left, show message
-          if (remainingCards.length === 0) {
-            grid.innerHTML = '<p style="color:var(--muted);padding:40px;text-align:center;">Has cerrado todas las historias. <a href="javascript:location.reload()" style="color:#e67e5f;text-decoration:underline;">Recargar página</a></p>';
-          }
+      return;
+    }
 
-          // Re-init parallax for remaining cards
-          initBlogParallax();
-        }, 400);
-      }
-    });
-  });
-
-  // Handle open buttons (dot) - opens blog entry page
-  const openButtons = document.querySelectorAll('.blog-open-btn');
-
-  openButtons.forEach(button => {
-    button.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const url = button.getAttribute('data-url');
+    const openBtn = event.target.closest('.blog-open-btn');
+    if (openBtn) {
+      event.stopPropagation();
+      const url = openBtn.getAttribute('data-url');
       if (url) {
-        window.location.href = url;
+        window.open(url, '_blank', 'noopener');
       }
-    });
+    }
   });
+
+  blogControlsBound = true;
 }
 
 // Social Media Grid - Mix Instagram and TikTok
