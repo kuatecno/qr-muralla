@@ -40,8 +40,8 @@
         <span class="status-text" id="statusText">•••</span>
         <div class="status-tooltip" id="statusTooltip"></div>
       </div>
-      
-      <!-- Split-flap display for today's specials -->
+
+      <!-- Split-flap display for today's specials (default state) -->
       <div class="split-flap-board" id="splitFlapBoard">
         <div class="flap-label">HOY:</div>
         <div class="flap-display" id="flapDisplay">
@@ -51,7 +51,13 @@
           </div>
         </div>
       </div>
-      
+
+      <!-- Sticky category indicator (shows when scrolling through menu) -->
+      <div class="sticky-category-indicator" id="stickyCategoryIndicator" style="display:none;">
+        <span class="sticky-category-emoji" id="stickyCategoryEmoji"></span>
+        <span class="sticky-category-name" id="stickyCategoryName"></span>
+      </div>
+
       <div class="verb-display" id="verbDisplay">
         <span class="verb-spinner" id="verbSpinner">·</span>
         <span class="verb-text" id="verbText">cargando</span>
@@ -195,6 +201,10 @@
         <div class="ticker-track" id="tickerTrack">
           <span class="ticker-skeleton">Cargando especiales...</span>
         </div>
+      </div>
+      <!-- Extra features display (fades in when scrolling through menu) -->
+      <div class="bottom-features" id="bottomFeatures" style="opacity:0;">
+        <div class="features-track" id="featuresTrack"></div>
       </div>
     </nav>
 

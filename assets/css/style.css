@@ -138,7 +138,22 @@ body{
   display:grid;grid-template-columns:auto auto 1fr auto;gap:12px;align-items:center;
   padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.06);
   backdrop-filter:saturate(130%) blur(8px);background:linear-gradient(180deg, rgba(12,12,18,0.7), rgba(12,12,18,0.35));
+  transition:all 0.3s ease;
 }
+
+/* Sticky category indicator - replaces split-flap when scrolling through menu */
+.sticky-category-indicator{
+  display:flex;align-items:center;gap:8px;
+  justify-self:center;flex:1;max-width:500px;
+  padding:8px 20px;border-radius:999px;
+  background:var(--violet);
+  color:#0b0b10;font-weight:600;font-size:16px;
+  border:2px solid rgba(200,181,209,0.3);
+  box-shadow:0 4px 12px rgba(0,0,0,0.2);
+  transition:opacity 0.4s ease, transform 0.4s ease;
+}
+.sticky-category-emoji{font-size:20px;}
+.sticky-category-name{font-size:16px;font-weight:600;}
 
 /* Bottom navigation bar with ticker */
 .site-bottom-nav{
@@ -147,16 +162,47 @@ body{
   border-top:1px solid rgba(255,255,255,0.06);
   backdrop-filter:saturate(130%) blur(8px);
   background:linear-gradient(0deg, rgba(12,12,18,0.85), rgba(12,12,18,0.4));
+  transition:all 0.3s ease;
 }
 
 .site-bottom-nav .ticker{
   width:100%;
   overflow:hidden;
+  transition:opacity 0.4s ease;
+}
+
+/* Bottom features - extra features like "Sin gluten" that fade in when scrolling */
+.bottom-features{
+  width:100%;
+  padding:8px 0;
+  transition:opacity 0.4s ease;
+}
+.features-track{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+  padding:0 14px;
+}
+.feature-badge{
+  font-size:clamp(10px, 2vw, 13px);
+  padding:4px 10px;
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:999px;
+  color:var(--muted);
+  background:rgba(255,255,255,0.05);
+  transition:all 0.3s ease;
+}
+.feature-badge:hover{
+  border-color:rgba(255,255,255,0.3);
+  color:#fff;
 }
 
 /* Split-flap display - Airport sign style */
 .split-flap-board{
   display:flex;
+  transition:opacity 0.4s ease, transform 0.4s ease;
   align-items:center;
   gap:8px;
   justify-self:center;

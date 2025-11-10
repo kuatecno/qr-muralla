@@ -93,6 +93,12 @@ const el = {
   searchInput: document.getElementById("searchInput"),
   searchClose: document.getElementById("searchClose"),
   categorySection: document.getElementById("categorySection"),
+  stickyCategoryIndicator: document.getElementById("stickyCategoryIndicator"),
+  stickyCategoryEmoji: document.getElementById("stickyCategoryEmoji"),
+  stickyCategoryName: document.getElementById("stickyCategoryName"),
+  bottomFeatures: document.getElementById("bottomFeatures"),
+  featuresTrack: document.getElementById("featuresTrack"),
+  ticker: document.getElementById("ticker"),
 };
 
 const TAGS = [
@@ -1016,15 +1022,14 @@ function renderProducts(skipAnimation = false) {
       const colors = p.image ? null : getColorPalette(i);
       const bgStyle = p.image ? `background-image:url('${p.image}')` : `background-color:${colors.bg}`;
       const textColor = colors ? colors.text : '#fff';
-      const badges = (p.tags || []).map(t => `<span class="badge">${t}</span>`).join(" ");
       const price = p.price ? `$${Number(p.price).toLocaleString("es-CL")}` : "";
       const desc = p.description || "The quick, brown fox jumped over the lazy dog.";
-      return `<article class="card-flip-container ${animationClass}" data-id="${p.id}" style="${bgStyle}">
+      return `<article class="card-flip-container ${animationClass}" data-id="${p.id}" data-category="${p.category || ''}" data-tags="${(p.tags || []).join(',')}" style="${bgStyle}">
         <div class="card-flip">
           <div class="card-front" style="color:${textColor}">
             <div class="card-content">
               <h3 class="card-main-title">${p.name}</h3>
-              <p class="card-subtitle">${badges ? `${badges} —` : ''} ${price}</p>
+              <p class="card-subtitle">${price}</p>
               <p class="card-description">${desc}</p>
             </div>
           </div>
@@ -1777,6 +1782,141 @@ function initSocialComments() {
   });
 }
 
+// Sticky category scroll behavior
+let stickyCategoryScrollHandler = null;
+let currentStickyState = {
+  isInMenu: false,
+  currentCategory: null,
+  splitFlapHidden: false,
+  stickyCategoryShown: false
+};
+
+function initStickyCategory() {
+  const menuSection = document.querySelector('.menu');
+
+  if (stickyCategoryScrollHandler) {
+    window.removeEventListener('scroll', stickyCategoryScrollHandler);
+    stickyCategoryScrollHandler = null;
+  }
+
+  if (!menuSection || !el.products || !el.stickyCategoryIndicator || !el.splitFlapBoard) return;
+
+  let ticking = false;
+
+  function updateStickyCategory() {
+    const menuRect = menuSection.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+
+    // Check if we're in the menu section
+    const inMenuSection = menuRect.top < 100 && menuRect.bottom > 200;
+
+    if (inMenuSection) {
+      // Get all product cards
+      const productCards = Array.from(el.products.querySelectorAll('.card-flip-container'));
+
+      if (productCards.length === 0) {
+        ticking = false;
+        return;
+      }
+
+      // Find the first visible product card
+      let currentCategory = null;
+      for (const card of productCards) {
+        const cardRect = card.getBoundingClientRect();
+        if (cardRect.top < windowHeight / 2 && cardRect.bottom > 0) {
+          const category = card.dataset.category;
+          if (category) {
+            currentCategory = category;
+            break;
+          }
+        }
+      }
+
+      // If we found a category, show it in the sticky indicator
+      if (currentCategory && currentCategory !== currentStickyState.currentCategory) {
+        const categoryData = state.categories.find(c =>
+          normalizeTag(c.name) === normalizeTag(currentCategory)
+        );
+
+        if (categoryData) {
+          // Update category content
+          el.stickyCategoryEmoji.textContent = categoryData.emoji || '';
+          el.stickyCategoryName.textContent = categoryData.name || '';
+          currentStickyState.currentCategory = currentCategory;
+        }
+      }
+
+      // Show sticky category and hide split-flap if not already done
+      if (!currentStickyState.stickyCategoryShown) {
+        el.splitFlapBoard.style.opacity = '0';
+        el.splitFlapBoard.style.transform = 'scale(0.95)';
+
+        el.stickyCategoryIndicator.style.display = 'flex';
+        requestAnimationFrame(() => {
+          el.stickyCategoryIndicator.style.opacity = '1';
+          el.stickyCategoryIndicator.style.transform = 'scale(1)';
+        });
+
+        currentStickyState.stickyCategoryShown = true;
+        currentStickyState.splitFlapHidden = true;
+      }
+
+      // Show bottom features and hide ticker
+      if (el.ticker && el.ticker.style.opacity !== '0') {
+        el.ticker.style.opacity = '0';
+      }
+      if (el.bottomFeatures && el.bottomFeatures.style.opacity !== '1') {
+        el.bottomFeatures.style.opacity = '1';
+      }
+    } else {
+      // Not in menu section - show split-flap, hide sticky category
+      if (currentStickyState.stickyCategoryShown) {
+        el.stickyCategoryIndicator.style.opacity = '0';
+        el.stickyCategoryIndicator.style.transform = 'scale(0.95)';
+
+        el.splitFlapBoard.style.opacity = '1';
+        el.splitFlapBoard.style.transform = 'scale(1)';
+
+        currentStickyState.stickyCategoryShown = false;
+        currentStickyState.splitFlapHidden = false;
+        currentStickyState.currentCategory = null;
+      }
+
+      // Hide bottom features and show ticker
+      if (el.ticker && el.ticker.style.opacity !== '1') {
+        el.ticker.style.opacity = '1';
+      }
+      if (el.bottomFeatures && el.bottomFeatures.style.opacity !== '0') {
+        el.bottomFeatures.style.opacity = '0';
+      }
+    }
+
+    ticking = false;
+  }
+
+  stickyCategoryScrollHandler = () => {
+    if (!ticking) {
+      window.requestAnimationFrame(updateStickyCategory);
+      ticking = true;
+    }
+  };
+
+  window.addEventListener('scroll', stickyCategoryScrollHandler);
+  stickyCategoryScrollHandler(); // Call once on init
+}
+
+// Initialize bottom features display
+function initBottomFeatures() {
+  if (!el.featuresTrack) return;
+
+  // Render all tags as feature badges
+  const featuresHTML = TAGS.map(tag =>
+    `<span class="feature-badge">${tag}</span>`
+  ).join('');
+
+  el.featuresTrack.innerHTML = featuresHTML;
+}
+
 async function main() {
   // Render skeleton cards immediately before data loads
   renderProductSkeletons();
@@ -1806,6 +1946,8 @@ async function main() {
   updateOpenStatus();
   renderReviews();
   initSocialComments();
+  initStickyCategory();
+  initBottomFeatures();
   // Check status every minute
   setInterval(updateOpenStatus, 60000);
 
