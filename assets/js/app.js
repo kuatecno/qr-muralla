@@ -449,13 +449,23 @@ async function loadData() {
   state.today = today || FALLBACK.today;
   state.verbs = verbs || [];
 
+  // Ensure config has all required properties (merge with fallback if needed)
+  if (state.config) {
+    // Merge with fallback to ensure all properties exist
+    state.config = {
+      ...FALLBACK.config,
+      ...state.config,
+      // Ensure nested objects are also merged
+      map: state.config.map || FALLBACK.config.map,
+      booking: state.config.booking || FALLBACK.config.booking,
+      providers: state.config.providers || FALLBACK.config.providers,
+      hero: state.config.hero || FALLBACK.config.hero
+    };
+  }
+
   // Inject API key from serverless function if available
   console.log('[Map Debug] API Config response:', apiConfig);
   console.log('[Map Debug] State config:', state.config);
-  if (state.config && !state.config.map) {
-    console.error('[Map Debug] ERROR: state.config.map is undefined! Using fallback.');
-    state.config.map = FALLBACK.config.map;
-  }
   if (apiConfig && apiConfig.googleMapsApiKey && state.config.map) {
     state.config.map.apiKey = apiConfig.googleMapsApiKey;
     console.log('[Map Debug] API key injected successfully');
@@ -1935,7 +1945,7 @@ async function main() {
   renderEvents();
   renderBlog();
   initBlogParallax();
-  wireBlogCloseButtons();
+  wireBlogWindowControls();
   renderInstagram();
   renderMap();
   wireSheet();
