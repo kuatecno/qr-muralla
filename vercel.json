@@ -2,5 +2,14 @@
   "version": 2,
   "public": true,
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "nodejs20.x"
+    }
+  },
+  "env": {
+    "MURALLA_API_KEY": "@muralla-api-key",
+    "FLOWKICK_API_KEY": "@flowkick-api-key"
+  }
 }

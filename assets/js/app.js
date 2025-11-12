@@ -4,7 +4,7 @@ import { COLOR_PALETTE, getColorPalette } from './color-palette.js';
 // API Configuration
 const MURALLA_API_URL = "https://muralla-kua.vercel.app";
 const MURALLA_ADMIN_API = "https://admin.murallacafe.cl";
-const MURALLA_API_KEY = "muralla_live_5e63df1db66e8c739d3a87de5501472a45693af831c67328";
+let MURALLA_API_KEY = ""; // Will be loaded from /api/config
 
 // Cache configuration
 const CACHE_PREFIX = 'muralla_cache_';
@@ -463,14 +463,24 @@ async function loadData() {
     };
   }
 
-  // Inject API key from serverless function if available
+  // Inject API keys from serverless function if available
   console.log('[Map Debug] API Config response:', apiConfig);
   console.log('[Map Debug] State config:', state.config);
+
+  // Inject Muralla Admin API key
+  if (apiConfig && apiConfig.murallaApiKey) {
+    MURALLA_API_KEY = apiConfig.murallaApiKey;
+    console.log('[API] Muralla Admin API key loaded successfully');
+  } else {
+    console.warn('[API] No Muralla Admin API key available - products/categories may not load');
+  }
+
+  // Inject Google Maps API key
   if (apiConfig && apiConfig.googleMapsApiKey && state.config.map) {
     state.config.map.apiKey = apiConfig.googleMapsApiKey;
-    console.log('[Map Debug] API key injected successfully');
+    console.log('[Map Debug] Google Maps API key injected successfully');
   } else {
-    console.log('[Map Debug] No API key available, will use iframe fallback');
+    console.log('[Map Debug] No Google Maps API key available, will use iframe fallback');
   }
   console.log('[Map Debug] Final map config:', state.config.map);
 
