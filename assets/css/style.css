@@ -2495,3 +2495,271 @@ body{
   .instructions-card{padding:32px;gap:24px}
   .step-icon{font-size:48px;top:-24px;right:24px}
 }
+
+/* Policy Page Styles */
+.policy-section{
+  padding:40px 14px;
+  min-height:calc(100vh - 60px);
+}
+
+.policy-container{
+  max-width:800px;
+  margin:0 auto;
+}
+
+.policy-header{
+  text-align:center;
+  margin-bottom:60px;
+}
+
+.policy-icon{
+  font-size:64px;
+  margin-bottom:20px;
+  filter:drop-shadow(0 0 10px var(--cyan));
+}
+
+.policy-header h1{
+  font-size:clamp(32px, 6vw, 48px);
+  font-weight:700;
+  color:var(--text);
+  margin:0 0 16px 0;
+  text-transform:uppercase;
+  letter-spacing:2px;
+}
+
+.policy-subtitle{
+  font-size:clamp(16px, 3vw, 20px);
+  color:var(--muted);
+  margin:0;
+}
+
+.policy-content{
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+}
+
+.policy-card{
+  background:var(--panel);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:16px;
+  padding:32px;
+  position:relative;
+  overflow:hidden;
+  backdrop-filter:blur(10px);
+  transition:all 0.3s ease;
+}
+
+.policy-card:hover{
+  background:var(--panel-2);
+  transform:translateY(-2px);
+  box-shadow:var(--shadow);
+}
+
+.card-icon{
+  position:absolute;
+  top:20px;
+  right:20px;
+  font-size:32px;
+  opacity:0.6;
+  filter:drop-shadow(0 0 5px currentColor);
+}
+
+.policy-card h2{
+  font-size:clamp(24px, 4vw, 32px);
+  font-weight:700;
+  color:var(--text);
+  margin:0 0 16px 0;
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+.policy-text{
+  font-size:clamp(16px, 2.5vw, 18px);
+  line-height:1.6;
+  color:var(--muted);
+  margin:0 0 24px 0;
+}
+
+.defect-examples h3,
+.exclusion-list h3{
+  font-size:clamp(18px, 3vw, 20px);
+  font-weight:600;
+  color:var(--text);
+  margin:0 0 12px 0;
+}
+
+.defect-examples ul,
+.exclusion-list ul{
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+
+.defect-examples li,
+.exclusion-list li{
+  position:relative;
+  padding-left:24px;
+  margin-bottom:8px;
+  font-size:clamp(15px, 2.5vw, 16px);
+  color:var(--muted);
+}
+
+.defect-examples li::before,
+.exclusion-list li::before{
+  content:"•";
+  position:absolute;
+  left:0;
+  color:var(--coral);
+  font-weight:700;
+}
+
+.process-steps{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.step{
+  display:flex;
+  align-items:flex-start;
+  gap:16px;
+  padding:20px;
+  background:rgba(255,255,255,0.03);
+  border-radius:12px;
+  border-left:4px solid var(--cyan);
+}
+
+.step-number{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:40px;
+  height:40px;
+  background:var(--cyan);
+  color:var(--text);
+  border-radius:50%;
+  font-weight:700;
+  font-size:18px;
+  flex-shrink:0;
+}
+
+.step-content h4{
+  font-size:clamp(16px, 3vw, 18px);
+  font-weight:600;
+  color:var(--text);
+  margin:0 0 8px 0;
+}
+
+.step-content p{
+  font-size:clamp(14px, 2.5vw, 15px);
+  color:var(--muted);
+  margin:0;
+  line-height:1.5;
+}
+
+.contact-card{
+  background:linear-gradient(135deg, var(--panel) 0%, rgba(61,95,111,0.2) 100%);
+  border:1px solid var(--cyan);
+}
+
+.contact-info{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+.contact-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.contact-label{
+  font-weight:600;
+  color:var(--text);
+  min-width:80px;
+}
+
+.contact-value,
+.contact-link{
+  color:var(--muted);
+  text-decoration:none;
+}
+
+.contact-link:hover{
+  color:var(--cyan);
+  text-decoration:underline;
+}
+
+.policy-footer{
+  margin-top:60px;
+  padding-top:40px;
+  border-top:1px solid rgba(255,255,255,0.1);
+  text-align:center;
+}
+
+.footer-note{
+  font-size:clamp(15px, 2.5vw, 16px);
+  color:var(--muted);
+  line-height:1.6;
+  margin:0 0 16px 0;
+}
+
+.update-date{
+  font-size:14px;
+  color:var(--muted);
+  opacity:0.7;
+  margin:0;
+}
+
+/* Responsive for Policy Page */
+@media (max-width: 768px){
+  .policy-section{
+    padding:20px 14px;
+  }
+  
+  .policy-card{
+    padding:24px;
+  }
+  
+  .card-icon{
+    font-size:24px;
+    top:16px;
+    right:16px;
+  }
+  
+  .policy-header{
+    margin-bottom:40px;
+  }
+  
+  .policy-icon{
+    font-size:48px;
+  }
+  
+  .step{
+    padding:16px;
+  }
+  
+  .step-number{
+    width:32px;
+    height:32px;
+    font-size:16px;
+  }
+}
+
+@media (max-width: 480px){
+  .policy-card{
+    padding:20px;
+  }
+  
+  .contact-item{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:4px;
+  }
+  
+  .contact-label{
+    min-width:auto;
+  }
+}
