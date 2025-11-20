@@ -75,10 +75,10 @@
               <div class="step-icon">💬</div>
               <div class="step-number">2</div>
               <div class="step-content">
-                <h3>Envía el mensaje</h3>
-                <p>Mándanos un mensaje directo con la palabra:</p>
+                <h3>Envía la palabra</h3>
+                <p>Envía la palabra (para ver nuestro menú):</p>
                 <div class="code-word-wrapper">
-                  <div class="code-word" id="codeWord">"cafecito"</div>
+                  <div class="code-word" id="codeWord">"MENU"</div>
                   <button class="copy-btn" id="copyBtn" aria-label="Copiar código">
                     <span id="copyIcon">📋</span>
                   </button>
@@ -91,11 +91,11 @@
               <div class="step-icon">🎉</div>
               <div class="step-number">3</div>
               <div class="step-content">
-                <h3>¡Listo!</h3>
-                <p>Te llegará inmediatamente un cupón de café a $1000</p>
+                <h3>¡Muéstranos el QR!</h3>
+                <p>Muestra el código que recibirás por Instagram</p>
                 <div class="success-badge">
                   <span class="badge-shimmer">✨</span>
-                  Cupón válido
+                  Código QR
                   <span class="badge-shimmer">✨</span>
                 </div>
               </div>
@@ -160,7 +160,7 @@
 
       if (copyBtn && codeWord) {
         copyBtn.addEventListener('click', async () => {
-          const text = 'cafecito';
+          const text = 'MENU';
 
           try {
             await navigator.clipboard.writeText(text);
